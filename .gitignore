@@ -4,3 +4,14 @@
 local.properties
 *.iml
 .idea/
+# Local IDE / OS files
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db
+.vscode/
+# Signing credentials and generated Android packages
+*.jks
+*.keystore
+*.apk
+*.aab
