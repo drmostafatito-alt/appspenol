@@ -29,6 +29,7 @@ gradle :app:assembleDebug
 gradle :app:lintDebug
 python tools/check_learning_logic.py
 python tools/validate_content.py
+python tools/validate_resources.py
 ```
 
 The portable logic test compiles the actual production `LearningLogic.java` with the local JDK into a temporary directory and runs assertions for phrase/template answers, matching-pair scheduling with duplicate translations, lesson progression, and flashcard intervals. It needs no Android SDK or dependencies. On Windows, run it with `py tools/check_learning_logic.py` or `python tools/check_learning_logic.py`.
