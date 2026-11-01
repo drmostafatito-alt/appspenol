@@ -284,7 +284,18 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private int dueCount(){long now=System.currentTimeMillis();int count=0;for(Track t:tracks)for(Item item:t.items){long due=prefs.getLong("due_"+item.id,0);if(due>0&&due<=now)count++;}return count;}
     private void dailyGoalCard(LinearLayout box){
         int goal=prefs.getInt("daily_goal",1);String today=new SimpleDateFormat("yyyy-MM-dd",Locale.US).format(new Date());int done=prefs.getString("daily_date","").equals(today)?prefs.getInt("daily_lessons",0):0;
-        LinearLayout daily=card();daily.setBackground(bg(LAVENDER,0,20));full(daily,text("🎯  هدفك اليومي",17,INK,true));space(daily,5);full(daily,text("أنجزت "+done+" من "+goal+" درس اليوم",14,MUTED,false));space(daily,6);full(daily,progress(done,goal));full(box,daily);
+        LinearLayout daily=card();daily.setBackground(bg(LAVENDER,0,20));full(daily,text("🎯  هدفك اليومي",17,INK,true));space(daily,5);full(daily,goalRow(done,goal));full(box,daily);
+    }
+    private LinearLayout goalRow(int done,int goal){
+        LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);
+        int pct=goal<=0?0:Math.min(100,done*100/goal);
+        DesignSystem.RingProgressView ring=new DesignSystem.RingProgressView(this,pct,done+"/"+goal,"درس اليوم",foreground(GREEN),surface(LINE),foreground(INK),foreground(MUTED),cairoBold,nunitoRegular);
+        row.addView(ring,new LinearLayout.LayoutParams(dp(92),dp(92)));
+        LinearLayout copy=column();
+        full(copy,text(done>=goal?"وصلت لهدفك اليوم 🎉":"باقي "+(goal-done)+" درس لهدف اليوم",16,INK,true));space(copy,4);
+        full(copy,text("الهدف: "+goal+" درس يوميًا · السلسلة: "+prefs.getInt("streak",0)+" يوم",13,MUTED,false));
+        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMargins(dp(12),0,0,0);row.addView(copy,p);
+        return row;
     }
     private void showLearningSettings(){
         screen="settings";setup("إعدادات التعلم",true,false);LinearLayout c=card();full(c,text("🎯 هدف الدروس اليومي",19,INK,true));space(c,8);int goal=prefs.getInt("daily_goal",1);TextView value=text(goal+" درس يوميًا",17,GREEN,true);value.setGravity(Gravity.CENTER);full(c,value);space(c,8);LinearLayout row=new LinearLayout(this);Button less=button("−",Color.WHITE,BLUE),more=button("+",Color.WHITE,BLUE);row.addView(less,new LinearLayout.LayoutParams(0,dp(54),1));row.addView(more,new LinearLayout.LayoutParams(0,dp(54),1));full(c,row);less.setOnClickListener(v->{int n=Math.max(1,prefs.getInt("daily_goal",1)-1);prefs.edit().putInt("daily_goal",n).apply();value.setText(n+" درس يوميًا");});more.setOnClickListener(v->{int n=Math.min(10,prefs.getInt("daily_goal",1)+1);prefs.edit().putInt("daily_goal",n).apply();value.setText(n+" درس يوميًا");});space(c,20);full(c,text("🔊 سرعة النطق الإسباني",19,INK,true));space(c,5);float rate=prefs.getFloat("tts_rate",.9f);TextView speed=text(String.format(Locale.US,"%.1f×",rate),17,GREEN,true);speed.setGravity(Gravity.CENTER);full(c,speed);android.widget.SeekBar seek=new android.widget.SeekBar(this);seek.setMax(15);seek.setProgress(Math.round((rate-.5f)*10));full(c,seek);seek.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(android.widget.SeekBar s,int p,boolean user){float r=.5f+p*.1f;speed.setText(String.format(Locale.US,"%.1f×",r));if(user){prefs.edit().putFloat("tts_rate",r).apply();if(ttsReady)tts.setSpeechRate(r);}}public void onStartTrackingTouch(android.widget.SeekBar s){}public void onStopTrackingTouch(android.widget.SeekBar s){}});space(c,16);
