@@ -1,0 +1,520 @@
+# Spanish 1000 — A1: التعارف، الأسرة، الروتين، المدرسة والعمل، الأكل، البيت، الملابس، الطقس، الهوايات
+L|A1|A1 — الأساسيات|A1 — Nivel básico|تعرّف نفسك وعيلتك، وتتكلم عن يومك وأكلك وشغلك وهواياتك بجمل كاملة.|مستوى المبتدئ: تخرج منه وأنت تقدر تعمل حوار قصير عن نفسك ويومك، وتفهم أسئلة بسيطة وترد عليها.
+
+U|a1_familia|الأسرة والتعارف|La familia|تتكلم عن عيلتك وأصحابك وتوصف الناس.
+W|la familia|الأسرة|العيلة|noun|الأسرة||la faˈmi.lja
+W|el padre|الأب|الأب / بابا|noun|الأسرة||el ˈpa.ðɾe
+W|la madre|الأم|الأم / ماما|noun|الأسرة||la ˈma.ðɾe
+W|el hermano|الأخ|الأخ|noun|الأسرة|المؤنث: hermana|el eɾˈma.no
+W|la hermana|الأخت|الأخت|noun|الأسرة||la eɾˈma.na
+W|el hijo|الابن|الابن / الولد|noun|الأسرة||el ˈi.xo
+W|la hija|الابنة|البنت|noun|الأسرة||la ˈi.xa
+W|el abuelo|الجد|الجد / سيدي|noun|الأسرة||el aˈβwe.lo
+W|la abuela|الجدة|الجدة / تيتة|noun|الأسرة||la aˈβwe.la
+W|el tío|العم / الخال|العم / الخال|noun|الأسرة||el ˈti.o
+W|la tía|العمة / الخالة|العمة / الخالة|noun|الأسرة||la ˈti.a
+W|el primo|ابن العم|ابن العم / ابن الخال|noun|الأسرة||el ˈpɾi.mo
+W|el marido|الزوج|الزوج / جوزها|noun|الأسرة||el maˈɾi.ðo
+W|la mujer|الزوجة / المرأة|المرأة / مراته|noun|الأسرة||la muˈxeɾ
+W|el niño|الطفل|الطفل / الواد|noun|الأسرة||el ˈni.ɲo
+W|la niña|الطفلة|البنت الصغيرة|noun|الأسرة||la ˈni.ɲa
+W|el amigo|الصديق|الصاحب|noun|الأسرة|المؤنث: amiga|el aˈmi.ɣo
+W|la gente|الناس|الناس|noun|الأسرة||la ˈxen.te
+W|el vecino|الجار|الجار|noun|الأسرة||el beˈθi.no
+W|la pareja|الشريك / الزوجان|الشريك / الاتنين مع بعض|noun|الأسرة||la paˈɾe.xa
+W|casado|متزوج|متجوز|adj|الأسرة|المؤنث: casada|kaˈsa.ðo
+W|soltero|أعزب|أعزب|adj|الأسرة||solˈte.ɾo
+W|joven|شاب / صغير السن|صغير|adj|الأسرة||ˈxo.βen
+W|mayor|أكبر|كبير|adj|الأسرة||maˈʝoɾ
+W|el nombre|الاسم|الاسم|noun|الأسرة||el ˈnom.bɾe
+W|la edad|العمر|السن|noun|الأسرة||la eˈðað
+W|el cumpleaños|عيد الميلاد|عيد الميلاد|noun|الأسرة||el kum.pleˈa.ɲos
+S|Mi familia es grande.|عائلتي كبيرة.|عيلتي كبيرة.
+S|Mi padre trabaja en El Cairo.|أبي يعمل في القاهرة.|أبويا بيشتغل في القاهرة.
+S|Tengo dos hermanos y una hermana.|عندي أخوان وأخت.|عندي أخين وأخت.
+S|Mi abuela vive con nosotros.|جدتي تعيش معنا.|تيتة عايشة معانا.
+S|¿Cuántos años tienes?|كم عمرك؟|عندك كام سنة؟
+S|Soy casado y tengo un hijo.|أنا متزوج وعندي ابن.|أنا متجوز وعندي ولد.
+S|Mi mejor amigo se llama Omar.|أفضل صديق لي اسمه عمر.|أعز صاحبي اسمه عمر.
+S|Mi vecino es muy amable.|جاري لطيف جدًا.|جاري طيب جدًا.
+
+U|a1_rutina|الروتين اليومي|La rutina diaria|تحكي يومك من الصبح للليل بأفعال صحيحة.
+W|levantarse|يستيقظ|يصحى|verb|الروتين||le.βanˈtaɾ.se
+W|me levanto|أستيقظ|بصحى|verb|الروتين||me leˈβan.to
+W|despertarse|يستفيق|يصحى من النوم|verb|الروتين||des.peɾˈtaɾ.se
+W|ducharse|يستحم|يستحمى|verb|الروتين||duˈtʃaɾ.se
+W|desayunar|يتناول الفطور|يفطر|verb|الروتين||de.sa.ʝuˈnaɾ
+W|el desayuno|الفطور|الفطار|noun|الروتين||el de.saˈʝu.no
+W|almorzar|يتغدى|يتغدى|verb|الروتين||al.moɾˈθaɾ
+W|la comida|الغداء|الغدا|noun|الروتين||la koˈmi.ða
+W|cenar|يتعشى|يتعشى|verb|الروتين||θeˈnaɾ
+W|la cena|العشاء|العشا|noun|الروتين||la ˈθe.na
+W|trabajar|يعمل|يشتغل|verb|الروتين||tɾa.βaˈxaɾ
+W|estudiar|يدرس|يذاكر|verb|الروتين||es.tuˈðjaɾ
+W|dormir|ينام|ينام|verb|الروتين||doɾˈmiɾ
+W|irme a la cama|أذهب للنوم|أروح أنام|verb|الروتين||ˈiɾ.me a la ˈka.ma
+W|temprano|مبكرًا|بدري|adv|الروتين||temˈpɾa.no
+W|tarde|متأخرًا|متأخر|adv|الروتين||ˈtaɾ.ðe
+W|siempre|دائمًا|دايمًا|adv|الروتين||ˈsjem.pɾe
+W|nunca|أبدًا|عمره ما / أبدًا|adv|الروتين||ˈnuŋ.ka
+W|a veces|أحيانًا|ساعات|adv|الروتين||a ˈβe.θes
+W|casi siempre|غالبًا|غالبًا|adv|الروتين||ˈka.si ˈsjem.pɾe
+W|todos los días|كل يوم|كل يوم|adv|الروتين||ˈto.ðos los ˈdi.as
+W|por la mañana|في الصباح|الصبح|phrase|الروتين||poɾ la maˈɲa.na
+W|por la tarde|بعد الظهر|بعد الضهر|phrase|الروتين||poɾ la ˈtaɾ.ðe
+W|por la noche|في الليل|بالليل|phrase|الروتين||poɾ la ˈno.tʃe
+W|la hora|الساعة|الساعة|noun|الروتين||la ˈo.ɾa
+W|el reloj|الساعة (الجهاز)|الساعة (الجهاز)|noun|الروتين||el reˈlox
+S|Me levanto a las siete de la mañana.|أستيقظ في السابعة صباحًا.|بصحى الساعة سبعة الصبح.
+S|Desayuno café con leche y pan.|أفطر قهوة بالحليب وخبزًا.|بفطر قهوة بلبن وعيش.
+S|Trabajo todos los días menos el viernes.|أعمل كل يوم ما عدا الجمعة.|بشتغل كل يوم ما عدا الجمعة.
+S|Por la noche estudio español.|في الليل أدرس الإسبانية.|بالليل بذاكر إسباني.
+S|Nunca me acuesto tarde.|لا أنام متأخرًا أبدًا.|عمري ما بنام متأخر.
+S|A veces ceno con mi familia.|أحيانًا أتعشى مع عائلتي.|ساعات بتعشى مع العيلة.
+
+U|a1_escuela|المدرسة والعمل|Escuela y trabajo|تتكلم عن دراستك وشغلك ومهامك.
+W|la escuela|المدرسة|المدرسة|noun|المدرسة والعمل||la esˈkwe.la
+W|la universidad|الجامعة|الجامعة|noun|المدرسة والعمل||la u.ni.βeɾ.siˈðað
+W|el profesor|المعلم|المدرس|noun|المدرسة والعمل|المؤنث: profesora|el pɾo.feˈsoɾ
+W|el estudiante|الطالب|الطالب|noun|المدرسة والعمل||el es.tuˈðjan.te
+W|la clase|الحصة|الحصة / الكلاس|noun|المدرسة والعمل||la ˈkla.se
+W|la tarea|الواجب|الواجب|noun|المدرسة والعمل||la ˈta.ɾe.a
+W|el examen|الامتحان|الامتحان|noun|المدرسة والعمل||el ekˈsa.men
+W|el libro|الكتاب|الكتاب|noun|المدرسة والعمل||el ˈli.βɾo
+W|el cuaderno|الكراسة|الكراسة|noun|المدرسة والعمل||el kwaˈðeɾ.no
+W|la oficina|المكتب|المكتب|noun|المدرسة والعمل||la o.fiˈθi.na
+W|el trabajo|العمل|الشغل|noun|المدرسة والعمل||el tɾaˈβa.xo
+W|el jefe|المدير|المدير / البيه|noun|المدرسة والعمل||el ˈxe.fe
+W|el compañero|الزميل|الزميل|noun|المدرسة والعمل||el kom.paˈɲe.ɾo
+W|la reunión|الاجتماع|الاجتماع / الميتنج|noun|المدرسة والعمل||la reuˈnjon
+W|el sueldo|الراتب|المرتب|noun|المدرسة والعمل||el ˈswel.ðo
+W|la empresa|الشركة|الشركة|noun|المدرسة والعمل||la emˈpɾe.sa
+W|aprender|يتعلم|يتعلم|verb|المدرسة والعمل||a.pɾenˈdeɾ
+W|enseñar|يُعلّم|يعلّم|verb|المدرسة والعمل||en.seˈɲaɾ
+W|preguntar|يسأل|يسأل|verb|المدرسة والعمل||pɾe.ɣunˈtaɾ
+W|responder|يجيب|يرد|verb|المدرسة والعمل||res.ponˈdeɾ
+W|escribir|يكتب|يكتب|verb|المدرسة والعمل||es.kɾiˈβiɾ
+W|leer|يقرأ|يقرا|verb|المدرسة والعمل||leˈeɾ
+W|escuchar|يستمع|يسمع|verb|المدرسة والعمل||es.kuˈtʃaɾ
+W|entender|يفهم|يفهم|verb|المدرسة والعمل||en.tenˈdeɾ
+W|empezar|يبدأ|يبدأ|verb|المدرسة والعمل||em.peˈθaɾ
+W|terminar|ينتهي / يُنهي|يخلص|verb|المدرسة والعمل||teɾ.miˈnaɾ
+S|Trabajo en una empresa grande.|أعمل في شركة كبيرة.|بشتغل في شركة كبيرة.
+S|Tengo una reunión con el jefe.|عندي اجتماع مع المدير.|عندي ميتنج مع المدير.
+S|Estudio español en la universidad.|أدرس الإسبانية في الجامعة.|بذاكر إسباني في الجامعة.
+S|No entiendo esta pregunta.|لا أفهم هذا السؤال.|مش فاهم السؤال ده.
+S|El examen empieza a las nueve.|الامتحان يبدأ في التاسعة.|الامتحان بيبدأ التسعة.
+S|Mi compañero me ayuda mucho.|زميلي يساعدني كثيرًا.|زميلي بيساعدني كتير.
+
+U|a1_comida|الأكل والشرب|Comida y bebida|تطلب أكل وشرب وتتكلم عن اللي بتحبه.
+W|el agua|الماء|الماية|noun|الأكل والشرب||el ˈa.ɣwa
+W|el pan|الخبز|العيش|noun|الأكل والشرب||el pan
+W|la carne|اللحم|اللحمة|noun|الأكل والشرب||la ˈkaɾ.ne
+W|el pollo|الدجاج|الفراخ|noun|الأكل والشرب||el ˈpo.ʝo
+W|el pescado|السمك|السمك|noun|الأكل والشرب||el pesˈka.ðo
+W|el arroz|الأرز|الرز|noun|الأكل والشرب||el aˈroθ
+W|la verdura|الخضار|الخضار|noun|الأكل والشرب||la beɾˈðu.ɾa
+W|la fruta|الفاكهة|الفاكهة|noun|الأكل والشرب||la ˈfɾu.ta
+W|la manzana|التفاحة|التفاحة|noun|الأكل والشرب||la manˈθa.na
+W|la naranja|البرتقالة|البرتقانة|noun|الأكل والشرب||la naˈɾaŋ.xa
+W|el tomate|الطماطم|الطماطم|noun|الأكل والشرب||el toˈma.te
+W|la cebolla|البصل|البصل|noun|الأكل والشرب||la θeˈβo.ʝa
+W|el queso|الجبن|الجبنة|noun|الأكل والشرب||el ˈke.so
+W|el huevo|البيضة|البيضة|noun|الأكل والشرب||el ˈwe.βo
+W|la leche|الحليب|اللبن|noun|الأكل والشرب||la ˈle.tʃe
+W|el azúcar|السكر|السكر|noun|الأكل والشرب||el aˈθu.kaɾ
+W|la sal|الملح|الملح|noun|الأكل والشرب||la sal
+W|el aceite|الزيت|الزيت|noun|الأكل والشرب||el aˈθej.te
+W|dulce|حلو|حلو|adj|الأكل والشرب||ˈdul.θe
+W|salado|مالح|مالح|adj|الأكل والشرب||saˈla.ðo
+W|picante|حار|حرّاق|adj|الأكل والشرب||piˈkan.te
+W|caliente|ساخن|سخن|adj|الأكل والشرب||kaˈljen.te
+W|frío|بارد|بارد|adj|الأكل والشرب||ˈfɾi.o
+W|rico|لذيذ|لذيذ|adj|الأكل والشرب||ˈri.ko
+W|comer|يأكل|ياكل|verb|الأكل والشرب||koˈmeɾ
+W|beber|يشرب|يشرب|verb|الأكل والشرب||beˈβeɾ
+W|probar|يتذوق / يجرب|يجرب|verb|الأكل والشرب||pɾoˈβaɾ
+W|la cuenta|الحساب|الحساب|noun|الأكل والشرب||la ˈkwen.ta
+W|el desayuno ligero|فطور خفيف|فطار خفيف|phrase|الأكل والشرب||el de.saˈʝu.no ˈli.xe.ɾo
+S|No como carne, pero como pollo.|لا آكل لحمًا، لكن آكل دجاجًا.|مش باكل لحمة، بس باكل فراخ.
+S|El té está muy caliente.|الشاي ساخن جدًا.|الشاي سخن أوي.
+S|Quiero una ensalada de tomate y cebolla.|أريد سلطة طماطم وبصل.|عايز سلطة طماطم وبصل.
+S|La comida está muy rica.|الطعام لذيذ جدًا.|الأكل لذيذ أوي.
+S|¿Puedo pagar la cuenta, por favor?|هل يمكنني دفع الحساب، من فضلك؟|أقدر أدفع الحساب لو سمحت؟
+S|Bebo agua fría todos los días.|أشرب ماءً باردًا كل يوم.|بشرب مية باردة كل يوم.
+
+U|a1_casa|البيت والأثاث|La casa|توصف بيتك وغرفك وأثاثك.
+W|la casa|البيت|البيت|noun|البيت||la ˈka.sa
+W|el piso|الشقة|الشقة|noun|البيت||el ˈpi.so
+W|la habitación|الغرفة|الأوضة|noun|البيت||la a.βi.taˈθjon
+W|el salón|غرفة المعيشة|الصالة|noun|البيت||el saˈlon
+W|la cocina|المطبخ|المطبخ|noun|البيت||la koˈθi.na
+W|el baño|الحمام|الحمام|noun|البيت||el ˈba.ɲo
+W|la cama|السرير|السرير|noun|البيت||la ˈka.ma
+W|la mesa|الطاولة|الترابيزة|noun|البيت||la ˈme.sa
+W|la silla|الكرسي|الكرسي|noun|البيت||la ˈsi.ʝa
+W|el sofá|الأريكة|الكنبة|noun|البيت||el soˈfa
+W|la puerta|الباب|الباب|noun|البيت||la ˈpweɾ.ta
+W|la ventana|النافذة|الشباك|noun|البيت||la benˈta.na
+W|la llave|المفتاح|المفتاح|noun|البيت||la ˈʝa.βe
+W|la luz|النور / الكهرباء|النور|noun|البيت||la luθ
+W|el espejo|المرآة|المراية|noun|البيت||el esˈpe.xo
+W|la nevera|الثلاجة|التلاجة|noun|البيت||la neˈβe.ɾa
+W|la lavadora|الغسالة|الغسالة|noun|البيت||la la.βaˈðo.ɾa
+W|el jardín|الحديقة|الجنينة|noun|البيت||el xaɾˈðin
+W|la escalera|السلم|السلم|noun|البيت||la es.kaˈle.ɾa
+W|el ascensor|المصعد|الأسانسير|noun|البيت||el as.θenˈsoɾ
+W|limpio|نظيف|نضيف|adj|البيت||ˈlim.pjo
+W|sucio|قذر|وسخ|adj|البيت||ˈsu.θjo
+W|grande|كبير|كبير|adj|البيت||ˈɡɾan.de
+W|pequeño|صغير|صغير|adj|البيت||peˈke.ɲo
+W|alquilar|يستأجر|يأجر|verb|البيت||al.kiˈlaɾ
+W|el alquiler|الإيجار|الإيجار|noun|البيت||el alˈki.leɾ
+S|Mi piso es pequeño pero está limpio.|شقتي صغيرة لكن نظيفة.|شقتي صغيرة بس نضيفة.
+S|La cocina está al lado del salón.|المطبخ بجانب غرفة المعيشة.|المطبخ جنب الصالة.
+S|No encuentro la llave de la puerta.|لا أجد مفتاح الباب.|مش لاقي مفتاح الباب.
+S|El ascensor no funciona hoy.|المصعد لا يعمل اليوم.|الأسانسير مش شغال النهاردة.
+S|Pagamos el alquiler el primer día del mes.|ندفع الإيجار في أول الشهر.|بندفع الإيجار أول الشهر.
+S|Hay una ventana grande en la habitación.|في الغرفة نافذة كبيرة.|في الأوضة شباك كبير.
+
+U|a1_ropa|الملابس والألوان|Ropa y colores|تشتري هدوم وتوصف الألوان والمقاسات.
+W|la ropa|الملابس|الهدوم|noun|الملابس والألوان||la ˈro.pa
+W|la camisa|القميص|القميص|noun|الملابس والألوان||la kaˈmi.sa
+W|la camiseta|التي شيرت|التيشيرت|noun|الملابس والألوان||la ka.miˈse.ta
+W|el pantalón|البنطلون|البنطلون|noun|الملابس والألوان||el pan.taˈlon
+W|los zapatos|الحذاء|الجزم|noun|الملابس والألوان||los θaˈpa.tos
+W|el vestido|الفستان|الفستان|noun|الملابس والألوان||el besˈti.ðo
+W|la chaqueta|الجاكيت|الجاكيت|noun|الملابس والألوان||la tʃaˈke.ta
+W|la falda|الجيبة|الجيبة|noun|الملابس والألوان||la ˈfal.da
+W|el sombrero|القبعة|الطاقية|noun|الملابس والألوان||el somˈbɾe.ɾo
+W|los calcetines|الجوارب|الشرابات|noun|الملابس والألوان||los kal.θeˈti.nes
+W|la talla|المقاس|المقاس|noun|الملابس والألوان||la ˈta.ʝa
+W|el probador|غرفة القياس|غرفة القياس|noun|الملابس والألوان||el pɾo.βaˈðoɾ
+W|rojo|أحمر|أحمر|adj|الملابس والألوان||ˈro.xo
+W|azul|أزرق|أزرق|adj|الملابس والألوان||aˈθul
+W|verde|أخضر|أخضر|adj|الملابس والألوان||ˈbeɾ.ðe
+W|amarillo|أصفر|أصفر|adj|الملابس والألوان||a.maˈɾi.ʝo
+W|negro|أسود|أسود|adj|الملابس والألوان||ˈne.ɣɾo
+W|blanco|أبيض|أبيض|adj|الملابس والألوان||ˈblaŋ.ko
+W|gris|رمادي|رمادي|adj|الملابس والألوان||ɡɾis
+W|marrón|بني|بني|adj|الملابس والألوان||maˈron
+W|probarse|يقيس (ملابس)|يقيس|verb|الملابس والألوان||pɾoˈβaɾ.se
+W|llevar|يرتدي / يحمل|يلبس / يشيل|verb|الملابس والألوان||ʝeˈβaɾ
+W|comprar|يشتري|يشتري|verb|الملابس والألوان||komˈpɾaɾ
+W|vender|يبيع|يبيع|verb|الملابس والألوان||benˈdeɾ
+W|la tienda de ropa|محل ملابس|محل هدوم|phrase|الملابس والألوان||la ˈtjen.da de ˈro.pa
+W|caro|غالي|غالي|adj|الملابس والألوان||ˈka.ɾo
+W|barato|رخيص|رخيص|adj|الملابس والألوان||baˈɾa.to
+W|de moda|على الموضة|موضة|phrase|الملابس والألوان||de ˈmo.ða
+S|Quiero probarme esta camisa azul.|أريد قياس هذا القميص الأزرق.|عايز أقيس القميص الأزرق ده.
+S|¿Tiene una talla más grande?|هل عندك مقاس أكبر؟|عندك مقاس أكبر؟
+S|Esta chaqueta es muy cara.|هذا الجاكيت غالي جدًا.|الجاكيت ده غالي أوي.
+S|Llevo zapatos negros al trabajo.|أرتدي حذاءً أسود في العمل.|بلبس جزم أسود في الشغل.
+S|El vestido rojo es de moda.|الفستان الأحمر على الموضة.|الفستان الأحمر موضة.
+S|Prefiero colores claros en verano.|أفضل الألوان الفاتحة في الصيف.|بفضّل الألوان الفاتحة في الصيف.
+
+U|a1_clima|الطقس والفصول|El tiempo y las estaciones|تتكلم عن الجو والفصول والأشهر.
+W|el tiempo|الطقس|الجو|noun|الطقس||el ˈtjem.po
+W|el sol|الشمس|الشمس|noun|الطقس||el sol
+W|la lluvia|المطر|المطرة|noun|الطقس||la ˈʝu.βja
+W|el viento|الريح|الهوا|noun|الطقس||el ˈbjen.to
+W|la nieve|الثلج|التلج|noun|الطقس||la ˈnje.βe
+W|la nube|السحابة|السحابة|noun|الطقس||la ˈnu.βe
+W|el calor|الحرارة|الحر|noun|الطقس||el kaˈloɾ
+W|el frío|البرد|البرد|noun|الطقس||el ˈfɾi.o
+W|la primavera|الربيع|الربيع|noun|الطقس||la pɾi.maˈβe.ɾa
+W|el verano|الصيف|الصيف|noun|الطقس||el beˈɾa.no
+W|el otoño|الخريف|الخريف|noun|الطقس||el oˈto.ɲo
+W|el invierno|الشتاء|الشتا|noun|الطقس||el imˈbjeɾ.no
+W|hace sol|الجو مشمس|الشمس طالعة|phrase|الطقس||ˈa.θe sol
+W|hace frío|الجو بارد|الجو برد|phrase|الطقس||ˈa.θe ˈfɾi.o
+W|hace calor|الجو حار|الجو حر|phrase|الطقس||ˈa.θe kaˈloɾ
+W|llueve|تمطر|بتمطر|verb|الطقس||ˈʝwe.βe
+W|está nublado|الجو غائم|الجو مغيم|phrase|الطقس||esˈta nuˈbla.ðo
+W|el grado|الدرجة|الدرجة|noun|الطقس||el ˈɡɾa.ðo
+W|la temperatura|درجة الحرارة|درجة الحرارة|noun|الطقس||la tem.pe.ɾaˈtu.ɾa
+S|En verano hace mucho calor en El Cairo.|في الصيف الجو حار جدًا في القاهرة.|في الصيف الجو حر أوي في القاهرة.
+S|Hoy llueve y hace viento.|اليوم تمطر والريح قوية.|النهاردة بتمطر والهوا شديد.
+S|En invierno hace frío por la noche.|في الشتاء الجو بارد في الليل.|في الشتا الجو برد بالليل.
+S|En primavera el tiempo es agradable.|في الربيع الطقس لطيف.|في الربيع الجو حلو.
+S|La temperatura es de treinta grados.|درجة الحرارة ثلاثون درجة.|درجة الحرارة تلاتين.
+S|¿Qué tiempo hace hoy?|كيف الطقس اليوم؟|الجو النهاردة إيه؟
+
+U|a1_hobbies|الهوايات والوقت الحر|Aficiones|تتكلم عن هواياتك وخططك.
+W|el deporte|الرياضة|الرياضة|noun|الهوايات||el deˈpoɾ.te
+W|el fútbol|كرة القدم|الكورة|noun|الهوايات||el ˈfut.bol
+W|la música|الموسيقى|المزيكا|noun|الهوايات||la ˈmu.si.ka
+W|el cine|السينما|السينما|noun|الهوايات||el ˈθi.ne
+W|la playa|الشاطئ|البحر|noun|الهوايات||la ˈpla.ʝa
+W|el viaje|الرحلة|السفرية|noun|الهوايات||el ˈbja.xe
+W|las vacaciones|العطلة|الأجازة|noun|الهوايات||las ba.kaˈθjo.nes
+W|el parque|الحديقة العامة|الجنينة العامة|noun|الهوايات||el ˈpaɾ.ke
+W|el gimnasio|صالة الرياضة|الجيم|noun|الهوايات||el ximˈna.sjo
+W|cocinar|يطبخ|يطبخ|verb|الهوايات||ko.θiˈnaɾ
+W|bailar|يرقص|يرقص|verb|الهوايات||bajˈlaɾ
+W|cantar|يغني|يغني|verb|الهوايات||kanˈtaɾ
+W|correr|يجري|يجري|verb|الهوايات||koˈreɾ
+W|nadar|يسبح|يعوم|verb|الهوايات||naˈðaɾ
+W|jugar|يلعب|يلعب|verb|الهوايات||xuˈɣaɾ
+W|ver|يشاهد|يتفرج|verb|الهوايات||beɾ
+W|salir|يخرج|يخرج|verb|الهوايات||saˈliɾ
+W|quedar con amigos|يتقابل مع الأصدقاء|يتقابل مع أصحابه|phrase|الهوايات||keˈðaɾ kon aˈmi.ɣos
+W|el fin de semana|نهاية الأسبوع|الويك إند|phrase|الهوايات||el fin de seˈma.na
+W|gustar|يعجب|يعجب|verb|الهوايات||ɡusˈtaɾ
+W|me gusta|أنا أحب|أنا بحب|phrase|الهوايات||me ˈɡus.ta
+W|no me gusta|أنا لا أحب|أنا مش بحب|phrase|الهوايات||no me ˈɡus.ta
+W|preferir|يفضل|يفضّل|verb|الهوايات||pɾe.feˈɾiɾ
+W|el pasatiempo|الهواية|الهوبي|noun|الهوايات||el pa.saˈtjem.po
+W|descansar|يرتاح|يرتاح|verb|الهوايات||des.kanˈsaɾ
+S|Me gusta el fútbol, pero no me gusta correr.|أحب كرة القدم، لكن لا أحب الجري.|بحب الكورة، بس مش بحب أجري.
+S|El fin de semana voy a la playa con amigos.|نهاية الأسبوع أذهب للشاطئ مع الأصدقاء.|الويك إند بروح البحر مع أصحابي.
+S|Prefiero quedarme en casa los viernes.|أفضل البقاء في البيت أيام الجمعة.|بفضّل أقعد في البيت يوم الجمعة.
+S|En vacaciones viajo con mi familia.|في العطلة أسافر مع عائلتي.|في الأجازة بسافر مع العيلة.
+S|¿Qué te gusta hacer en tu tiempo libre?|ماذا تحب أن تفعل في وقت فراغك؟|بتحب تعمل إيه في وقت فراغك؟
+S|Me gusta cocinar y escuchar música.|أحب الطبخ والاستماع للموسيقى.|بحب أطبخ وأسمع مزيكا.
+
+U|a1_sentimientos|المشاعر والصفات|Sentimientos y carácter|توصف حالتك وشخصيتك.
+W|contento|سعيد / راضٍ|مبسوط|adj|المشاعر|المؤنث: contenta|konˈten.to
+W|triste|حزين|زعلان|adj|المشاعر||ˈtɾis.te
+W|cansado|متعب|تعبان|adj|المشاعر||kanˈsa.ðo
+W|enfermo|مريض|عيان|adj|المشاعر||enˈfeɾ.mo
+W|nervioso|متوتر|متوتر|adj|المشاعر||neɾˈβjo.so
+W|enfadado|غاضب|زعلان / متضايق|adj|المشاعر||en.faˈða.ðo
+W|tranquilo|هادئ|هادي|adj|المشاعر||tɾaŋˈki.lo
+W|sorprendido|متفاجئ|مستغرب|adj|المشاعر||soɾ.pɾenˈdi.ðo
+W|orgulloso|فخور|فخور|adj|المشاعر||oɾ.ɣuˈʝo.so
+W|aburrido|ممل / يشعر بالملل|زهقان|adj|المشاعر||a.βuˈri.ðo
+W|simpático|لطيف / ودود|دمه خفيف|adj|المشاعر||simˈpa.ti.ko
+W|serio|جاد|جاد|adj|المشاعر||ˈse.ɾjo
+W|tímido|خجول|خجول|adj|المشاعر||ˈti.mi.ðo
+W|inteligente|ذكي|ذكي|adj|المشاعر||in.te.liˈxen.te
+W|trabajador|مجتهد|مجتهد|adj|المشاعر||tɾa.βa.xaˈðoɾ
+W|perezoso|كسول|كسول|adj|المشاعر||pe.ɾeˈθo.so
+W|amable|طيب / لطيف|طيب|adj|المشاعر||aˈma.βle
+W|gracioso|مضحك|مضحك|adj|المشاعر||ɡɾaˈθjo.so
+W|sentirse|يشعر|يحس|verb|المشاعر||senˈtiɾ.se
+W|me siento|أنا أشعر|أنا حاسس|phrase|المشاعر||me ˈsjen.to
+W|estar cansado de|يشعر بالتعب من|زهقان من|phrase|المشاعر||esˈtaɾ kanˈsa.ðo de
+W|tener miedo|يخاف|خايف|phrase|المشاعر||teˈneɾ ˈmje.ðo
+W|tener hambre|يشعر بالجوع|جعان|phrase|المشاعر||teˈneɾ ˈam.bɾe
+W|tener sed|يشعر بالعطش|عطشان|phrase|المشاعر||teˈneɾ seð
+W|tener sueño|يشعر بالنوم|نعسان|phrase|المشاعر||teˈneɾ ˈswe.ɲo
+S|Hoy estoy cansado porque trabajo mucho.|أنا متعب اليوم لأني أعمل كثيرًا.|أنا تعبان النهاردة عشان بشتغل كتير.
+S|Mi hermana es simpática y muy inteligente.|أختي لطيفة وذكية جدًا.|أختي دمها خفيف وذكية أوي.
+S|Tengo hambre y quiero comer algo.|أنا جائع وأريد أن آكل شيئًا.|أنا جعان وعايز آكل حاجة.
+S|No tengo miedo de hablar español.|لا أخاف من التحدث بالإسبانية.|مش خايف أتكلم إسباني.
+S|¿Estás contento con tu trabajo?|هل أنت راضٍ عن عملك؟|إنت مبسوط في شغلك؟
+S|Me siento un poco nervioso antes del examen.|أشعر بقليل من التوتر قبل الامتحان.|بحس بتوتر شوية قبل الامتحان.
+
+U|a1_verbos|أفعال ومصطلحات أساسية|Verbos esenciales|أهم الأفعال في الحاضر مع تعبيرات الوقت.
+W|ir|يذهب|يروح|verb|الأفعال||iɾ
+W|voy|أنا أذهب|أنا بروح|verb|الأفعال||boj
+W|vas|أنت تذهب|إنت بتروح|verb|الأفعال||bas
+W|va|هو يذهب|هو بيروح|verb|الأفعال||ba
+W|hacer|يفعل / يعمل|يعمل|verb|الأفعال||aˈθeɾ
+W|hago|أنا أفعل|أنا بعمل|verb|الأفعال||ˈa.ɣo
+W|hace|هو يفعل|هو بيعمل|verb|الأفعال||ˈa.θe
+W|poder|يستطيع|يقدر|verb|الأفعال||poˈðeɾ
+W|puedo|أنا أستطيع|أنا أقدر|verb|الأفعال||ˈpwe.ðo
+W|deber|يجب|لازم|verb|الأفعال||deˈβeɾ
+W|tengo que|يجب عليّ|لازم عليّا|phrase|الأفعال||ˈteŋ.ɡo ke
+W|querer|يريد|عايز|verb|الأفعال||keˈɾeɾ
+W|quiere|هو يريد|هو عايز|verb|الأفعال||ˈkje.ɾe
+W|venir|يأتي|يجي|verb|الأفعال||beˈniɾ
+W|vienes|أنت تأتي|إنت بتيجي|verb|الأفعال||ˈbje.nes
+W|dar|يعطي|يدي|verb|الأفعال||daɾ
+W|decir|يقول|يقول|verb|الأفعال||deˈθiɾ
+W|digo|أنا أقول|أنا بقول|verb|الأفعال||ˈdi.ɣo
+W|saber|يعرف|يعرف|verb|الأفعال||saˈβeɾ
+W|sé|أنا أعرف|أنا عارف|verb|الأفعال||se
+W|conocer|يتعرف على|يتعرف على|verb|الأفعال||ko.noˈθeɾ
+W|vivir|يعيش|يعيش|verb|الأفعال||biˈβiɾ
+W|vivo|أنا أعيش|أنا عايش|verb|الأفعال||ˈbi.βo
+W|ayudar|يساعد|يساعد|verb|الأفعال||a.ʝuˈðaɾ
+W|esperar|ينتظر|يستنى|verb|الأفعال||es.peˈɾaɾ
+W|llamar|ينادي / يتصل|يتصل|verb|الأفعال||ʝaˈmaɾ
+W|abrir|يفتح|يفتح|verb|الأفعال||aˈβɾiɾ
+W|cerrar|يغلق|يقفل|verb|الأفعال||θeˈraɾ
+W|buscar|يبحث|يدوّر|verb|الأفعال||busˈkaɾ
+W|encontrar|يجد|يلاقي|verb|الأفعال||eŋ.konˈtɾaɾ
+W|pensar|يفكر|يفكر|verb|الأفعال||penˈsaɾ
+S|Voy al trabajo en metro.|أذهب للعمل بالمترو.|بروح الشغل بالمترو.
+S|No puedo venir mañana.|لا أستطيع القدوم غدًا.|مش هقدر أجي بكرة.
+S|Tengo que estudiar esta noche.|يجب أن أدرس هذه الليلة.|لازم أذاكر الليلة.
+S|¿Sabes dónde está la estación?|هل تعرف أين المحطة؟|تعرف المحطة فين؟
+S|Te llamo por la tarde.|سأتصل بك بعد الظهر.|هكلمك بعد الضهر.
+S|Busco un supermercado cerca.|أبحث عن سوبرماركت قريب.|بدوّر على سوبر ماركت قريب.
+S|Pienso viajar en agosto.|أفكر في السفر في أغسطس.|بفكر أسافر في أغسطس.
+
+U|a1_cuerpo|الجسم والصحة الأساسية|El cuerpo|أعضاء الجسم وما يقوله الطبيب في المواقف البسيطة.
+W|el cuerpo|الجسم|الجسم|noun|الجسم
+W|la cabeza|الرأس|الدماغ|noun|الجسم
+W|el pelo|الشعر|الشعر|noun|الجسم
+W|el ojo|العين|العين|noun|الجسم
+W|la nariz|الأنف|المنخير|noun|الجسم
+W|la boca|الفم|البوز|noun|الجسم
+W|la oreja|الأذن|الودن|noun|الجسم
+W|el diente|السن|السنة|noun|الجسم
+W|la lengua|اللسان|اللسان|noun|الجسم
+W|el cuello|الرقبة|الرقبة|noun|الجسم
+W|el brazo|الذراع|الدراع|noun|الجسم
+W|la mano|اليد|الإيد|noun|الجسم
+W|el dedo|الإصبع|الصباع|noun|الجسم
+W|la pierna|الساق|الرجل|noun|الجسم
+W|el pie|القدم|الرجل|noun|الجسم
+W|la rodilla|الركبة|الركبة|noun|الجسم
+W|el corazón|القلب|القلب|noun|الجسم
+W|la piel|الجلد|الجلد|noun|الجسم
+W|la sangre|الدم|الدم|noun|الجسم
+W|el hueso|العظم|العضم|noun|الجسم
+W|el pecho|الصدر|الصدر|noun|الجسم
+W|la cara|الوجه|الوش|noun|الجسم
+W|el labio|الشفة|الشفايف|noun|الجسم
+W|el hombro|الكتف|الكتف|noun|الجسم
+W|el estómago|المعدة|المعدة|noun|الجسم
+W|sano|سليم / صحيح|سليم|adj|الجسم
+W|el síntoma|العَرَض|الأعراض|noun|الجسم
+W|la medicina|الدواء|الدوا|noun|الجسم
+W|la herida|الجرح|الجرح|noun|الجسم
+W|la salud mental|الصحة النفسية|الصحة النفسية|phrase|الجسم
+S|Me lavo las manos antes de comer.|أغسل يدي قبل الأكل.|بغسل إيديا قبل الأكل.
+S|Me duelen los pies después de caminar mucho.|قدماي تؤلمانني بعد المشي الكثير.|رجليا بتوجعني بعد المشي الكتير.
+S|Tengo el pelo largo y los ojos negros.|شعري طويل وعيناي سوداوان.|شعري طويل وعيني سودا.
+S|El médico dice que el corazón está bien.|يقول الطبيب إن القلب بخير.|الدكتور بيقول القلب تمام.
+S|Esta medicina se toma después de la comida.|يُؤخذ هذا الدواء بعد الأكل.|الدوا ده بيتاخد بعد الأكل.
+
+U|a1_casa_objetos|أدوات البيت|Objetos de casa|أسماء الأشياء اللي حوالينا في البيت.
+W|la lámpara|المصباح|اللمبة|noun|البيت
+W|el vaso|الكوب|الكباية|noun|البيت
+W|el plato|الطبق|الطبق|noun|البيت
+W|la taza|الفنجان|الفنجان|noun|البيت
+W|el tenedor|الشوكة|الشوكة|noun|البيت
+W|la cuchara|الملعقة|المعلقة|noun|البيت
+W|el cuchillo|السكين|السكينة|noun|البيت
+W|el horno|الفرن|الفرن|noun|البيت
+W|la televisión|التلفزيون|التلفزيون|noun|البيت
+W|la alfombra|السجادة|السجادة|noun|البيت
+W|la cortina|الستارة|الستارة|noun|البيت
+W|el armario|الدولاب|الدولاب|noun|البيت
+W|el cajón|الدرج|الدرج|noun|البيت
+W|el tejado|السطح|السطح|noun|البيت
+W|la planta|النبات|النبات|noun|البيت
+W|el cuadro|اللوحة|اللوحة|noun|البيت
+W|la basura|القمامة|الزبالة|noun|البيت
+W|la escoba|المكنسة|المقشة|noun|البيت
+W|el jabón|الصابون|الصابون|noun|البيت
+W|la toalla|المنشفة|الفوطة|noun|البيت
+W|ordenado|مرتب|مرتب|adj|البيت
+W|desordenado|غير مرتب|مكركب|adj|البيت
+W|amplio|واسع|واسع|adj|البيت
+W|estrecho|ضيق|ضيق|adj|البيت
+W|cómodo|مريح|مريح|adj|البيت
+W|el agua caliente|الماء الساخن|المية السخنة|phrase|البيت
+W|el mueble|الأثاث|الأثاث|noun|البيت
+S|La mesa está en el salón y las sillas alrededor.|الطاولة في الصالة والكراسي حولها.|الترابيزة في الصالة والكراسي حواليها.
+S|Necesito una toalla limpia para el baño.|أحتاج منشفة نظيفة للحمام.|محتاج فوطة نضيفة للحمام.
+S|La nevera está llena y la cocina está limpia.|الثلاجة مليانة والمطبخ نظيف.|التلاجة مليانة والمطبخ نضيف.
+S|Abre la ventana, por favor; hace calor aquí.|افتح الشباك من فضلك، الجو حر هنا.|افتح الشباك لو سمحت، الجو حر هنا.
+S|El armario es grande, pero la habitación es estrecha.|الدولاب كبير، لكن الغرفة ضيقة.|الدولاب كبير، بس الأوضة ضيقة.
+
+U|a1_comida_extra|طعام إضافي|Más comida|أطعمة ومشروبات شائعة.
+W|la pasta|المعكرونة|المكرونة|noun|الطعام
+W|la sopa|الشوربة|الشوربة|noun|الطعام
+W|la ensalada|السلطة|السلطة|noun|الطعام
+W|el plátano|الموز|الموز|noun|الطعام
+W|la uva|العنب|العنب|noun|الطعام
+W|la sandía|البطيخ|البطيخ|noun|الطعام
+W|la fresa|الفراولة|الفراولة|noun|الطعام
+W|el limón|الليمون|الليمون|noun|الطعام
+W|la patata|البطاطس|البطاطس|noun|الطعام
+W|el ajo|الثوم|التوم|noun|الطعام
+W|la zanahoria|الجزر|الجزر|noun|الطعام
+W|el pepino|الخيار|الخيار|noun|الطعام
+W|la miel|العسل|العسل|noun|الطعام
+W|el té|الشاي|الشاي|noun|الطعام
+W|el café|القهوة|القهوة|noun|الطعام
+W|el zumo|العصير|العصير|noun|الطعام
+W|el helado|المثلجات|الآيس كريم|noun|الطعام
+W|el pastel|الكيك|التورتة|noun|الطعام
+W|el chocolate|الشوكولاتة|الشوكولاتة|noun|الطعام
+W|el bocadillo|الساندويتش|الساندويتش|noun|الطعام
+W|fresco|طازج|طازج|adj|الطعام
+S|Como pan con queso y bebo té por la mañana.|آكل خبزًا بالجبن وأشرب الشاي صباحًا.|بأكل عيش بجبنة وبشرب شاي الصبح.
+S|La ensalada lleva tomate, pepino y cebolla.|السلطة فيها طماطم وخيار وبصل.|السلطة فيها طماطم وخيار وبصل.
+S|El zumo de naranja está frío y muy rico.|عصير البرتقال بارد ولذيذ جدًا.|عصير البرتقان ساقع ولذيذ أوي.
+S|No me gusta la comida picante, prefiero la sopa.|لا أحب الطعام الحار، أفضل الشوربة.|مش بحب الأكل الحرّاق، بفضّل الشوربة.
+S|Compramos fruta fresca: manzanas, uvas y fresas.|نشتري فاكهة طازجة: تفاحًا وعنبًا وفراولة.|بنشتري فاكهة طازجة: تفاح وعنب وفراولة.
+
+U|a1_ropa_extra|ملابس وإكسسوارات|Ropa y accesorios|تفاصيل الملابس والألوان والمقاسات.
+W|el abrigo|المعطف|المعطف|noun|الملابس
+W|el jersey|البلوفر|البلوفر|noun|الملابس
+W|las sandalias|الصندل|الشبشب|noun|الملابس
+W|la bufanda|الوشاح|الكوفية|noun|الملابس
+W|los guantes|القفازات|الجوانتي|noun|الملابس
+W|el cinturón|الحزام|الحزام|noun|الملابس
+W|la corbata|ربطة العنق|الكرافة|noun|الملابس
+W|el bolso|حقيبة اليد|الشنطة|noun|الملابس
+W|la cartera|المحفظة|المحفظة|noun|الملابس
+W|las gafas|النظارة|النضارة|noun|الملابس
+W|el anillo|الخاتم|الخاتم|noun|الملابس
+W|el collar|العقد|العقد|noun|الملابس
+W|los pendientes|الأقراط|الحلق|noun|الملابس
+W|el algodón|القطن|القطن|noun|الملابس
+W|la lana|الصوف|الصوف|noun|الملابس
+W|el cuero|الجلد|الجلد|noun|الملابس
+W|la moda|الموضة|الموضة|noun|الملابس
+W|nuevo|جديد|جديد|adj|الملابس
+W|viejo|قديم|قديم|adj|الملابس
+W|elegante|أنيق|شيك|adj|الملابس
+W|cómodo para llevar|مريح للّبس|مريح في اللبس|phrase|الملابس
+W|de color azul|باللون الأزرق|بلون أزرق|phrase|الملابس
+S|Llevo una camisa blanca y un pantalón negro.|أرتدي قميصًا أبيض وبنطلونًا أسود.|لابس قميص أبيض وبنطلون أسود.
+S|Este abrigo es muy elegante, pero es caro.|هذا المعطف أنيق جدًا، لكنه غالٍ.|المعطف ده شيك أوي، بس غالي.
+S|Necesito zapatos cómodos para caminar.|أحتاج حذاءً مريحًا للمشي.|محتاج جزمة مريحة للمشي.
+S|Me gustan las gafas de sol en verano.|أحب النظارة الشمسية في الصيف.|بحب النضارة الشمس في الصيف.
+S|El jersey de lana es caliente y suave.|البلوفر الصوفي دافئ وناعم.|البلوفر الصوف دافي وناعم.
+
+U|a1_animales|الحيوانات|Los animales|حيوانات البيت والمزرعة والحديقة.
+W|el perro|الكلب|الكلب|noun|الحيوانات
+W|el gato|القط|القط|noun|الحيوانات
+W|el pájaro|العصفور|العصفور|noun|الحيوانات
+W|el pez|السمكة|السمكة|noun|الحيوانات
+W|el caballo|الحصان|الحصان|noun|الحيوانات
+W|la vaca|البقرة|البقرة|noun|الحيوانات
+W|la oveja|الخروف|الخروف|noun|الحيوانات
+W|la cabra|العنزة|العنزة|noun|الحيوانات
+W|el pato|البطة|البطة|noun|الحيوانات
+W|el león|الأسد|الأسد|noun|الحيوانات
+W|el elefante|الفيل|الفيل|noun|الحيوانات
+W|el ratón|الفأر|الفار|noun|الحيوانات
+W|la serpiente|الأفعى|التعبان|noun|الحيوانات
+W|la abeja|النحلة|النحلة|noun|الحيوانات
+W|la mariposa|الفراشة|الفراشة|noun|الحيوانات
+W|el insecto|الحشرة|الحشرة|noun|الحيوانات
+W|el bosque|الغابة|الغابة|noun|الحيوانات
+W|la granja|المزرعة|المزرعة|noun|الحيوانات
+W|el zoo|حديقة الحيوان|حديقة الحيوان|noun|الحيوانات
+S|Mi gato duerme todo el día en el sofá.|قطي ينام طول اليوم على الكنبة.|قطي بينام طول اليوم على الكنبة.
+S|Los pájaros cantan por la mañana en el jardín.|العصافير تغني صباحًا في الحديقة.|العصافير بتغني الصبح في الجنينة.
+S|En la granja hay vacas, ovejas y patos.|في المزرعة بقر وأغنام وبط.|في المزرعة بقر وخراف وبط.
+S|El león es fuerte, pero vive lejos de la ciudad.|الأسد قوي، لكنه يعيش بعيدًا عن المدينة.|الأسد قوي، بس عايش بعيد عن المدينة.
+S|No me gustan los insectos en la cocina.|لا أحب الحشرات في المطبخ.|مش بحب الحشرات في المطبخ.
+
+U|a1_tiempo_extra|كلمات الوقت|Palabras de tiempo|تعبيرات الوقت والتكرار.
+W|rara vez|نادرًا|نادراً|adv|الوقت
+W|todavía|ما زال|لسه|adv|الوقت
+W|ya|بالفعل|خلاص|adv|الوقت
+W|pronto|قريبًا|قريب|adv|الوقت
+W|enseguida|فورًا|على طول|adv|الوقت
+W|de vez en cuando|من وقت لآخر|كل فترة|phrase|الوقت
+W|una vez por semana|مرة في الأسبوع|مرة في الأسبوع|phrase|الوقت
+W|el momento|اللحظة|اللحظة|noun|الوقت
+W|la fecha|التاريخ|التاريخ|noun|الوقت
+W|el minuto|الدقيقة|الدقيقة|noun|الوقت
+W|el siglo|القرن|القرن|noun|الوقت
+W|la temporada|الموسم|الموسم|noun|الوقت
+S|Casi siempre desayuno a las siete y media.|غالبًا أفطر في السابعة والنصف.|غالباً بفطر الساعة سبعة ونص.
+S|Todavía no he terminado la tarea de hoy.|لم أنهِ واجب اليوم بعد.|لسه ما خلصت واجب النهاردة.
+S|De vez en cuando cenamos fuera los viernes.|من وقت لآخر نتعشى خارجًا يوم الجمعة.|كل فترة بنتعشى بره يوم الجمعة.
+S|Llego temprano y vuelvo tarde del trabajo.|أصل مبكرًا وأعود متأخرًا من العمل.|بوصل بدري وبرجع متأخر من الشغل.
+S|Enseguida te llamo cuando salga de la reunión.|سأتصل بك فورًا عندما أخرج من الاجتماع.|هكلمك على طول أول ما أخرج من الاجتماع.

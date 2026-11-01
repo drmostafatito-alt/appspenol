@@ -45,7 +45,7 @@ final class RealLife {
             "Muchas gracias", "الموظف اشرح لك كل حاجة. اشكره."},
         {"الطبيب 🩺", "أشعر بالإعياء في العيادة: اشرح حالتك للطبيب.",
             "Buenas tardes", "دخلت العيادة وقت الضهر والموظف يحيّيك. رُدّ على التحية.",
-            "Me siento mareado/a", "الطبيب سألك: ¿Qué le pasa? قل إنك مريض/ة وحالة الدوخة معاك.",
+            "Me siento mareado", "الطبيب سألك: ¿Qué le pasa? قل إنك مريض/ة وحالة الدوخة معاك.",
             "Me duele la cabeza", "الطبيب سألك: ¿Dónde le duele? قل إن راسك بوجعك.",
             "Tengo fiebre", "الطبيب سألك: ¿Tiene algo más? قل إن عندك حمّى.",
             "¿Dónde está la farmacia más cercana?", "أوصاك الطبيب بتدوّر على دواء. اسأل عن أقرب صيدلية.",

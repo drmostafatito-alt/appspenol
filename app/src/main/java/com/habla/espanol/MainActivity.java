@@ -2,7 +2,6 @@ package com.habla.espanol;
 
 import android.Manifest;
 import android.app.Activity;
-import android.os.Build;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -10,12 +9,13 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -39,628 +39,3013 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
+/**
+ * Spanish 1000 — single-activity Arabic (Egyptian) course app.
+ *
+ * Screens: welcome, home, level map, unit/lesson path, lesson session, lesson
+ * result, daily review, flashcards, dictionary, word details, statistics,
+ * achievements, call-centre practice, real-life scenarios, grammar, settings.
+ *
+ * The curriculum itself lives in assets/content.json (see tools/build_content.py);
+ * grading, spaced repetition, XP rules and the mistake tutor are pure Java classes
+ * that are unit-tested on the JVM (tools/java_tests).
+ */
 public class MainActivity extends Activity implements TextToSpeech.OnInitListener {
-    private static final int INK=0xff263238, MUTED=0xff687a76, GREEN=0xff218746, DARK_GREEN=0xff176b39, BLUE=0xff386a80, SKY=0xffe8f3f4, PALE=0xffe8f8eb, LINE=0xffd9e6db, RED=0xffaa3644, RED_BG=0xffffefef, BG=0xfff7f9f5, GOLD=0xffffc857, CORAL=0xffff9558, LAVENDER=0xfff3f4e8;
-    private static final int MIC_PERMISSION=17, NOTIFY_PERMISSION=18, PER_LESSON=5, EXPORT_REQUEST=101, IMPORT_REQUEST=102;
-    private static final int INTRO=LearningLogic.INTRO, MEANING=LearningLogic.MEANING, LISTEN=LearningLogic.LISTEN, ORDER=LearningLogic.ORDER, TYPE=LearningLogic.TYPE, SPEAK=LearningLogic.SPEAK, REVERSE=LearningLogic.REVERSE, MISSING=LearningLogic.MISSING, MATCH=LearningLogic.MATCH, CONVERSE=LearningLogic.CONVERSE, TRANSFORM=LearningLogic.TRANSFORM;
-    private final ArrayList<Track> tracks=new ArrayList<>();
-    private final ArrayList<Exercise> queue=new ArrayList<>();
-    private final Set<String> mistakes=new HashSet<>(), skippedItems=new HashSet<>();
-    private final ArrayList<String> selectedWords=new ArrayList<>();
-    private final ArrayList<Button> selectedChips=new ArrayList<>();
-    private final ArrayList<Item> sessionItems=new ArrayList<>();
+    private static final int INK = 0xff263238, MUTED = 0xff687a76, GREEN = 0xff218746, DARK_GREEN = 0xff176b39,
+            BLUE = 0xff386a80, SKY = 0xffe8f3f4, PALE = 0xffe8f8eb, LINE = 0xffd9e6db, RED = 0xffaa3644,
+            RED_BG = 0xffffefef, BG = 0xfff7f9f5, GOLD = 0xffffc857, CORAL = 0xffff9558, LAVENDER = 0xfff3f4e8;
+    private static final int MIC_PERMISSION = 17, NOTIFY_PERMISSION = 18, EXPORT_REQUEST = 101, IMPORT_REQUEST = 102;
+    private static final int MAX_BACKUP_BYTES = 4 * 1024 * 1024;
+
+    private final ArrayList<Track> tracks = new ArrayList<>();
+    private final ArrayList<Session> queue = new ArrayList<>();
+    private final Set<String> mistakes = new HashSet<>(), skippedItems = new HashSet<>(), srsGraded = new HashSet<>();
+    private final LinkedHashMap<String, Boolean> firstOutcome = new LinkedHashMap<>();
+    private final ArrayList<String> selectedWords = new ArrayList<>();
+    private final ArrayList<Button> selectedChips = new ArrayList<>();
+    private final ArrayList<Item> sessionItems = new ArrayList<>();
+    private final Locale spanish = new Locale("es", "ES");
+
+    private Curriculum curriculum;
     private SharedPreferences prefs;
+    private PrefStore store;
     private Typeface cairoRegular, cairoBold, nunitoRegular, nunitoBold;
     private TextToSpeech tts;
+    /** Empty when the Spanish voice works; otherwise a clear Egyptian-Arabic reason shown in the UI. */
+    private String ttsProblem = "";
     private SpeechRecognizer recognizer;
-    private        LinearLayout root, body, answers, footer;
+    private LinearLayout root, body, answers, footer;
     private WordFlow bank, selectedBank;
     private MatchCards matchCards;
     private ScrollView scroll;
     private TextView feedback;
     private EditText input;
     private Button action;
-    private String selectedId=null, selectedWord=null, screen="home";
-    private int a0Track=-1;
-    private int trackIndex=0, lessonIndex=0, cursor=0, correct=0, attempted=0, firstCorrect=0, firstAttempted=0, speechSkipped=0, listeningSkipped=0, matchMoves=0;
-    private boolean dialogueMode=false;
-    private int dialogueTurn=0;
-    private Item dialogueItem;
-    private boolean ttsReady=false, answered=false, pendingSpeech=false, reviewMode=false;
-    private long lessonStarted;
-    private String pendingExport=null;
-    private static final int MAX_BACKUP_BYTES=4*1024*1024;
-    private final Locale spanish=new Locale("es","ES");
+    private String screen = "home";
+    private int trackIndex = 0, cursor = 0, correct = 0, attempted = 0, firstCorrect = 0, firstAttempted = 0,
+            speechSkipped = 0, listeningSkipped = 0, ttsFailures = 0;
+    private boolean ttsReady = false, answered = false, pendingSpeech = false, reviewMode = false;
+    private Integer selectedChoice = null;
+    private String selectedWord = null;
+    private long lessonStarted = 0;
+    /** Durable snapshot of the running lesson so a restart can resume it. */
+    private LessonSession savedSession;
+    private Lesson activeLesson;
+    private Curriculum.Dialogue activeDialogue;
+    private String pendingExport = null;
+    private int dicLimit = 120;
+    private String dicLevel = "", dicQuery = "";
+    private boolean dicFavorites = false;
+    private EditText dicSearch;
 
-    private static class Item {
-        String id, es, ar;
-        Item(String id,String es,String ar){this.id=id;this.es=es;this.ar=ar;}
-    }
-    private static class Lesson {
-        String title; ArrayList<Item> items=new ArrayList<>();
-        Lesson(String title){this.title=title;}
-    }
-    private static class Track {
-        String title; ArrayList<Lesson> lessons=new ArrayList<>(); ArrayList<Item> items=new ArrayList<>();
-        Track(String title){this.title=title;}
-    }
-    private static class Exercise {
-        Item item; int type; boolean retry; String prompt="";
-        Exercise(Item item,int type,boolean retry){this.item=item;this.type=type;this.retry=retry;}
+    // ---------- model ----------
+
+    private static final class Item {
+        String id = "", es = "", ar = "", egy = "", ipa = "", pos = "", topic = "", noteEgy = "", verification = "";
+        String exEs = "", exFusha = "", exEgy = "", level = "", unitTitle = "";
+        String source = "", sourceStatus = "", exampleSource = "";
+        int freq = 0;
+        int freqRank = 0;
+        boolean hasEgy() { return !egy.isEmpty(); }
+        boolean hasExample() { return !exEs.isEmpty(); }
+        String egyOrFusha() { return hasEgy() ? egy : ar; }
     }
 
-    @Override public void onCreate(Bundle state){
+    private static final class Lesson {
+        String id = "", title = "", titleEs = "", goalEgy = "", dialogueId = "";
+        Curriculum.Lesson ref;
+        ArrayList<Item> items = new ArrayList<>();
+    }
+
+    private static final class Unit {
+        String id = "", title = "", titleEs = "", goalEgy = "", kind = "";
+        ArrayList<Lesson> lessons = new ArrayList<>();
+        ArrayList<Item> items = new ArrayList<>();
+    }
+
+    private static final class Track {
+        String id = "", title = "", titleEs = "", goalEgy = "", descEgy = "";
+        ArrayList<Unit> units = new ArrayList<>();
+        ArrayList<Lesson> lessons = new ArrayList<>();
+        ArrayList<Item> items = new ArrayList<>();
+    }
+
+    private static final class Session {
+        Curriculum.Exercise ex;
+        Curriculum.Item item;
+        boolean retry = false;
+        String dialogueId = "";
+        Session(Curriculum.Exercise ex, Curriculum.Item item, boolean retry, String dialogueId) {
+            this.ex = ex; this.item = item; this.retry = retry; this.dialogueId = dialogueId;
+        }
+    }
+
+    /** Adapter so the pure-Java review scheduler can read/write SharedPreferences. */
+    private final class PrefStore implements ReviewScheduler.Store {
+        public int getInt(String key, int fallback) { return prefs.getInt(key, fallback); }
+        public void putInt(String key, int value) { prefs.edit().putInt(key, value).apply(); }
+        public long getLong(String key, long fallback) { return prefs.getLong(key, fallback); }
+        public void putLong(String key, long value) { prefs.edit().putLong(key, value).apply(); }
+        public float getFloat(String key, float fallback) { return prefs.getFloat(key, fallback); }
+        public void putFloat(String key, float value) { prefs.edit().putFloat(key, value).apply(); }
+        public String getString(String key, String fallback) { return prefs.getString(key, fallback); }
+        public void putString(String key, String value) { prefs.edit().putString(key, value).apply(); }
+    }
+
+    // ---------- lifecycle ----------
+
+    @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        if(Build.VERSION.SDK_INT>=33)getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,this::navigateBack);
-        getWindow().setStatusBarColor(BG); getWindow().setNavigationBarColor(BG);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-        prefs=getSharedPreferences("habla_progress",MODE_PRIVATE);
-        cairoRegular=Typeface.createFromAsset(getAssets(),"fonts/cairo-regular.ttf");
-        cairoBold=Typeface.createFromAsset(getAssets(),"fonts/cairo-bold.ttf");
-        nunitoRegular=Typeface.createFromAsset(getAssets(),"fonts/nunito-regular.ttf");
-        nunitoBold=Typeface.createFromAsset(getAssets(),"fonts/nunito-bold.ttf");
-        trackIndex=prefs.getInt("last_track",0);
-        try{loadContent();}catch(Exception e){throw new IllegalStateException("تعذر تحميل الدروس",e);}
-        if(!prefs.contains("last_track")&&a0Track>=0&&a0Track<tracks.size()&&prefs.getInt("complete_0",0)==0&&prefs.getInt("xp",0)==0)trackIndex=a0Track;
-        if(trackIndex<0||trackIndex>=tracks.size())trackIndex=0;
-        if(prefs.getBoolean("reminders_enabled",true))ReminderReceiver.scheduleNext(this);
-        tts=new TextToSpeech(this,this); if(!prefs.getBoolean("onboarding_done",false)&&prefs.getInt("complete_0",0)==0&&prefs.getInt("complete_1",0)==0&&prefs.getInt("xp",0)==0)showWelcome();else home();
+        if (Build.VERSION.SDK_INT >= 33) {
+            getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
+                    android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT, this::navigateBack);
+        }
+        prefs = getSharedPreferences("habla_progress", MODE_PRIVATE);
+        store = new PrefStore();
+        cairoRegular = Typeface.createFromAsset(getAssets(), "fonts/cairo-regular.ttf");
+        cairoBold = Typeface.createFromAsset(getAssets(), "fonts/cairo-bold.ttf");
+        nunitoRegular = Typeface.createFromAsset(getAssets(), "fonts/nunito-regular.ttf");
+        nunitoBold = Typeface.createFromAsset(getAssets(), "fonts/nunito-bold.ttf");
+        try {
+            loadContent();
+        } catch (Exception e) {
+            throw new IllegalStateException("تعذر تحميل المحتوى: " + e.getMessage(), e);
+        }
+        trackIndex = prefs.getInt("last_track", 0);
+        if (trackIndex < 0 || trackIndex >= tracks.size()) trackIndex = 0;
+        if (prefs.getBoolean("reminders_enabled", false)) ReminderReceiver.scheduleNext(this);
+        tts = new TextToSpeech(this, this);
+        if (!prefs.getBoolean("onboarding_done", false) && prefs.getInt("xp", 0) == 0) showWelcome(); else home();
     }
+
+    private String readAsset(String path) throws Exception {
+        InputStream in = getAssets().open(path);
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        byte[] buffer = new byte[8192];
+        int read;
+        while ((read = in.read(buffer)) != -1) bytes.write(buffer, 0, read);
+        in.close();
+        return bytes.toString("UTF-8");
+    }
+
     private void loadContent() throws Exception {
-        InputStream in=getAssets().open("content.json"); ByteArrayOutputStream bytes=new ByteArrayOutputStream(); byte[] buf=new byte[8192]; int n;
-        while((n=in.read(buf))!=-1)bytes.write(buf,0,n); in.close();
-        JSONArray ts=new JSONObject(bytes.toString("UTF-8")).getJSONArray("tracks");
-        for(int t=0;t<ts.length();t++){
-            JSONObject tr=ts.getJSONObject(t); Track track=new Track(tr.getString("title")); JSONArray units=tr.getJSONArray("units");
-            if("A0".equals(tr.optString("id")))a0Track=t;
-            for(int u=0;u<units.length();u++){
-                JSONObject unit=units.getJSONObject(u); JSONArray list=unit.getJSONArray("items"); Lesson lesson=null;
-                for(int i=0;i<list.length();i++){
-                    JSONObject obj=list.getJSONObject(i);
-                    if(i%PER_LESSON==0){String st=obj.optString("verification","");String tag="verified".equals(st)?"":(st.isEmpty()?" • غير معتمد":" • قيد التحقق");lesson=new Lesson(unit.getString("title")+" • "+(i/PER_LESSON+1)+tag);track.lessons.add(lesson);}
-                    Item item=new Item(t+"_"+u+"_"+i,obj.getString("es"),obj.getString("ar"));
-                    lesson.items.add(item); track.items.add(item);
+        curriculum = Curriculum.parse(readAsset("content.json"));
+        tracks.clear();
+        for (Curriculum.Level level : curriculum.levels) {
+            Track track = new Track();
+            track.id = level.id;
+            track.title = level.title;
+            track.titleEs = level.titleEs;
+            track.goalEgy = level.goalEgy;
+            track.descEgy = level.descEgy;
+            for (Curriculum.Unit unit : level.units) {
+                Unit local = new Unit();
+                local.id = unit.id;
+                local.title = unit.title;
+                local.titleEs = unit.titleEs;
+                local.goalEgy = unit.goalEgy;
+                for (Curriculum.Item source : unit.items) {
+                    Item item = copyItem(source, unit.title);
+                    local.items.add(item);
+                    track.items.add(item);
                 }
-            } tracks.add(track);
+                for (Curriculum.Lesson lessonSource : unit.lessons) {
+                    Lesson lesson = new Lesson();
+                    lesson.id = lessonSource.id;
+                    lesson.title = lessonSource.title;
+                    lesson.titleEs = lessonSource.titleEs;
+                    lesson.goalEgy = lessonSource.goalEgy;
+                    lesson.ref = lessonSource;
+                    if ("dialogue".equals(unit.kind)) lesson.dialogueId = lessonSource.id.replace("_lesson", "");
+                    for (String itemId : lessonSource.itemIds) {
+                        Item item = findItemBySource(itemId);
+                        if (item != null) lesson.items.add(item);
+                    }
+                    if (!lessonSource.itemIds.isEmpty() && lesson.items.isEmpty()) continue;
+                    local.lessons.add(lesson);
+                    track.lessons.add(lesson);
+                }
+                track.units.add(local);
+            }
+            tracks.add(track);
         }
     }
-    @Override public void onInit(int status){
-        if(status==TextToSpeech.SUCCESS && tts.isLanguageAvailable(spanish)>=TextToSpeech.LANG_AVAILABLE && tts.setLanguage(spanish)>=TextToSpeech.LANG_AVAILABLE){tts.setSpeechRate(prefs.getFloat("tts_rate",.9f));ttsReady=true;}
-        if(tts!=null){tts.setOnUtteranceProgressListener(new android.speech.tts.UtteranceProgressListener(){@Override public void onStart(String id){} @Override public void onDone(String id){runOnUiThread(()->{if(tts!=null)tts.setSpeechRate(prefs.getFloat("tts_rate",.9f));});} @Override public void onError(String id){runOnUiThread(()->{if(tts!=null)tts.setSpeechRate(prefs.getFloat("tts_rate",.9f));});}});}
+
+    private Item copyItem(Curriculum.Item source, String unitTitle) {
+        Item item = new Item();
+        item.id = source.id;
+        item.es = source.es;
+        item.ar = source.ar;
+        item.egy = source.egy;
+        item.ipa = source.ipa;
+        item.pos = source.pos;
+        item.topic = source.topic;
+        item.noteEgy = source.noteEgy;
+        item.exEs = source.exEs;
+        item.exFusha = source.exFusha;
+        item.exEgy = source.exEgy;
+        item.verification = source.verification;
+        item.source = source.source;
+        item.sourceStatus = source.sourceStatus;
+        item.exampleSource = source.exampleSource;
+        item.freqRank = source.freqRank;
+        item.level = source.level;
+        item.unitTitle = unitTitle;
+        item.freq = source.freq;
+        return item;
     }
-    private void speak(String value,boolean slow){
-        if(!ttsReady){toast("الصوت الإسباني غير متاح. نزّل الصوت الإسباني من إعدادات تحويل النص إلى كلام.");return;}
-        String phrase=value.replaceAll("\\([^)]*\\)","").replaceAll("/as\\b","").replaceAll("/a\\b","").replace("...","").replace("…","").trim();
-        float savedRate=prefs.getFloat("tts_rate",.9f);tts.setPitch(1.04f);tts.setSpeechRate(slow?Math.max(.5f,savedRate*.72f):savedRate);
-        if(tts.speak(phrase,TextToSpeech.QUEUE_FLUSH,null,"lesson")!=TextToSpeech.SUCCESS)toast("تعذر تشغيل الصوت الإسباني.");
-        tts.setSpeechRate(.9f);
+
+    private Track trackFor(String id) {
+        for (Track track : tracks) if (track.id.equals(id)) return track;
+        return null;
     }
-    private int dp(float v){return (int)(v*getResources().getDisplayMetrics().density+.5f);}
-    private boolean dark(){return prefs!=null&&prefs.getBoolean("dark_mode",false);}
-    private int surface(int color){if(!dark())return color;if(color==Color.WHITE)return 0xff25332d;if(color==BG)return 0xff121d18;if(color==PALE)return 0xff203e2e;if(color==SKY)return 0xff263750;if(color==LAVENDER)return 0xff333247;if(color==RED_BG)return 0xff482b30;if(color==LINE)return 0xff42554a;return color;}
-    private int foreground(int color){if(!dark())return color;if(color==INK)return 0xffeff5ef;if(color==MUTED)return 0xffb5c6b9;if(color==DARK_GREEN||color==GREEN)return 0xff8ee3a1;if(color==BLUE)return 0xffa9c7ff;if(color==RED)return 0xffffa8ac;return color;}
-    private GradientDrawable bg(int color,int stroke,int radius){GradientDrawable d=new GradientDrawable();d.setColor(surface(color));d.setCornerRadius(dp(radius));if(stroke!=0)d.setStroke(dp(2),surface(stroke));return d;}
-    private Typeface fontFor(String value,boolean bold){boolean arabic=value==null||value.isEmpty()||value.matches("(?s).*[\\u0600-\\u06ff\\u0750-\\u077f\\u08a0-\\u08ff].*");return arabic?(bold?cairoBold:cairoRegular):(bold?nunitoBold:nunitoRegular);}
-    private TextView text(String value,int size,int color,boolean bold){TextView v=new TextView(this);v.setText(value);v.setTextSize(size);v.setTextColor(foreground(color));v.setGravity(Gravity.CENTER_VERTICAL);v.setTextDirection(View.TEXT_DIRECTION_FIRST_STRONG);v.setTypeface(fontFor(value,bold));v.setLineSpacing(dp(3),1);return v;}
-    private void space(LinearLayout box,int h){box.addView(new View(this),new LinearLayout.LayoutParams(1,dp(h)));}
-    private Button button(String value,int color,int fg){Button b=new Button(this);b.setText(value);b.setTextColor(color==GREEN||color==BLUE||color==DARK_GREEN?fg:foreground(fg));b.setTextSize(16);b.setAllCaps(false);b.setTypeface(fontFor(value,true));b.setMinHeight(dp(54));b.setPadding(dp(14),dp(9),dp(14),dp(9));GradientDrawable shape=bg(color,color==Color.WHITE?LINE:0,18);b.setBackground(new android.graphics.drawable.RippleDrawable(ColorStateList.valueOf(dark()?0x33ffffff:0x22000000),shape,null));return b;}
-    private void full(LinearLayout box,View v){box.addView(v,new LinearLayout.LayoutParams(-1,-2));}
-    private LinearLayout column(){LinearLayout c=new LinearLayout(this);c.setOrientation(LinearLayout.VERTICAL);return c;}
-    private LinearLayout card(){LinearLayout c=column();c.setPadding(dp(20),dp(20),dp(20),dp(20));c.setBackground(bg(Color.WHITE,LINE,24));return c;}
-    private void toast(String s){Toast.makeText(this,s,Toast.LENGTH_LONG).show();}
-    private ProgressBar progress(int value,int max){ProgressBar p=new ProgressBar(this,null,android.R.attr.progressBarStyleHorizontal);p.setMax(Math.max(1,max));p.setProgress(value);p.setProgressTintList(ColorStateList.valueOf(dark()?0xff58cc72:GREEN));p.setProgressBackgroundTintList(ColorStateList.valueOf(surface(LINE)));p.setContentDescription("التقدم: "+value+" من "+max);return p;}
-    private void setup(String title,boolean back,boolean fixedFooter){
-        root=column();root.setBackgroundColor(surface(BG));getWindow().setStatusBarColor(surface(BG));getWindow().setNavigationBarColor(surface(BG));getWindow().getDecorView().setSystemUiVisibility(dark()?0:View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR|(Build.VERSION.SDK_INT>=26?View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR:0));root.setPadding(dp(20),dp(12),dp(20),dp(12));
-        root.setOnApplyWindowInsetsListener((view,insets)->{view.setPadding(dp(20),dp(12)+insets.getSystemWindowInsetTop(),dp(20),dp(12)+insets.getSystemWindowInsetBottom());return insets;});
-        setContentView(root);root.requestApplyInsets();
-        LinearLayout bar=new LinearLayout(this);bar.setGravity(Gravity.CENTER_VERTICAL);
-        if(back){Button b=button("✕",Color.WHITE,MUTED);b.setTextSize(18);bar.addView(b,new LinearLayout.LayoutParams(dp(50),dp(48)));b.setOnClickListener(v->navigateBack());}
-        TextView heading=text(title,18,INK,true);heading.setGravity(Gravity.CENTER);bar.addView(heading,new LinearLayout.LayoutParams(0,-2,1));full(root,bar);space(root,12);
-        scroll=new ScrollView(this);scroll.setFillViewport(false);root.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));body=column();scroll.addView(body);
-        if(fixedFooter){footer=column();space(root,8);full(root,footer);}else footer=null;
-        if(screen.equals("home")||screen.equals("path")||screen.equals("review")||screen.equals("dictionary")||screen.equals("profile")) addNavigation();
+
+    private Unit unitFor(Track track, String id) {
+        for (Unit unit : track.units) if (unit.id.equals(id)) return unit;
+        return null;
     }
-    private void addNavigation(){
-        LinearLayout nav=new LinearLayout(this);nav.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);nav.setPadding(0,dp(8),0,0);
-        String[] labels={"الرئيسية","التعلم","المراجعة","القاموس","حسابي"};
-        String[] screens={"home","path","review","dictionary","profile"};
-        for(int i=0;i<labels.length;i++){
-            final int tab=i;boolean active=screen.equals(screens[i]);
-            String[] icons={"⌂","◈","↻","▤","◎"};TextView item=text(icons[i]+"\n"+labels[i],12,active?DARK_GREEN:MUTED,active);item.setGravity(Gravity.CENTER);item.setMinHeight(dp(58));item.setBackground(bg(active?PALE:BG,0,14));item.setContentDescription(labels[i]+(active?"، القسم الحالي":""));
-            item.setOnClickListener(v->{if(tab==0)home();else if(tab==1)path();else if(tab==2)showReview();else if(tab==3)showDictionary();else showProfile();});
-            nav.addView(item,new LinearLayout.LayoutParams(0,-2,1));
+
+    private Item findItemBySource(String id) {
+        for (Track track : tracks) for (Item item : track.items) if (item.id.equals(id)) return item;
+        return null;
+    }
+
+    private Item findItemBySpanish(String spanishWord) {
+        Curriculum.Item source = curriculum.findBySpanish(spanishWord);
+        return source == null ? null : findItemBySource(source.id);
+    }
+
+    private Track currentTrack() {
+        if (trackIndex < 0 || trackIndex >= tracks.size()) trackIndex = 0;
+        return tracks.get(trackIndex);
+    }
+
+    // ---------- audio ----------
+
+    @Override public void onInit(int status) {
+        if (status == TextToSpeech.SUCCESS && tts != null) {
+            int available = tts.isLanguageAvailable(spanish);
+            if (available == TextToSpeech.LANG_MISSING_DATA) {
+                ttsProblem = "محرك الصوت موجود لكن حزمة اللغة الإسبانية غير منزّلة. نزّلها من إعدادات تحويل النص إلى كلام.";
+            } else if (available == TextToSpeech.LANG_NOT_SUPPORTED) {
+                ttsProblem = "محرك الصوت على الجهاز لا يدعم الإسبانية. جرّب محركًا آخر من إعدادات النظام.";
+            } else if (available >= TextToSpeech.LANG_AVAILABLE
+                    && tts.setLanguage(spanish) >= TextToSpeech.LANG_AVAILABLE) {
+                ttsReady = true;
+                ttsProblem = "";
+                applyRate(false);
+            } else {
+                ttsProblem = "تعذر تفعيل الصوت الإسباني على هذا الجهاز.";
+            }
+        } else if (status != TextToSpeech.SUCCESS) {
+            ttsProblem = "محرك تحويل النص إلى كلام غير متاح على الجهاز.";
         }
-        full(root,nav);
+        if (!ttsReady) ttsFailures++;
     }
-    private void showWelcome(){
-        screen="welcome";setup("أهلاً بك في Spanish 1000",false,false);
-        mascot(body,"كل يوم خطوة تقربك من الإسبانية.");space(body,18);
-        LinearLayout c=card();full(c,text("ابدأ رحلتك",24,INK,true));space(c,8);
-        full(c,text("اتعلم الكلمات والعبارات، وراجعها في الوقت المناسب. تقدمك محفوظ على جهازك.",16,MUTED,false));space(c,16);
-        full(c,text("اختار نقطة البداية",17,INK,true));space(c,4);full(c,text("المساران بيبدؤوا من أول درس؛ تقدر تغيّر المسار في أي وقت.",14,MUTED,false));space(c,6);Button trackChoice=button(tracks.get(trackIndex).title,Color.WHITE,BLUE);full(c,trackChoice);trackChoice.setOnClickListener(v->{trackIndex=(trackIndex+1)%tracks.size();prefs.edit().putInt("last_track",trackIndex).apply();trackChoice.setText(tracks.get(trackIndex).title);});space(c,12);
-        full(c,text("هدفك اليومي",17,INK,true));space(c,8);
-        Button goal=button(prefs.getInt("daily_goal",1)+" درس يومياً",Color.WHITE,BLUE);full(c,goal);goal.setOnClickListener(v->{int n=prefs.getInt("daily_goal",1)%3+1;prefs.edit().putInt("daily_goal",n).apply();goal.setText(n+" دروس يومياً");});space(c,12);
-        Button start=button("ابدأ أول درس",GREEN,Color.WHITE);full(c,start);start.setOnClickListener(v->{prefs.edit().putBoolean("onboarding_done",true).apply();lessonIndex=completed(trackIndex);if(lessonIndex<tracks.get(trackIndex).lessons.size()){reviewMode=false;intro(tracks.get(trackIndex).lessons.get(lessonIndex).items);}else home();});full(body,c);
+
+    private void applyRate(boolean slow) {
+        if (tts == null) return;
+        float saved = prefs.getFloat("tts_rate", 0.92f);
+        tts.setSpeechRate(slow ? Math.max(0.45f, saved * 0.7f) : saved);
+        tts.setPitch(1.03f);
     }
-    private void showReview(){
-        screen="review";setup("المراجعة",false,false);
-        LinearLayout c=card();full(c,text("راجع اللي اتعلمته",22,INK,true));space(c,8);
-        full(c,text(dueCount()+" عنصر مستحق الآن · "+weakCount()+" يحتاج تدريبًا",16,MUTED,false));space(c,8);
-        full(c,text(masteredCount()+" عنصر متقن حاليًا",15,DARK_GREEN,true));space(c,6);int total=0;for(Track track:tracks)total+=track.items.size();full(c,text("الإتقان من عناصر المسارين: "+percentage(masteredCount(),total),14,MUTED,false));full(c,progress(masteredCount(),total));space(c,16);
-        Button review=button("ابدأ المراجعة",GREEN,Color.WHITE);full(c,review);review.setOnClickListener(v->startReview());full(body,c);space(body,12);
-        Button flash=button("بطاقات المراجعة",Color.WHITE,BLUE);full(body,flash);flash.setOnClickListener(v->startFlashcards());space(body,8);
-        Button weak=button("الكلمات التي تحتاج تدريبًا",Color.WHITE,BLUE);full(body,weak);weak.setOnClickListener(v->showWeakWords());
-    }
-    private void startFlashcards(){
-        ArrayList<Item> due=new ArrayList<>();long now=System.currentTimeMillis();for(Track track:tracks)for(Item item:track.items){long when=prefs.getLong("due_"+item.id,0);if((when>0&&when<=now)||prefs.getInt("misses_"+item.id,0)>0)due.add(item);}
-        if(due.isEmpty()){toast("مفيش بطاقات مستحقة للمراجعة دلوقتي.");return;}
-        Collections.sort(due,(a,b)->Long.compare(prefs.getLong("due_"+a.id,0),prefs.getLong("due_"+b.id,0)));if(due.size()>PER_LESSON)due=new ArrayList<>(due.subList(0,PER_LESSON));showFlashcard(due,0,false);
-    }
-    private void showFlashcard(ArrayList<Item> cards,int index,boolean revealed){
-        if(index>=cards.size()){showReview();toast("انتهت مراجعة البطاقات.");return;}
-        screen="flashcard";Item item=cards.get(index);setup("بطاقة "+(index+1)+" / "+cards.size(),true,false);full(body,progress(index,cards.size()));space(body,18);
-        LinearLayout c=card();TextView word=text(item.es,26,INK,true);word.setTextDirection(View.TEXT_DIRECTION_LTR);full(c,word);space(c,12);audioControls(c,item.es);space(c,12);
-        if(revealed){full(c,text(item.ar,20,INK,true));space(c,12);full(c,text("افتكرتها إزاي؟",16,MUTED,false));String[] labels={"لم أتذكر","صعب","متوسط","سهل"};for(int q=0;q<labels.length;q++){final int quality=q;Button rate=button(labels[q],q==3?GREEN:Color.WHITE,q==3?Color.WHITE:BLUE);full(c,rate);space(c,6);rate.setOnClickListener(v->{long old=prefs.getLong("interval_"+item.id,0);float ease=prefs.getFloat("ease_"+item.id,2.5f);long interval=LearningLogic.flashcardInterval(old,ease,quality);prefs.edit().putLong("interval_"+item.id,interval).putLong("due_"+item.id,System.currentTimeMillis()+(quality==0?3600000L:interval)).putFloat("ease_"+item.id,Math.max(1.3f,Math.min(3f,ease+(quality==0?-.2f:quality==3?.1f:0)))).putInt("misses_"+item.id,quality==0?prefs.getInt("misses_"+item.id,0)+1:Math.max(0,prefs.getInt("misses_"+item.id,0)-1)).apply();showFlashcard(cards,index+1,false);});}}
-        else{Button reveal=button("اظهر المعنى",GREEN,Color.WHITE);full(c,reveal);reveal.setOnClickListener(v->showFlashcard(cards,index,true));}full(body,c);
-    }
-    private void showProfile(){
-        screen="profile";setup("حسابي",false,false);
-        LinearLayout c=card();c.setBackground(bg(PALE,0,24));LinearLayout profileHead=new LinearLayout(this);profileHead.setGravity(Gravity.CENTER_VERTICAL);StudyBuddy profileBuddy=new StudyBuddy(this);profileHead.addView(profileBuddy,new LinearLayout.LayoutParams(dp(68),dp(68)));LinearLayout profileCopy=column();full(profileCopy,text("رحلتك في الإسباني",22,INK,true));full(profileCopy,text("تقدمك محفوظ على جهازك",14,MUTED,false));LinearLayout.LayoutParams profileParams=new LinearLayout.LayoutParams(0,-2,1);profileParams.setMargins(dp(12),0,0,0);profileHead.addView(profileCopy,profileParams);full(c,profileHead);space(c,8);
-        full(c,text(prefs.getInt("xp",0)+" نقطة · "+prefs.getInt("streak",0)+" يوم متتالي",16,DARK_GREEN,true));space(c,6);full(c,text((completed(0)+completed(1))+" درس مكتمل · "+favorites().size()+" عنصر في المفضلة",15,MUTED,false));full(body,c);space(body,12);
-        Button stats=button("إحصاءات التقدم",Color.WHITE,BLUE);full(body,stats);stats.setOnClickListener(v->showStats());space(body,8);
-        Button settings=button("الإعدادات والنسخ الاحتياطي",Color.WHITE,BLUE);full(body,settings);settings.setOnClickListener(v->showLearningSettings());space(body,12);stickerShelf(body);
-    }
-    private int completed(int t){return Math.max(0,Math.min(prefs.getInt("complete_"+t,0),tracks.get(t).lessons.size()));}
-    private int completedItems(int t){ArrayList<Integer> sizes=new ArrayList<>();for(Lesson l:tracks.get(t).lessons)sizes.add(l.items.size());return LearningLogic.completedItems(sizes,completed(t));}
-    private String percentage(int done,int total){return (total==0?0:done*100/total)+"٪";}
-    private void mascot(LinearLayout box,String caption){LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);CharacterArt.CharacterView buddy=new CharacterArt.CharacterView(this,CharacterArt.Cast.SOL,CharacterArt.Mood.WELCOME,dark(),false);row.addView(buddy,new LinearLayout.LayoutParams(dp(76),dp(76)));TextView bubble=text(caption,15,INK,true);bubble.setPadding(dp(14),dp(10),dp(14),dp(10));bubble.setBackground(bg(Color.WHITE,LINE,18));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMargins(dp(8),0,0,0);row.addView(bubble,p);full(box,row);}
-    private void home(){
-        screen="home";setup("Spanish 1000",false,false);
-        Track current=tracks.get(trackIndex);int next=completed(trackIndex);
-        LinearLayout welcome=new LinearLayout(this);welcome.setGravity(Gravity.CENTER_VERTICAL);LinearLayout greeting=column();full(greeting,text("¡Hola! أهلًا بيك",25,INK,true));space(greeting,4);full(greeting,text("كل يوم أقرب للإسباني",15,MUTED,false));welcome.addView(greeting,new LinearLayout.LayoutParams(0,-2,1));CharacterArt.CharacterView buddy=new CharacterArt.CharacterView(this,CharacterArt.Cast.SOL,CharacterArt.Mood.HAPPY,dark(),false);welcome.addView(buddy,new LinearLayout.LayoutParams(dp(72),dp(72)));full(body,welcome);space(body,16);
-        LinearLayout indicators=new LinearLayout(this);indicators.setGravity(Gravity.CENTER_VERTICAL);TextView streak=text("سلسلتك  "+prefs.getInt("streak",0)+" يوم",14,DARK_GREEN,true),xp=text("نقاطك  "+prefs.getInt("xp",0)+" XP",14,DARK_GREEN,true);streak.setGravity(Gravity.CENTER);xp.setGravity(Gravity.CENTER);streak.setPadding(dp(8),dp(12),dp(8),dp(12));xp.setPadding(dp(8),dp(12),dp(8),dp(12));streak.setBackground(bg(PALE,0,16));xp.setBackground(bg(LAVENDER,0,16));LinearLayout.LayoutParams ip=new LinearLayout.LayoutParams(0,-2,1);ip.setMargins(0,0,dp(8),0);indicators.addView(streak,ip);indicators.addView(xp,new LinearLayout.LayoutParams(0,-2,1));full(body,indicators);space(body,20);
-        TextView section=text("رحلتك النهارده",19,INK,true);full(body,section);space(body,8);
-        LinearLayout continuation=card();continuation.setBackground(bg(PALE,0,24));full(continuation,text(current.title,14,DARK_GREEN,true));space(continuation,6);full(continuation,text(next<current.lessons.size()?current.lessons.get(next).title:"أكملت المسار — راجع دروسك",21,INK,true));space(continuation,8);full(continuation,text(completedItems(trackIndex)+" من "+current.items.size()+" عنصر في المسار",14,MUTED,false));space(continuation,8);full(continuation,progress(completedItems(trackIndex),current.items.size()));space(continuation,16);
-        Button resume=button(next==0?"ابدأ التعلم":"كمّل التعلم",GREEN,Color.WHITE);full(continuation,resume);resume.setOnClickListener(v->{if(next<current.lessons.size()){lessonIndex=next;reviewMode=false;intro(current.lessons.get(next).items);}else path();});full(body,continuation);space(body,16);
-        dailyGoalCard(body);space(body,12);
-        LinearLayout reviewPanel=card();full(reviewPanel,text("تدريب مناسب ليك",18,INK,true));space(reviewPanel,5);full(reviewPanel,text(dueCount()>0?dueCount()+" عنصر موعد مراجعته وصل":"ابدأ درسًا جديدًا أو راجع الكلمات اللي محتاجة تدريب",14,MUTED,false));space(reviewPanel,10);Button todayReview=button(dueCount()>0?"ابدأ المراجعة":"افتح المراجعة",Color.WHITE,BLUE);full(reviewPanel,todayReview);todayReview.setOnClickListener(v->showReview());full(body,reviewPanel);space(body,20);
-        full(body,text("اختار مسارك",21,INK,true));space(body,10);
-        for(int t=0;t<tracks.size();t++){
-            final int index=t;Track tr=tracks.get(t);int done=completed(t),items=completedItems(t),remaining=tr.items.size()-items;LinearLayout c=card();
-            full(c,text((t==0?"📘  ":"💬  ")+tr.title,20,INK,true));space(c,8);
-            full(c,text(percentage(items,tr.items.size())+" مكتمل  •  "+items+" من "+tr.items.size()+" عنصر",15,INK,true));space(c,8);full(c,progress(items,tr.items.size()));space(c,8);
-            full(c,text("خلصت "+done+" درس  •  باقي "+(tr.lessons.size()-done)+" درس و"+remaining+" عنصر",14,MUTED,false));space(c,14);
-            Button go=button(done==0?"ابدأ المسار":"افتح مسارك",t==0?GREEN:BLUE,Color.WHITE);full(c,go);go.setOnClickListener(v->{trackIndex=index;prefs.edit().putInt("last_track",index).apply();path();});full(body,c);space(body,12);
+
+    /** Speaks Spanish text. Only ever uses the device TextToSpeech engine (never claims human audio). */
+    private void speak(String value, boolean slow) {
+        if (value == null || value.trim().isEmpty()) return;
+        if (!ttsReady) {
+            toast(ttsProblem.isEmpty()
+                    ? "الصوت الإسباني غير متاح على الجهاز. نزّل حزمة الصوت الإسباني من إعدادات تحويل النص إلى كلام، ثم أعد فتح التطبيق."
+                    : ttsProblem);
+            return;
         }
-        Button review=button("🔄  مراجعة العناصر المستحقة  •  "+dueCount(),Color.WHITE,BLUE);full(body,review);review.setOnClickListener(v->startReview());space(body,8);
-        Button weak=button("🧠  الكلمات التي تحتاج تدريبًا  •  "+weakCount(),Color.WHITE,BLUE);full(body,weak);weak.setOnClickListener(v->showWeakWords());space(body,8);
-        Button dialogue=button("🎭  محادثات الحياة اليومية — Real Life Spanish",Color.WHITE,GREEN);full(body,dialogue);dialogue.setOnClickListener(v->showScenarios());space(body,8);
-        Button stats=button("📊  إحصاءاتك وسلسلة أيامك",Color.WHITE,BLUE);full(body,stats);stats.setOnClickListener(v->showStats());space(body,8);
-        Button dictionary=button("📖  القاموس — ابحث وسمّع وافضّل",Color.WHITE,BLUE);full(body,dictionary);dictionary.setOnClickListener(v->showDictionary());space(body,8);
-        Button grammar=button("📚  قواعد إسبانية سريعة",Color.WHITE,BLUE);full(body,grammar);grammar.setOnClickListener(v->showGrammar());space(body,8);
-        Button settings=button("⚙  التقدم الاحتياطي والسرعة والهدف",Color.WHITE,MUTED);full(body,settings);settings.setOnClickListener(v->showLearningSettings());space(body,12);
-        stickerShelf(body);
-        full(body,text("الاستماع والنطق يعتمدان على خدمات هاتفك. التحدث قد يحتاج إنترنت.",13,MUTED,false));
-    }
-    private void stickerShelf(LinearLayout box){
-        int total=completed(0)+completed(1);LinearLayout c=card();full(c,text("ملصقات رحلتك 🏅",18,INK,true));space(c,8);LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);
-        String[] labels={"أول درس","خمس دروس","صاحب سلسلة"};String[] icons={"🌱","🗺️","🔥"};int[] thresholds={1,5,3};
-        for(int i=0;i<labels.length;i++){boolean unlocked=i==2?prefs.getInt("streak",0)>=thresholds[i]:total>=thresholds[i];LinearLayout badge=column();badge.setGravity(Gravity.CENTER);TextView icon=text(unlocked?icons[i]:"🔒",25,unlocked?GOLD:MUTED,true);icon.setGravity(Gravity.CENTER);badge.addView(icon,new LinearLayout.LayoutParams(-1,dp(42)));TextView caption=text(labels[i],11,unlocked?INK:MUTED,unlocked);caption.setGravity(Gravity.CENTER);badge.addView(caption);LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);row.addView(badge,p);}
-        full(c,row);full(box,c);space(box,12);
-    }
-    private void path(){
-        screen="path";Track track=tracks.get(trackIndex);setup(track.title,true,false);int done=completed(trackIndex),items=completedItems(trackIndex);
-        LinearLayout banner=card();int pathColor=trackIndex==0?DARK_GREEN:BLUE;banner.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{pathColor,trackIndex==0?GREEN:Color.rgb(93,142,226)}));((GradientDrawable)banner.getBackground()).setCornerRadius(dp(22));
-        full(banner,text("رحلتك في الإسباني ✨",23,Color.WHITE,true));space(banner,7);
-        full(banner,text("خلصت "+items+" من "+track.items.size()+" عنصر • باقي "+(track.items.size()-items),15,Color.WHITE,true));space(banner,9);
-        ProgressBar bp=progress(items,track.items.size());bp.setProgressTintList(ColorStateList.valueOf(Color.WHITE));full(banner,bp);space(banner,7);
-        full(banner,text(done+" من "+track.lessons.size()+" درس • "+percentage(items,track.items.size()),14,Color.WHITE,false));full(body,banner);space(body,16);
-        if(done<track.lessons.size()){
-            final int next=done;Button start=button("▶  ابدأ الدرس التالي",GREEN,Color.WHITE);full(body,start);start.setOnClickListener(v->{lessonIndex=next;reviewMode=false;intro(track.lessons.get(next).items);});space(body,8);
-        }else{full(body,text("أكملت المسار! راجع أي درس وقت ما تحب. 🎉",16,GREEN,true));space(body,8);}
-        if(done>0){Button quiz=button("اختبر نفسك — عناصر عشوائية من دروسك المكتملة",Color.WHITE,BLUE);full(body,quiz);quiz.setOnClickListener(v->startQuiz());space(body,16);}else space(body,16);
-        full(body,text("الوحدات والدروس",21,INK,true));space(body,6);
-        String previousUnit="";
-        for(int i=0;i<track.lessons.size();i++){
-            final int index=i;Lesson l=track.lessons.get(i);boolean locked=i>done,finished=i<done,current=i==done;
-            String unit=l.title.split(" • ")[0];
-            if(!unit.equals(previousUnit)){previousUnit=unit;int unitTotal=0,unitCompleted=0;for(int j=i;j<track.lessons.size()&&track.lessons.get(j).title.split(" • ")[0].equals(unit);j++){unitTotal++;if(j<done)unitCompleted++;}space(body,12);LinearLayout unitHeader=card();unitHeader.setBackground(bg(PALE,0,18));full(unitHeader,text(unit,18,INK,true));space(unitHeader,4);full(unitHeader,text(unitCompleted+" من "+unitTotal+" درس مكتمل",14,MUTED,false));space(unitHeader,6);full(unitHeader,progress(unitCompleted,unitTotal));full(body,unitHeader);space(body,8);}
-            LinearLayout row=new LinearLayout(this);row.setOrientation(LinearLayout.VERTICAL);row.setGravity(i%3==0?Gravity.START:i%3==1?Gravity.CENTER_HORIZONTAL:Gravity.END);row.setPadding(dp(38),dp(3),dp(38),dp(3));
-            Button node=button(finished?"✓":current?"▶":"·",finished?DARK_GREEN:current?GREEN:LINE,finished||current?Color.WHITE:INK);
-            node.setTextSize(23);node.setBackground(bg(finished?DARK_GREEN:current?GREEN:LINE,0,40));
-            row.addView(node,new LinearLayout.LayoutParams(dp(68),dp(68)));node.setContentDescription(l.title+(finished?" مكتمل":current?" الدرس التالي":" مقفل"));
-            if(!locked)node.setOnClickListener(v->{lessonIndex=index;reviewMode=false;intro(track.lessons.get(index).items);});else node.setOnClickListener(v->toast("أكمل الدروس السابقة لفتح هذا الدرس."));
-            TextView label=text(current?"الدرس الحالي":finished?"مكتمل":"مقفل",13,current?DARK_GREEN:MUTED,true);label.setGravity(Gravity.CENTER);LinearLayout.LayoutParams labelParams=new LinearLayout.LayoutParams(dp(100),-2);labelParams.topMargin=dp(4);row.addView(label,labelParams);full(body,row);if(i+1<track.lessons.size()&&track.lessons.get(i+1).title.split(" • ")[0].equals(unit)){TextView connector=text("·  ·  ·",16,finished?GREEN:MUTED,true);connector.setGravity(Gravity.CENTER);full(body,connector);}
+        String phrase = cleanForSpeech(value);
+        tts.stop();
+        applyRate(slow);
+        if (tts.speak(phrase, TextToSpeech.QUEUE_FLUSH, null, "habla") != TextToSpeech.SUCCESS) {
+            toast("تعذر تشغيل الصوت.");
         }
     }
-    private void intro(ArrayList<Item> items){begin(items);}
-    private void startReview(){
-        ArrayList<Item> due=new ArrayList<>();long now=System.currentTimeMillis();for(Track t:tracks)for(Item item:t.items){long when=prefs.getLong("due_"+item.id,0);if((when>0&&when<=now)||prefs.getInt("misses_"+item.id,0)>0)due.add(item);}
-        if(due.isEmpty()){toast("مفيش مراجعة مستحقة دلوقتي. أكمل درسًا وارجع لاحقًا.");return;}
-        Collections.sort(due,(a,b)->Long.compare(prefs.getLong("due_"+a.id,0),prefs.getLong("due_"+b.id,0)));
-        ArrayList<Item> prioritized=new ArrayList<>();for(Item item:due)if(prefs.getLong("interval_"+item.id,0)==0)prioritized.add(item);for(Item item:due)if(!prioritized.contains(item))prioritized.add(item);
-        if(prioritized.size()>PER_LESSON)prioritized=new ArrayList<>(prioritized.subList(0,PER_LESSON));reviewMode=true;intro(prioritized);
+
+    private String cleanForSpeech(String value) {
+        return value.replaceAll("\\([^)]*\\)", "")
+                .replace("…", "").replace("...", "")
+                .replace("/", " ").replace("____", " ")
+                .trim();
     }
-    private int dueCount(){long now=System.currentTimeMillis();int count=0;for(Track t:tracks)for(Item item:t.items){long due=prefs.getLong("due_"+item.id,0);if(due>0&&due<=now)count++;}return count;}
-    private void dailyGoalCard(LinearLayout box){
-        int goal=prefs.getInt("daily_goal",1);String today=new SimpleDateFormat("yyyy-MM-dd",Locale.US).format(new Date());int done=prefs.getString("daily_date","").equals(today)?prefs.getInt("daily_lessons",0):0;
-        LinearLayout daily=card();daily.setBackground(bg(LAVENDER,0,20));full(daily,text("🎯  هدفك اليومي",17,INK,true));space(daily,5);full(daily,goalRow(done,goal));full(box,daily);
+
+    private void stopSpeaking() {
+        if (tts != null) tts.stop();
     }
-    private LinearLayout goalRow(int done,int goal){
-        LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);
-        int pct=goal<=0?0:Math.min(100,done*100/goal);
-        DesignSystem.RingProgressView ring=new DesignSystem.RingProgressView(this,pct,done+"/"+goal,"درس اليوم",foreground(GREEN),surface(LINE),foreground(INK),foreground(MUTED),cairoBold,nunitoRegular);
-        row.addView(ring,new LinearLayout.LayoutParams(dp(92),dp(92)));
-        LinearLayout copy=column();
-        full(copy,text(done>=goal?"وصلت لهدفك اليوم 🎉":"باقي "+(goal-done)+" درس لهدف اليوم",16,INK,true));space(copy,4);
-        full(copy,text("الهدف: "+goal+" درس يوميًا · السلسلة: "+prefs.getInt("streak",0)+" يوم",13,MUTED,false));
-        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMargins(dp(12),0,0,0);row.addView(copy,p);
-        return row;
+
+    /** Where the example sentence comes from — never presented as hand-verified content. */
+    private String exampleSourceLabel(String kind) {
+        switch (kind) {
+            case "curriculum": return "جملة من المنهج نفسه";
+            case "pattern": return "مولّد بقالب جملة آمن (يحتاج مراجعة بشرية)";
+            case "phrase_self": return "التعبير نفسه";
+            default: return kind;
+        }
     }
-    private LinearLayout accuracyRing(int correctCount,int attemptCount){
-        LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);
-        int pct=attemptCount<=0?0:Math.min(100,correctCount*100/attemptCount);
-        DesignSystem.RingProgressView ring=new DesignSystem.RingProgressView(this,pct,attemptCount==0?"—":pct+"٪","دقة أول محاولة",foreground(GREEN),surface(LINE),foreground(INK),foreground(MUTED),cairoBold,nunitoRegular);
-        row.addView(ring,new LinearLayout.LayoutParams(dp(88),dp(88)));
-        LinearLayout copy=column();
-        full(copy,text("إجابات صحيحة من أول محاولة",15,INK,true));space(copy,4);
-        full(copy,text(correctCount+" من "+attemptCount,14,MUTED,false));
-        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMargins(dp(12),0,0,0);row.addView(copy,p);
-        return row;
+
+    /** Honest provenance line: attested spelling/frequency vs. no external source at all. */
+    private String sourceLabel(Item item) {
+        if ("spelling_attested".equals(item.sourceStatus)) {
+            String rank = item.freqRank > 0 ? " (رتبة تكرار " + item.freqRank + ")" : "";
+            return "المصدر: قائمة تكرار OpenSubtitles 2018" + rank
+                    + " — تثبت التهجئة والتكرار فقط، لا المعنى. حالة العنصر: فحص آلي.";
+        }
+        return "المصدر: لا يوجد إسناد خارجي لهذا العنصر. حالة العنصر: فحص آلي، وليس verified.";
     }
-    private void showLearningSettings(){
-        screen="settings";setup("إعدادات التعلم",true,false);LinearLayout c=card();full(c,text("🎯 هدف الدروس اليومي",19,INK,true));space(c,8);int goal=prefs.getInt("daily_goal",1);TextView value=text(goal+" درس يوميًا",17,GREEN,true);value.setGravity(Gravity.CENTER);full(c,value);space(c,8);LinearLayout row=new LinearLayout(this);Button less=button("−",Color.WHITE,BLUE),more=button("+",Color.WHITE,BLUE);row.addView(less,new LinearLayout.LayoutParams(0,dp(54),1));row.addView(more,new LinearLayout.LayoutParams(0,dp(54),1));full(c,row);less.setOnClickListener(v->{int n=Math.max(1,prefs.getInt("daily_goal",1)-1);prefs.edit().putInt("daily_goal",n).apply();value.setText(n+" درس يوميًا");});more.setOnClickListener(v->{int n=Math.min(10,prefs.getInt("daily_goal",1)+1);prefs.edit().putInt("daily_goal",n).apply();value.setText(n+" درس يوميًا");});space(c,20);full(c,text("🔊 سرعة النطق الإسباني",19,INK,true));space(c,5);float rate=prefs.getFloat("tts_rate",.9f);TextView speed=text(String.format(Locale.US,"%.1f×",rate),17,GREEN,true);speed.setGravity(Gravity.CENTER);full(c,speed);android.widget.SeekBar seek=new android.widget.SeekBar(this);seek.setMax(15);seek.setProgress(Math.round((rate-.5f)*10));full(c,seek);seek.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(android.widget.SeekBar s,int p,boolean user){float r=.5f+p*.1f;speed.setText(String.format(Locale.US,"%.1f×",r));if(user){prefs.edit().putFloat("tts_rate",r).apply();if(ttsReady)tts.setSpeechRate(r);}}public void onStartTrackingTouch(android.widget.SeekBar s){}public void onStopTrackingTouch(android.widget.SeekBar s){}});space(c,16);
-        full(c,text("المظهر",19,INK,true));space(c,8);Button theme=button(dark()?"الوضع الداكن: مفعّل":"الوضع الداكن: غير مفعّل",Color.WHITE,BLUE);full(c,theme);theme.setOnClickListener(v->{prefs.edit().putBoolean("dark_mode",!dark()).apply();showLearningSettings();});space(c,16);
-        boolean remindersOn=prefs.getBoolean("reminders_enabled",true);
-        full(c,text("🔔 التذكير اليومي",19,INK,true));space(c,5);
-        Button toggle=button(remindersOn?"المذكّرات مفعّلة — اضغط للإيقاف":"المذكّرات موقوفة — اضغط لتفعيلها",remindersOn?PALE:Color.WHITE,remindersOn?DARK_GREEN:BLUE);full(c,toggle);space(c,5);
-        full(c,text("نذكّرك يوميًا بعد الثامنة مساءً فقط إذا لم تُكمل هدف اليوم.",14,MUTED,false));space(c,8);
-        full(c,text("💾 نسخ التقدم الاحتياطي",19,INK,true));space(c,5);
-        full(c,text("صدّر تقدمك إلى ملف لتستعيده بعد حذف التطبيق أو عند الانتقال إلى جهاز آخر.",14,MUTED,false));space(c,8);
-        LinearLayout backupRow=new LinearLayout(this);Button expB=button("📤 تصدير",GREEN,Color.WHITE),impB=button("📥 استيراد",Color.WHITE,BLUE);backupRow.addView(expB,new LinearLayout.LayoutParams(0,dp(54),1));backupRow.addView(impB,new LinearLayout.LayoutParams(0,dp(54),1));full(c,backupRow);
-        full(body,c);space(body,10);full(body,text("الإعدادات تُحفظ على هذا الجهاز. توفر الصوت يعتمد على محرك TTS المثبت.",14,MUTED,false));
-        expB.setOnClickListener(v->exportProgress());impB.setOnClickListener(v->importProgressPicker());
-        toggle.setOnClickListener(v->{
-            if(remindersOn){prefs.edit().putBoolean("reminders_enabled",false).apply();ReminderReceiver.cancel(this);toast("أوقفنا التذكير اليومي.");showLearningSettings();return;}
-            prefs.edit().putBoolean("reminders_enabled",true).apply();
-            if(Build.VERSION.SDK_INT>=33&&checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)!=PackageManager.PERMISSION_GRANTED){requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS},NOTIFY_PERMISSION);return;}
-            ReminderReceiver.scheduleNext(this);toast("سنذكرك يوميًا إذا لم تُكمل هدفك.");showLearningSettings();
-        });}
-    private EditText dicSearch;private TextView dicCount;private LinearLayout dicList,dicChips;private int dicMode=-2,dicLimit=80;
-    private final ArrayList<Button> dicChipButtons=new ArrayList<>();private final ArrayList<Integer> dicChipModes=new ArrayList<>();
-    private Set<String> favorites(){Object value=prefs.getAll().get("dictionary_favorites");if(value instanceof Set)return new HashSet<>((Set<String>)value);if(value instanceof String){try{String raw=(String)value;if(raw.startsWith("s:"))raw=raw.substring(2);Set<String> recovered=LearningLogic.legacyFavorites(raw);saveFavorites(recovered);return recovered;}catch(IllegalArgumentException e){return new HashSet<>();}}return new HashSet<>();}
-    private void saveFavorites(Set<String> set){prefs.edit().putStringSet("dictionary_favorites",new HashSet<>(set)).apply();}
-    private void showDictionary(){
-        screen="dictionary";dicMode=-2;dicLimit=80;setup("القاموس 📖",true,false);
-        LinearLayout head=card();head.setBackground(bg(PALE,0,24));full(head,text("كلماتك في مكان واحد",22,INK,true));space(head,4);full(head,text("ابحث بالإسبانية أو بالعربي، واسمع النطق واحفظ المفضلة.",14,MUTED,false));space(head,8);
-        dicSearch=new EditText(this);dicSearch.setTypeface(cairoRegular);dicSearch.setSingleLine(true);dicSearch.setTextSize(17);dicSearch.setTextColor(foreground(INK));dicSearch.setHintTextColor(foreground(MUTED));dicSearch.setHint("اكتب مثل: agua أو ماء");dicSearch.setPadding(dp(15),dp(12),dp(15),dp(12));dicSearch.setBackground(bg(Color.WHITE,LINE,16));
-        dicSearch.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int a,int b,int c){}public void onTextChanged(CharSequence s,int a,int b,int c){}public void afterTextChanged(android.text.Editable s){dicLimit=80;renderDictionary();}});
-        full(head,dicSearch);space(head,10);
-        dicChips=new LinearLayout(this);dicChipButtons.clear();dicChipModes.clear();
-        addDicChip("الكل",-2);addDicChip("⭐ المفضلة",-1);for(int t=0;t<tracks.size();t++)addDicChip((t==0?"📘 ":"💬 ")+tracks.get(t).title,t);
-        HorizontalScrollView chipScroll=new HorizontalScrollView(this);chipScroll.setHorizontalScrollBarEnabled(false);chipScroll.addView(dicChips);full(head,chipScroll);
-        full(body,head);space(body,10);
-        dicCount=text("",14,MUTED,true);full(body,dicCount);space(body,8);
-        dicList=column();full(body,dicList);
-        renderDictionary();
+
+    private String audioStatus() {
+        if (ttsReady) return "الصوت جاهز — محرك الجهاز بصوت es-ES (إسباني أوروبي).";
+        if (!ttsProblem.isEmpty()) return "الصوت غير متاح — " + ttsProblem;
+        return "الصوت غير متاح: الجهاز لا يحتوي محرك TTS إسباني. التمارين الكتابية والقراءة تعمل عادي.";
     }
-    private void addDicChip(String label,int mode){
-        Button chip=button(label,Color.WHITE,INK);chip.setTextSize(13);chip.setMinHeight(dp(38));chip.setPadding(dp(12),dp(4),dp(12),dp(4));
-        chip.setBackground(bg(mode==dicMode?SKY:Color.WHITE,mode==dicMode?BLUE:LINE,14));
-        chip.setOnClickListener(v->{dicMode=mode;dicLimit=80;refreshDicChips();renderDictionary();});
-        dicChipButtons.add(chip);dicChipModes.add(mode);
-        dicChips.addView(chip,new LinearLayout.LayoutParams(-2,-2));View gap=new View(this);gap.setMinimumWidth(dp(6));dicChips.addView(gap,new LinearLayout.LayoutParams(dp(6),1));
+
+    private void audioControls(LinearLayout box, String value) {
+        LinearLayout row = new LinearLayout(this);
+        Button normal = button("🔊 استمع", SKY, BLUE);
+        Button slow = button("🐢 ببطء", Color.WHITE, BLUE);
+        Button stop = button("⏹ إيقاف", Color.WHITE, MUTED);
+        LinearLayout.LayoutParams first = new LinearLayout.LayoutParams(0, -2, 1);
+        first.setMargins(0, 0, dp(6), 0);
+        LinearLayout.LayoutParams second = new LinearLayout.LayoutParams(0, -2, 1);
+        second.setMargins(0, 0, dp(6), 0);
+        row.addView(normal, first);
+        row.addView(slow, second);
+        row.addView(stop, new LinearLayout.LayoutParams(0, -2, 1));
+        normal.setOnClickListener(v -> speak(value, false));
+        slow.setOnClickListener(v -> speak(value, true));
+        stop.setOnClickListener(v -> stopSpeaking());
+        normal.setContentDescription("تشغيل النطق الإسباني");
+        slow.setContentDescription("تشغيل النطق ببطء");
+        stop.setContentDescription("إيقاف الصوت");
+        full(box, row);
     }
-    private void refreshDicChips(){for(int i=0;i<dicChipButtons.size();i++){int mode=dicChipModes.get(i);dicChipButtons.get(i).setBackground(bg(mode==dicMode?SKY:Color.WHITE,mode==dicMode?BLUE:LINE,14));}}
-    private void renderDictionary(){
-        if(dicList==null||dicCount==null)return;
-        Set<String> fav=favorites();String query=dicSearch.getText().toString().trim().toLowerCase(Locale.ROOT);
-        ArrayList<Item> results=new ArrayList<>();
-        for(int t=0;t<tracks.size();t++){Track track=tracks.get(t);
-            for(Item item:track.items){
-                if(dicMode==-1&&!fav.contains(item.id))continue;
-                if(dicMode>=0&&dicMode!=t)continue;
-                if(!query.isEmpty()&&!item.es.toLowerCase(Locale.ROOT).contains(query)&&!item.ar.contains(query))continue;
-                results.add(item);
+
+    private void requestSpeech(final String expected) {
+        if (!SpeechRecognizer.isRecognitionAvailable(this)) {
+            toast("خدمة التعرف على الكلام غير متاحة على الجهاز. يمكنك تخطي تمرين التحدث.");
+            return;
+        }
+        if (checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            pendingSpeech = true;
+            requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, MIC_PERMISSION);
+            return;
+        }
+        listen(expected);
+    }
+
+    private void listen(final String expected) {
+        stopRecognizer();
+        recognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        recognizer.setRecognitionListener(new RecognitionListener() {
+            public void onReadyForSpeech(Bundle params) { hint("اتكلم دلوقتي بالإسباني..."); }
+            public void onBeginningOfSpeech() {}
+            public void onRmsChanged(float rms) {}
+            public void onBufferReceived(byte[] buffer) {}
+            public void onEndOfSpeech() { hint("جاري فهم كلامك..."); }
+            public void onError(int error) {
+                if (!screen.equals("exercise") || answered) return;
+                hint("الصوت مش واضح أو الخدمة غير متاحة. جرّب تاني أو تخطَّ التمرين.");
+            }
+            public void onResults(Bundle results) {
+                if (!screen.equals("exercise") || answered) return;
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (matches == null || matches.isEmpty()) { hint("ما سمعتش الكلام بوضوح، حاول تاني."); return; }
+                boolean ok = false;
+                for (String candidate : matches) if (AnswerChecker.speechMatches(expected, candidate)) { ok = true; break; }
+                gradeCurrent(ok, "سمعت: " + matches.get(0));
+            }
+            public void onPartialResults(Bundle partial) {}
+            public void onEvent(int eventType, Bundle params) {}
+        });
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");
+        intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+        recognizer.startListening(intent);
+    }
+
+    private void stopRecognizer() {
+        if (recognizer != null) {
+            try { recognizer.cancel(); recognizer.destroy(); } catch (Exception ignored) {}
+            recognizer = null;
+        }
+    }
+
+    @Override public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grants) {
+        super.onRequestPermissionsResult(requestCode, permissions, grants);
+        if (requestCode == MIC_PERMISSION && pendingSpeech) {
+            pendingSpeech = false;
+            if (grants.length > 0 && grants[0] == PackageManager.PERMISSION_GRANTED && screen.equals("exercise") && !answered) {
+                Session session = currentSession();
+                if (session != null) listen(session.ex.audio.isEmpty() ? session.ex.answers.isEmpty() ? "" : session.ex.answers.get(0) : session.ex.audio);
+            } else {
+                toast("إذن الميكروفون مطلوب للتحدث؛ يمكنك التخطي.");
             }
         }
-        String count=results.size()+" نتيجة";
-        if(results.size()>dicLimit)count+=" — بتعرض أول "+dicLimit+" بس";
-        dicCount.setText(count);dicList.removeAllViews();
-        int shown=Math.min(results.size(),dicLimit);
-        for(int r=0;r<shown;r++){
-            Item item=results.get(r);boolean starred=fav.contains(item.id);
-            int misses=prefs.getInt("misses_"+item.id,0);long interval=prefs.getLong("interval_"+item.id,0),due=prefs.getLong("due_"+item.id,0);
-            String mastery=misses>0?"عندك أخطاء متكررة فيها":(due>System.currentTimeMillis()&&interval>=86400000L?"محفوظة كويس ✓":"");
-            LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);row.setPadding(dp(16),dp(14),dp(16),dp(14));row.setBackground(bg(Color.WHITE,LINE,20));
-            LinearLayout copy=column();
-            TextView es=text(item.es,17,INK,true);es.setTextDirection(View.TEXT_DIRECTION_LTR);full(copy,es);
-            if(!item.ar.isEmpty())full(copy,text(item.ar,13,MUTED,false));
-            if(!mastery.isEmpty())full(copy,text(mastery,12,misses>0?RED:GREEN,true));
-            row.addView(copy,new LinearLayout.LayoutParams(0,-2,1));copy.setOnClickListener(v->showWordDetails(item));copy.setContentDescription("تفاصيل "+item.es);
-            Button star=button(starred?"★":"☆",Color.WHITE,starred?GOLD:MUTED);star.setTextSize(20);star.setPadding(0,0,0,0);row.addView(star,new LinearLayout.LayoutParams(dp(48),dp(48)));star.setContentDescription(starred?"إزالة من المفضلة":"أضف للمفضلة");
-            Button say=button("🔊",SKY,BLUE);say.setTextSize(15);say.setPadding(0,0,0,0);row.addView(say,new LinearLayout.LayoutParams(dp(48),dp(48)));say.setContentDescription("تشغيل النطق");
-            star.setOnClickListener(v->{Set<String> now=favorites();boolean keep;if(now.contains(item.id)){now.remove(item.id);keep=false;}else{now.add(item.id);keep=true;}saveFavorites(now);star.setText(keep?"★":"☆");star.setTextColor(keep?GOLD:foreground(MUTED));star.setContentDescription(keep?"إزالة من المفضلة":"أضف للمفضلة");if(dicMode==-1)renderDictionary();});
-            say.setOnClickListener(v->speak(item.es,false));
-            dicList.addView(row,new LinearLayout.LayoutParams(-1,-2));space(dicList,6);
+        if (requestCode == NOTIFY_PERMISSION) {
+            if (grants.length > 0 && grants[0] == PackageManager.PERMISSION_GRANTED) {
+                ReminderReceiver.scheduleNext(this);
+                toast("تم تفعيل التذكير اليومي.");
+            } else {
+                toast("إذن الإشعارات مطلوب ليصلك التذكير.");
+            }
+            showSettings();
         }
-        if(shown<results.size()){Button more=button("عرض المزيد",Color.WHITE,BLUE);full(dicList,more);more.setOnClickListener(v->{dicLimit+=80;renderDictionary();});}
-        if(results.isEmpty())full(dicList,text("لا توجد نتائج مطابقة.",15,MUTED,false));
-        space(dicList,14);
     }
-    private void showWordDetails(Item item){
-        screen="word_detail";setup("تفاصيل العبارة",true,false);LinearLayout c=card();
-        c.setBackground(bg(PALE,0,24));TextView word=text(item.es,28,INK,true);word.setTextDirection(View.TEXT_DIRECTION_LTR);full(c,word);space(c,8);full(c,text(item.ar,19,INK,true));space(c,12);audioControls(c,item.es);space(c,12);
-        int misses=prefs.getInt("misses_"+item.id,0);long interval=prefs.getLong("interval_"+item.id,0);String status=misses>0?"تحتاج إلى مراجعة":interval>0?"قيد المراجعة المتباعدة":"لم تتم مراجعتها بعد";full(c,text(status,15,MUTED,false));long due=prefs.getLong("due_"+item.id,0);if(due>0)full(c,text("المراجعة التالية: "+new SimpleDateFormat("yyyy-MM-dd HH:mm",Locale.getDefault()).format(new Date(due)),14,MUTED,false));space(c,12);
-        Button practice=button("تدرّب على العبارة",GREEN,Color.WHITE);full(c,practice);practice.setOnClickListener(v->{ArrayList<Item> one=new ArrayList<>();one.add(item);reviewMode=true;begin(one);});full(body,c);
+
+    // ---------- view helpers ----------
+
+    private int dp(float value) {
+        return (int) (value * getResources().getDisplayMetrics().density + 0.5f);
     }
-    private void showGrammar(){
-        screen="grammar";setup("قواعد إسبانية سريعة 📚",true,false);
-        full(body,text("بطاقات صغيرة بتشرح القاعدة اللي ورا الجمل اللي بتحفظها. اقراها بالراحة بعد درس، وهتثبت أسرع.",14,MUTED,false));space(body,10);
-        for(String[] tip:GrammarTips.TIPS){LinearLayout c=card();full(c,text(tip[0],18,GREEN,true));space(c,6);full(c,text(tip[1],15,INK,false));full(body,c);space(body,10);}
+
+    private boolean dark() {
+        return prefs != null && prefs.getBoolean("dark_mode", false);
     }
-    private void startQuiz(){
-        Track track=tracks.get(trackIndex);int done=Math.min(completed(trackIndex),track.lessons.size());
-        ArrayList<Item> pool=new ArrayList<>();for(int i=0;i<done;i++)pool.addAll(track.lessons.get(i).items);
-        if(pool.isEmpty()){toast("أكمل درسًا واحدًا الأول، ثم جرّب.");return;}
-        Collections.shuffle(pool);while(pool.size()>PER_LESSON)pool.remove(pool.size()-1);
-        reviewMode=true;begin(pool);
+
+    private int surface(int color) {
+        if (!dark()) return color;
+        if (color == Color.WHITE) return 0xff25332d;
+        if (color == BG) return 0xff121d18;
+        if (color == PALE) return 0xff203e2e;
+        if (color == SKY) return 0xff263750;
+        if (color == LAVENDER) return 0xff333247;
+        if (color == RED_BG) return 0xff482b30;
+        if (color == LINE) return 0xff42554a;
+        return color;
     }
-    private int masteredCount(){long now=System.currentTimeMillis();int n=0;for(Track t:tracks)for(Item i:t.items)if(prefs.getLong("interval_"+i.id,0)>=2L*86400000L&&prefs.getLong("due_"+i.id,0)>now)n++;return n;}
-    private void showStats(){
-        screen="stats";setup("إحصاءاتك 📊",true,false);
-        int streak=prefs.getInt("streak",0),xp=prefs.getInt("xp",0);int totalLessons=completed(0)+completed(1);
-        int firstC=prefs.getInt("total_first_correct",0),firstA=prefs.getInt("total_first_attempted",0);
-        Calendar week=Calendar.getInstance();SimpleDateFormat fmt=new SimpleDateFormat("yyyy-MM-dd",Locale.US);int weekC=0,weekA=0;for(int d=0;d<7;d++){weekC+=prefs.getInt("acc_"+fmt.format(week.getTime())+"_c",0);weekA+=prefs.getInt("acc_"+fmt.format(week.getTime())+"_a",0);week.add(Calendar.DAY_OF_YEAR,-1);}
-        LinearLayout hero=card();hero.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,new int[]{DARK_GREEN,GREEN}));((GradientDrawable)hero.getBackground()).setCornerRadius(dp(24));
-        full(hero,text("🔥  "+streak+" يوم متتالي",23,Color.WHITE,true));space(hero,7);full(hero,text("✦  "+xp+" نقطة تراكمية  •  "+totalLessons+" درس مكتمل",15,Color.rgb(221,245,234),true));full(body,hero);space(body,14);
-        LinearLayout acc=card();full(acc,text("دقة الإجابات",18,INK,true));space(acc,8);
-        full(acc,text("تراكمية: "+(firstA==0?"—":percentage(firstC,firstA)),16,INK,true));space(acc,6);
-        full(acc,text("هذا الأسبوع: "+(weekA==0?"—":percentage(weekC,weekA)),16,INK,true));space(acc,6);full(acc,progress(firstC,Math.max(1,firstA)));full(body,acc);space(body,12);
-        LinearLayout vocab=card();full(vocab,text("حصيلتك في الإسباني",18,INK,true));space(vocab,8);
-        full(vocab,text((completedItems(0)+completedItems(1))+" عنصر في الدروس المكتملة",16,INK,true));space(vocab,6);full(vocab,text(""+masteredCount()+" عبارة متقنة (2 يوم أو أكثر بين المراجعات)",15,INK,true));space(vocab,6);
-        full(vocab,text(""+dueCount()+" عبارة مستحقة للمراجعة الآن",15,INK,true));space(vocab,6);
-        full(vocab,text(""+weakCount()+" عبارة ما زالت تحتاج تدريبًا",15,INK,true));full(body,vocab);space(body,12);
-        LinearLayout history=card();full(history,text("سجل الإجابات خلال آخر ٧ أيام",18,INK,true));space(history,6);Calendar day=Calendar.getInstance();for(int i=0;i<7;i++){String key=fmt.format(day.getTime());int a=prefs.getInt("acc_"+key+"_a",0),correctDay=prefs.getInt("acc_"+key+"_c",0);full(history,text(key+"   •   "+(a==0?"لا توجد إجابات مسجلة":correctDay+" من "+a+" صحيحة"),14,INK,false));if(a>0)full(history,progress(correctDay,a));space(history,6);day.add(Calendar.DAY_OF_YEAR,-1);}full(body,history);space(body,12);
-        Button homeButton=button("العودة للرئيسية",GREEN,Color.WHITE);full(body,homeButton);homeButton.setOnClickListener(v->home());
+
+    private int foreground(int color) {
+        if (!dark()) return color;
+        if (color == INK) return 0xffeff5ef;
+        if (color == MUTED) return 0xffb5c6b9;
+        if (color == DARK_GREEN || color == GREEN) return 0xff8ee3a1;
+        if (color == BLUE) return 0xffa9c7ff;
+        if (color == RED) return 0xffffa8ac;
+        return color;
     }
-    private String encodePref(Object value){
-        if(value instanceof Boolean)return "b:"+value;
-        if(value instanceof Integer)return "i:"+value;
-        if(value instanceof Long)return "l:"+value;
-        if(value instanceof Float)return "f:"+value;
-        if(value instanceof Set)return "set:"+new JSONArray((Set<?>)value).toString();
-        return "s:"+value;
+
+    private GradientDrawable bg(int color, int stroke, int radius) {
+        GradientDrawable shape = new GradientDrawable();
+        shape.setColor(surface(color));
+        shape.setCornerRadius(dp(radius));
+        if (stroke != 0) shape.setStroke(dp(2), surface(stroke));
+        return shape;
     }
-    private String progressSnapshot() throws Exception {JSONObject data=new JSONObject();for(java.util.Map.Entry<String,?> entry:prefs.getAll().entrySet())data.put(entry.getKey(),encodePref(entry.getValue()));return data.toString();}
-    private void exportProgress(){
-        try{pendingExport=progressSnapshot();
-            Intent intent=new Intent(Intent.ACTION_CREATE_DOCUMENT);intent.addCategory(Intent.CATEGORY_OPENABLE);intent.setType("application/json");intent.putExtra(Intent.EXTRA_TITLE,"habla-backup.json");startActivityForResult(intent,EXPORT_REQUEST);
-        }catch(Exception e){toast("تعذر تجهيز النسخة الاحتياطية.");}
+
+    private boolean isArabicText(String value) {
+        return value == null || value.isEmpty() || value.matches("(?s).*[\\u0600-\\u06ff\\u0750-\\u077f].*");
     }
-    private void importProgressPicker(){
-        Intent intent=new Intent(Intent.ACTION_OPEN_DOCUMENT);intent.addCategory(Intent.CATEGORY_OPENABLE);intent.setType("*/*");startActivityForResult(intent,IMPORT_REQUEST);
+
+    private Typeface fontFor(String value, boolean bold) {
+        return isArabicText(value) ? (bold ? cairoBold : cairoRegular) : (bold ? nunitoBold : nunitoRegular);
     }
-    @Override public void onActivityResult(int requestCode,int resultCode,Intent data){
-        super.onActivityResult(requestCode,resultCode,data);
-        if(requestCode==EXPORT_REQUEST&&resultCode==RESULT_OK&&data!=null&&data.getData()!=null){
-            try(OutputStream out=getContentResolver().openOutputStream(data.getData())){if(pendingExport==null)pendingExport=progressSnapshot();out.write(pendingExport.getBytes("UTF-8"));toast("تم تصدير تقدمك. احفظ الملف في مكان آمن.");}catch(Exception e){toast("تعذر كتابة الملف.");}
-            pendingExport=null;
+
+    private TextView text(String value, int size, int color, boolean bold) {
+        TextView view = new TextView(this);
+        view.setText(value);
+        view.setTextSize(size);
+        view.setTextColor(foreground(color));
+        view.setTypeface(fontFor(value, bold));
+        view.setLineSpacing(dp(4), 1f);
+        return view;
+    }
+
+    private TextView ltr(String value, int size, int color, boolean bold) {
+        TextView view = text(value, size, color, bold);
+        view.setTextDirection(View.TEXT_DIRECTION_LTR);
+        view.setGravity(Gravity.START);
+        view.setTypeface(bold ? nunitoBold : nunitoRegular);
+        return view;
+    }
+
+    private Button button(String label, int color, int fgColor) {
+        Button button = new Button(this);
+        button.setText(label);
+        button.setTextColor(foreground(fgColor));
+        button.setTextSize(16);
+        button.setAllCaps(false);
+        button.setTypeface(fontFor(label, true));
+        button.setMinHeight(dp(54));
+        button.setPadding(dp(14), dp(9), dp(14), dp(9));
+        GradientDrawable shape = bg(color, color == Color.WHITE ? LINE : 0, 18);
+        button.setBackground(new android.graphics.drawable.RippleDrawable(
+                ColorStateList.valueOf(dark() ? 0x33ffffff : 0x22000000), shape, null));
+        return button;
+    }
+
+    private void full(LinearLayout box, View view) {
+        box.addView(view, new LinearLayout.LayoutParams(-1, -2));
+    }
+
+    private void space(LinearLayout box, int height) {
+        box.addView(new View(this), new LinearLayout.LayoutParams(1, dp(height)));
+    }
+
+    private LinearLayout column() {
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        return layout;
+    }
+
+    private LinearLayout card() {
+        LinearLayout layout = column();
+        layout.setPadding(dp(20), dp(20), dp(20), dp(20));
+        layout.setBackground(bg(Color.WHITE, LINE, 24));
+        return layout;
+    }
+
+    private void toast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private ProgressBar progress(int value, int max) {
+        ProgressBar bar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
+        bar.setMax(Math.max(1, max));
+        bar.setProgress(Math.max(0, Math.min(value, max)));
+        bar.setProgressTintList(ColorStateList.valueOf(dark() ? 0xff58cc72 : GREEN));
+        bar.setProgressBackgroundTintList(ColorStateList.valueOf(surface(LINE)));
+        bar.setContentDescription("التقدم: " + value + " من " + max);
+        return bar;
+    }
+
+    private void setup(String title, boolean back, boolean fixedFooter) {
+        root = column();
+        root.setBackgroundColor(surface(BG));
+        getWindow().setStatusBarColor(surface(BG));
+        getWindow().setNavigationBarColor(surface(BG));
+        getWindow().getDecorView().setSystemUiVisibility(dark() ? 0 :
+                View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | (Build.VERSION.SDK_INT >= 26 ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR : 0));
+        root.setPadding(dp(20), dp(12), dp(20), dp(12));
+        root.setOnApplyWindowInsetsListener((view, insets) -> {
+            view.setPadding(dp(20), dp(12) + insets.getSystemWindowInsetTop(), dp(20), dp(12) + insets.getSystemWindowInsetBottom());
+            return insets;
+        });
+        setContentView(root);
+        root.requestApplyInsets();
+        LinearLayout bar = new LinearLayout(this);
+        bar.setGravity(Gravity.CENTER_VERTICAL);
+        if (back) {
+            Button close = button("✕", Color.WHITE, MUTED);
+            close.setTextSize(18);
+            close.setContentDescription("رجوع");
+            bar.addView(close, new LinearLayout.LayoutParams(dp(50), dp(48)));
+            close.setOnClickListener(v -> navigateBack());
         }
-        else if(requestCode==IMPORT_REQUEST&&resultCode==RESULT_OK&&data!=null&&data.getData()!=null){
-            try(InputStream in=getContentResolver().openInputStream(data.getData())){
-                ByteArrayOutputStream bytes=new ByteArrayOutputStream();byte[] buf=new byte[8192];int n;while((n=in.read(buf))!=-1){if(bytes.size()>MAX_BACKUP_BYTES-n)throw new IllegalArgumentException("Backup too large");bytes.write(buf,0,n);}
-                JSONObject parsed=new JSONObject(bytes.toString("UTF-8"));java.util.Map<String,Object> decoded=new java.util.HashMap<>();Iterator<String> keys=parsed.keys();
-                while(keys.hasNext()){
-                    String key=keys.next();Object raw=parsed.get(key);if(!(raw instanceof String))throw new IllegalArgumentException("Invalid backup value");String encoded=(String)raw;Object value;
-                    if(key.equals("dictionary_favorites")&&encoded.startsWith("s:"))value=LearningLogic.legacyFavorites(encoded.substring(2));
-                    else if(encoded.startsWith("b:")){String v=encoded.substring(2);if(!v.equals("true")&&!v.equals("false"))throw new IllegalArgumentException("Invalid boolean");value=Boolean.valueOf(v);}
-                    else if(encoded.startsWith("i:"))value=Integer.valueOf(encoded.substring(2));
-                    else if(encoded.startsWith("l:"))value=Long.valueOf(encoded.substring(2));
-                    else if(encoded.startsWith("f:")){float v=Float.parseFloat(encoded.substring(2));if(Float.isNaN(v)||Float.isInfinite(v))throw new IllegalArgumentException("Invalid float");value=v;}
-                    else if(encoded.startsWith("set:")){JSONArray arr=new JSONArray(encoded.substring(4));Set<String> values=new HashSet<>();for(int i=0;i<arr.length();i++)values.add(arr.getString(i));value=values;}
-                    else if(encoded.startsWith("s:"))value=encoded.substring(2);else throw new IllegalArgumentException("Invalid backup type");
-                    if(!LearningLogic.validPreferenceType(key,value))throw new IllegalArgumentException("Invalid preference type");
-                    Object existing=prefs.getAll().get(key);if(existing!=null&&!key.equals("dictionary_favorites")&&!existing.getClass().equals(value.getClass())&&!(existing instanceof Set&&value instanceof Set))throw new IllegalArgumentException("Preference type mismatch");
-                    decoded.put(key,value);
+        TextView heading = text(title, 18, INK, true);
+        heading.setGravity(Gravity.CENTER);
+        bar.addView(heading, new LinearLayout.LayoutParams(0, -2, 1));
+        full(root, bar);
+        space(root, 12);
+        scroll = new ScrollView(this);
+        scroll.setFillViewport(false);
+        root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
+        body = column();
+        scroll.addView(body);
+        if (fixedFooter) {
+            footer = column();
+            space(root, 8);
+            full(root, footer);
+        } else {
+            footer = null;
+        }
+        if (screen.equals("home") || screen.equals("path") || screen.equals("review")
+                || screen.equals("dictionary") || screen.equals("profile")) addNavigation();
+    }
+
+    private void addNavigation() {
+        LinearLayout nav = new LinearLayout(this);
+        nav.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        nav.setPadding(0, dp(8), 0, 0);
+        String[] labels = {"الرئيسية", "التعلم", "المراجعة", "القاموس", "حسابي"};
+        String[] screens = {"home", "path", "review", "dictionary", "profile"};
+        String[] icons = {"⌂", "◈", "↻", "▤", "◎"};
+        for (int i = 0; i < labels.length; i++) {
+            final int tab = i;
+            boolean active = screen.equals(screens[i]);
+            TextView item = text(icons[i] + "\n" + labels[i], 12, active ? DARK_GREEN : MUTED, active);
+            item.setGravity(Gravity.CENTER);
+            item.setMinHeight(dp(58));
+            item.setBackground(bg(active ? PALE : BG, 0, 14));
+            item.setContentDescription(labels[i] + (active ? "، القسم الحالي" : ""));
+            item.setOnClickListener(v -> {
+                if (tab == 0) home();
+                else if (tab == 1) path();
+                else if (tab == 2) showReview();
+                else if (tab == 3) showDictionary();
+                else showProfile();
+            });
+            nav.addView(item, new LinearLayout.LayoutParams(0, -2, 1));
+        }
+        full(root, nav);
+    }
+
+    private void mascot(LinearLayout box, String caption) {
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        CharacterArt.CharacterView buddy = new CharacterArt.CharacterView(this,
+                CharacterArt.Cast.SOL, CharacterArt.Mood.WELCOME, dark(), false);
+        row.addView(buddy, new LinearLayout.LayoutParams(dp(76), dp(76)));
+        TextView bubble = text(caption, 15, INK, true);
+        bubble.setPadding(dp(14), dp(10), dp(14), dp(10));
+        bubble.setBackground(bg(Color.WHITE, LINE, 18));
+        LinearLayout.LayoutParams bubbleParams = new LinearLayout.LayoutParams(0, -2, 1);
+        bubbleParams.setMargins(dp(8), 0, 0, 0);
+        row.addView(bubble, bubbleParams);
+        full(box, row);
+    }
+
+    private void sectionTitle(String title, String subtitle) {
+        full(body, text(title, 22, INK, true));
+        if (subtitle != null && !subtitle.isEmpty()) {
+            space(body, 4);
+            full(body, text(subtitle, 14, MUTED, false));
+        }
+        space(body, 12);
+    }
+
+    private void hint(String message) {
+        if (feedback == null) { toast(message); return; }
+        feedback.setVisibility(View.VISIBLE);
+        feedback.setTextColor(foreground(BLUE));
+        feedback.setBackground(bg(SKY, 0, 14));
+        feedback.setText(message);
+    }
+
+    // ---------- progress helpers ----------
+
+    private Set<String> doneLessons() {
+        Set<String> raw = prefs.getStringSet("done_lessons", null);
+        return raw == null ? new HashSet<>() : new HashSet<>(raw);
+    }
+
+    private boolean lessonDone(String lessonId) {
+        return doneLessons().contains(lessonId);
+    }
+
+    private void markLessonDone(String lessonId) {
+        Set<String> done = doneLessons();
+        if (!done.add(lessonId)) return;
+        prefs.edit().putStringSet("done_lessons", done).apply();
+        for (int i = 0; i < tracks.size(); i++) {
+            Track track = tracks.get(i);
+            int count = 0;
+            for (Lesson lesson : track.lessons) if (done.contains(lesson.id)) count++;
+            prefs.edit().putInt("complete_" + i, count).apply();
+        }
+    }
+
+    private int doneLessons(Track track) {
+        Set<String> done = doneLessons();
+        int count = 0;
+        for (Lesson lesson : track.lessons) if (done.contains(lesson.id)) count++;
+        return count;
+    }
+
+    private int percent(int part, int whole) {
+        return whole <= 0 ? 0 : Math.max(0, Math.min(100, part * 100 / whole));
+    }
+
+    private String percentage(int part, int whole) {
+        return percent(part, whole) + "٪";
+    }
+
+    private boolean unlockAll() {
+        return prefs.getBoolean("unlock_all", false);
+    }
+
+    private boolean levelUnlocked(int index) {
+        if (index <= 0 || unlockAll()) return true;
+        Track previous = tracks.get(index - 1);
+        return percent(doneLessons(previous), Math.max(1, previous.lessons.size())) >= 80;
+    }
+
+    private Lesson nextLesson(Track track) {
+        Set<String> done = doneLessons();
+        for (Lesson lesson : track.lessons) if (!done.contains(lesson.id)) return lesson;
+        return null;
+    }
+
+    private boolean lessonUnlocked(Track track, Lesson lesson) {
+        if (unlockAll()) return true;
+        if (lessonDone(lesson.id)) return true;
+        Lesson next = nextLesson(track);
+        return next != null && next.id.equals(lesson.id);
+    }
+
+    private int learnedItemCount(Track track) {
+        Set<String> done = doneLessons();
+        Set<String> ids = new LinkedHashSet<>();
+        for (Lesson lesson : track.lessons) {
+            if (!done.contains(lesson.id)) continue;
+            for (Item item : lesson.items) ids.add(item.id);
+        }
+        return ids.size();
+    }
+
+    private List<String> allItemIds() {
+        return new ArrayList<>(curriculum.itemsById.keySet());
+    }
+
+    private int dueCount() {
+        return ReviewScheduler.dueCount(store, allItemIds(), System.currentTimeMillis());
+    }
+
+    private int masteredCount() {
+        return ReviewScheduler.masteredCount(store, allItemIds());
+    }
+
+    private int weakCount() {
+        int count = 0;
+        for (String id : allItemIds()) if (prefs.getInt("misses_" + id, 0) > 0) count++;
+        return count;
+    }
+
+    private String todayKey() {
+        return new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(new Date());
+    }
+
+    private int dailyLessonsToday() {
+        return todayKey().equals(prefs.getString("daily_date", "")) ? prefs.getInt("daily_lessons", 0) : 0;
+    }
+
+    private int xpLevel() {
+        return XpPolicy.levelFromXp(prefs.getInt("xp", 0));
+    }
+
+    // ---------- welcome ----------
+
+    private void showWelcome() {
+        screen = "welcome";
+        setup("أهلاً بك في Spanish 1000", false, false);
+        mascot(body, "هنتعلم إسباني من الصفر، بالعربي المصري، خطوة كل يوم.");
+        space(body, 16);
+        LinearLayout intro = card();
+        intro.setBackground(bg(PALE, 0, 24));
+        full(intro, text("إيه اللي هتلاقيه هنا؟", 22, INK, true));
+        space(intro, 8);
+        String[] points = {
+                "منهج مرتب من A0 (تأسيس) لحد C1 (متقدم).",
+                "لكل كلمة: المعنى بالفصحى والمصري، النطق، ومثال في جملة.",
+                "تمارين: اختيار، استماع، ترتيب، إكمال، ترجمة، نطق، وفهم حوارات.",
+                "مدرس أخطاء يشرح الغلط بالمصري ويرجّع الكلمة في المراجعة.",
+                "كل حاجة شغالة أوفلاين، وتقدمك محفوظ على جهازك.",
+        };
+        for (String point : points) {
+            full(intro, text("◆  " + point, 15, INK, false));
+            space(intro, 5);
+        }
+        full(body, intro);
+        space(body, 16);
+        LinearLayout setupCard = card();
+        full(setupCard, text("هدفك اليومي", 18, INK, true));
+        space(setupCard, 6);
+        final TextView goalValue = text(prefs.getInt("daily_goal", 1) + " درس يوميًا", 17, GREEN, true);
+        goalValue.setGravity(Gravity.CENTER);
+        full(setupCard, goalValue);
+        space(setupCard, 8);
+        LinearLayout goalRow = new LinearLayout(this);
+        Button less = button("−", Color.WHITE, BLUE);
+        Button more = button("+", Color.WHITE, BLUE);
+        goalRow.addView(less, new LinearLayout.LayoutParams(0, dp(50), 1));
+        goalRow.addView(more, new LinearLayout.LayoutParams(0, dp(50), 1));
+        full(setupCard, goalRow);
+        less.setOnClickListener(v -> {
+            prefs.edit().putInt("daily_goal", Math.max(1, prefs.getInt("daily_goal", 1) - 1)).apply();
+            goalValue.setText(prefs.getInt("daily_goal", 1) + " درس يوميًا");
+        });
+        more.setOnClickListener(v -> {
+            prefs.edit().putInt("daily_goal", Math.min(10, prefs.getInt("daily_goal", 1) + 1)).apply();
+            goalValue.setText(prefs.getInt("daily_goal", 1) + " درس يوميًا");
+        });
+        full(body, setupCard);
+        space(body, 16);
+        Button start = button("ابدأ من A0", GREEN, Color.WHITE);
+        start.setOnClickListener(v -> {
+            prefs.edit().putBoolean("onboarding_done", true).apply();
+            trackIndex = 0;
+            prefs.edit().putInt("last_track", 0).apply();
+            home();
+        });
+        full(body, start);
+        space(body, 8);
+        full(body, text("التطبيق مش بيدّعي إنه بيضمن الطلاقة. الهدف: أساس قوي + تمرين مستمر. "
+                + "عدد عناصر المحتوى الحالي: " + curriculum.summaryLine(), 13, MUTED, false));
+    }
+
+    // ---------- home ----------
+
+    private void home() {
+        screen = "home";
+        setup("Spanish 1000", false, false);
+        Track track = currentTrack();
+        Set<String> done = doneLessons();
+        int levelDone = doneLessons(track);
+        Lesson next = nextLesson(track);
+
+        LinearLayout welcome = new LinearLayout(this);
+        welcome.setGravity(Gravity.CENTER_VERTICAL);
+        LinearLayout greeting = column();
+        full(greeting, text("¡Hola! أهلًا بيك", 25, INK, true));
+        space(greeting, 4);
+        full(greeting, text(prefs.getInt("streak", 0) > 0 ? "كمّل سلسلتك 🔥" : "كل يوم خطوة صغيرة", 15, MUTED, false));
+        welcome.addView(greeting, new LinearLayout.LayoutParams(0, -2, 1));
+        CharacterArt.CharacterView buddy = new CharacterArt.CharacterView(this,
+                CharacterArt.Cast.SOL, CharacterArt.Mood.HAPPY, dark(), false);
+        welcome.addView(buddy, new LinearLayout.LayoutParams(dp(72), dp(72)));
+        full(body, welcome);
+        space(body, 14);
+
+        LinearLayout indicators = new LinearLayout(this);
+        TextView streak = text("سلسلتك " + prefs.getInt("streak", 0) + " يوم", 14, DARK_GREEN, true);
+        TextView xp = text(prefs.getInt("xp", 0) + " XP · مستوى " + xpLevel(), 14, DARK_GREEN, true);
+        streak.setGravity(Gravity.CENTER);
+        xp.setGravity(Gravity.CENTER);
+        streak.setPadding(dp(8), dp(12), dp(8), dp(12));
+        xp.setPadding(dp(8), dp(12), dp(8), dp(12));
+        streak.setBackground(bg(PALE, 0, 16));
+        xp.setBackground(bg(LAVENDER, 0, 16));
+        LinearLayout.LayoutParams indicatorParams = new LinearLayout.LayoutParams(0, -2, 1);
+        indicatorParams.setMargins(0, 0, dp(8), 0);
+        indicators.addView(streak, indicatorParams);
+        indicators.addView(xp, new LinearLayout.LayoutParams(0, -2, 1));
+        full(body, indicators);
+        space(body, 18);
+
+        resumeSessionCard(body);
+
+        LinearLayout continuation = card();
+        continuation.setBackground(bg(PALE, 0, 24));
+        full(continuation, text(track.title + "  •  " + track.titleEs, 14, DARK_GREEN, true));
+        space(continuation, 6);
+        full(continuation, text(next == null ? "خلصت كل دروس المستوى — راجع أو كمّل للمستوى اللي بعده" :
+                next.title, 20, INK, true));
+        space(continuation, 6);
+        full(continuation, text(levelDone + " من " + track.lessons.size() + " درس مكتمل  •  "
+                + learnedItemCount(track) + " عنصر من " + track.items.size(), 14, MUTED, false));
+        space(continuation, 8);
+        full(continuation, progress(levelDone, track.lessons.size()));
+        space(continuation, 14);
+        Button resume = button(next == null ? "استعرض المستويات" : (levelDone == 0 ? "ابدأ أول درس" : "كمّل الدرس التالي"),
+                GREEN, Color.WHITE);
+        resume.setOnClickListener(v -> {
+            if (next == null) showLevels();
+            else startLesson(next, false);
+        });
+        full(continuation, resume);
+        full(body, continuation);
+        space(body, 14);
+
+        dailyGoalCard(body);
+        space(body, 14);
+
+        LinearLayout reviewPanel = card();
+        full(reviewPanel, text("المراجعة المتباعدة", 18, INK, true));
+        space(reviewPanel, 5);
+        full(reviewPanel, text(dueCount() > 0 ? dueCount() + " عنصر مستحق النهاردة" : "مفيش عناصر مستحقة دلوقتي",
+                14, MUTED, false));
+        space(reviewPanel, 5);
+        full(reviewPanel, text(masteredCount() + " عنصر متقن  •  " + weakCount() + " محتاج تدريب", 13, MUTED, false));
+        space(reviewPanel, 10);
+        Button reviewNow = button(dueCount() > 0 ? "ابدأ المراجعة" : "افتح صفحة المراجعة", Color.WHITE, BLUE);
+        reviewNow.setOnClickListener(v -> showReview());
+        full(reviewPanel, reviewNow);
+        full(body, reviewPanel);
+        space(body, 18);
+
+        sectionTitle("اختار قسمك", null);
+        Button levels = button("🗺️  خريطة المستويات A0 → C1", Color.WHITE, GREEN);
+        levels.setOnClickListener(v -> showLevels());
+        full(body, levels);
+        space(body, 8);
+        Button dictionary = button("📖  القاموس والمفضلة", Color.WHITE, BLUE);
+        dictionary.setOnClickListener(v -> showDictionary());
+        full(body, dictionary);
+        space(body, 8);
+        Button callCenter = button("☎️  كول سنتر وخدمة عملاء بالإسباني", Color.WHITE, BLUE);
+        callCenter.setOnClickListener(v -> showCallCenter());
+        full(body, callCenter);
+        space(body, 8);
+        Button scenarios = button("🎭  مواقف الحياة اليومية", Color.WHITE, GREEN);
+        scenarios.setOnClickListener(v -> showScenarios());
+        full(body, scenarios);
+        space(body, 8);
+        Button grammar = button("📚  قواعد بالعربي المصري", Color.WHITE, BLUE);
+        grammar.setOnClickListener(v -> showGrammar());
+        full(body, grammar);
+        space(body, 8);
+        Button stats = button("📊  إحصائياتك والإنجازات", Color.WHITE, BLUE);
+        stats.setOnClickListener(v -> showStats());
+        full(body, stats);
+        space(body, 14);
+        full(body, text("الصوت بيستخدم محرك TTS في الجهاز بصوت es-ES. التعرف على الكلام بيستخدم خدمة الجهاز، "
+                + "وتقييم النطق تقريبي وليس تحليلًا صوتيًا.", 12, MUTED, false));
+    }
+
+    /** "Continue where you stopped" — backed by the durable {@link LessonSession}. */
+    private void resumeSessionCard(LinearLayout box) {
+        LessonSession pending = LessonSession.load(store);
+        if (pending == null || pending.cursor <= 0 || pending.finished()) return;
+        LinearLayout card = card();
+        card.setBackground(bg(SKY, 0, 22));
+        full(card, text("فيه درس وقفت في نصه 🕘", 17, BLUE, true));
+        space(card, 5);
+        String title = pending.lessonId;
+        Lesson lesson = findLessonById(pending.lessonId);
+        if (lesson != null && !lesson.title.isEmpty()) title = lesson.title;
+        full(card, text(title, 16, INK, true));
+        space(card, 4);
+        full(card, text("وقفت عند تمرين " + Math.min(pending.cursor + 1, pending.total) + " من " + pending.total
+                + " — إجابات صح من أول مرة: " + pending.firstCorrect + " من " + pending.firstAttempted, 13, MUTED, false));
+        space(card, 10);
+        LinearLayout row = new LinearLayout(this);
+        Button resume = button("كمّل من مكانك", GREEN, Color.WHITE);
+        Button restart = button("ابدأها من الأول", Color.WHITE, BLUE);
+        resume.setOnClickListener(v -> resumeSavedSession());
+        restart.setOnClickListener(v -> {
+            LessonSession.clear(store);
+            toast("اتلغت الجلسة المحفوظة. الدرس هيتحسب من الأول بدون نقاط إضافية.");
+            home();
+        });
+        row.addView(resume, new LinearLayout.LayoutParams(0, dp(48), 1.2f));
+        row.addView(restart, new LinearLayout.LayoutParams(0, dp(48), 1f));
+        full(card, row);
+        full(box, card);
+        space(box, 14);
+    }
+
+    private Lesson findLessonById(String id) {
+        if (id == null || id.isEmpty()) return null;
+        for (Track track : tracks) for (Lesson lesson : track.lessons) if (lesson.id.equals(id)) return lesson;
+        return null;
+    }
+
+    private void resumeSavedSession() {
+        LessonSession state = LessonSession.load(store);
+        if (state == null) { toast("مفيش جلسة محفوظة."); home(); return; }
+        Lesson lesson = findLessonById(state.lessonId);
+        if (lesson == null || lesson.ref == null) {
+            if (state.reviewMode && !state.items().isEmpty()) {
+                List<Curriculum.Item> items = new ArrayList<>();
+                for (String id : state.items()) {
+                    Curriculum.Item item = resolveItem(id);
+                    if (item != null) items.add(item);
                 }
-                SharedPreferences.Editor edit=prefs.edit();for(java.util.Map.Entry<String,Object> entry:decoded.entrySet()){String key=entry.getKey();Object v=entry.getValue();if(v instanceof Boolean)edit.putBoolean(key,(Boolean)v);else if(v instanceof Integer)edit.putInt(key,(Integer)v);else if(v instanceof Long)edit.putLong(key,(Long)v);else if(v instanceof Float)edit.putFloat(key,(Float)v);else if(v instanceof Set)edit.putStringSet(key,(Set<String>)v);else edit.putString(key,(String)v);}
-                if(!edit.commit())throw new IllegalStateException("Backup could not be saved");trackIndex=prefs.getInt("last_track",0);if(trackIndex<0||trackIndex>=tracks.size())trackIndex=0;if(prefs.getBoolean("reminders_enabled",true))ReminderReceiver.scheduleNext(this);else ReminderReceiver.cancel(this);if(ttsReady)tts.setSpeechRate(prefs.getFloat("tts_rate",.9f));toast("تمت استعادة تقدمك ("+decoded.size()+" عنصر).");home();
-            }catch(Exception e){toast("تعذر استيراد الملف. تأكد أنه ملف تصدير صالح من هذا التطبيق.");}
+                if (!items.isEmpty()) {
+                    startItemSession(items, true);
+                    cursor = Math.min(state.cursor, queue.size());
+                    firstCorrect = state.firstCorrect;
+                    firstAttempted = state.firstAttempted;
+                    attempted = state.attempted;
+                    correct = state.correct;
+                    showExercise();
+                    toast("رجعت لجلسة المراجعة من تمرين " + (cursor + 1) + ".");
+                    return;
+                }
+            }
+            LessonSession.clear(store);
+            toast("الدرس المحفوظ مش موجود في المحتوى الحالي؛ اتحذفت الجلسة بأمان.");
+            home();
+            return;
+        }
+        List<Curriculum.Exercise> plan = LessonPlanner.plan(curriculum, lesson.ref);
+        if (plan.isEmpty()) {
+            LessonSession.clear(store);
+            toast("الدرس المحفوظ مفيش فيه تمارين؛ اتحذفت الجلسة بأمان.");
+            home();
+            return;
+        }
+        activeLesson = lesson;
+        activeDialogue = lesson.dialogueId.isEmpty() ? null : curriculum.dialogue(lesson.dialogueId);
+        beginSession(plan, state.reviewMode, lesson.dialogueId, state);
+        toast("رجعت للدرس من تمرين " + (Math.min(state.cursor, queue.size() - 1) + 1) + " من " + queue.size() + ".");
+    }
+
+    private void dailyGoalCard(LinearLayout box) {
+        int goal = Math.max(1, prefs.getInt("daily_goal", 1));
+        int done = dailyLessonsToday();
+        LinearLayout daily = card();
+        daily.setBackground(bg(LAVENDER, 0, 20));
+        full(daily, text("🎯  هدفك اليومي", 17, INK, true));
+        space(daily, 6);
+        int percent = Math.min(100, done * 100 / goal);
+        DesignSystem.RingProgressView ring = new DesignSystem.RingProgressView(this, percent,
+                done + "/" + goal, "درس اليوم", foreground(GREEN), surface(LINE), foreground(INK),
+                foreground(MUTED), cairoBold, nunitoRegular);
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.addView(ring, new LinearLayout.LayoutParams(dp(92), dp(92)));
+        LinearLayout copy = column();
+        full(copy, text(done >= goal ? "وصلت لهدفك النهاردة 🎉" : "باقي " + (goal - done) + " درس لهدفك",
+                16, INK, true));
+        space(copy, 4);
+        full(copy, text("السلسلة: " + prefs.getInt("streak", 0) + " يوم", 13, MUTED, false));
+        LinearLayout.LayoutParams copyParams = new LinearLayout.LayoutParams(0, -2, 1);
+        copyParams.setMargins(dp(12), 0, 0, 0);
+        row.addView(copy, copyParams);
+        full(daily, row);
+        full(box, daily);
+    }
+
+    // ---------- level map ----------
+
+    private void showLevels() {
+        screen = "levels";
+        setup("خريطة المستويات", true, false);
+        full(body, text("المنهج متدرّج: كل مستوى بيفتح لما تخلص ٨٠٪ من اللي قبله. الأربع مستويات تغطي من الصفر لحد المتقدم.",
+                14, MUTED, false));
+        space(body, 12);
+        for (int index = 0; index < tracks.size(); index++) {
+            final int levelIndex = index;
+            Track track = tracks.get(index);
+            boolean unlocked = levelUnlocked(index);
+            boolean current = index == trackIndex;
+            int done = doneLessons(track);
+            LinearLayout box = card();
+            box.setBackground(bg(current ? PALE : Color.WHITE, LINE, 24));
+            LinearLayout head = new LinearLayout(this);
+            head.setGravity(Gravity.CENTER_VERTICAL);
+            TextView badge = text(track.id, 20, unlocked ? Color.WHITE : MUTED, true);
+            badge.setGravity(Gravity.CENTER);
+            badge.setBackground(bg(unlocked ? (current ? GREEN : BLUE) : LINE, 0, 18));
+            head.addView(badge, new LinearLayout.LayoutParams(dp(58), dp(58)));
+            LinearLayout copy = column();
+            full(copy, text(track.title, 19, INK, true));
+            space(copy, 3);
+            full(copy, text(track.titleEs + "  •  " + track.units.size() + " وحدات  •  "
+                    + track.lessons.size() + " درس", 13, MUTED, false));
+            LinearLayout.LayoutParams copyParams = new LinearLayout.LayoutParams(0, -2, 1);
+            copyParams.setMargins(dp(12), 0, 0, 0);
+            head.addView(copy, copyParams);
+            full(box, head);
+            space(box, 8);
+            full(box, text(track.descEgy, 13, MUTED, false));
+            space(box, 8);
+            full(box, progress(done, track.lessons.size()));
+            space(box, 5);
+            full(box, text(done + "/" + track.lessons.size() + " درس  •  " + percentage(done, track.lessons.size()),
+                    13, unlocked ? DARK_GREEN : MUTED, true));
+            space(box, 12);
+            Button go = button(unlocked ? (done == 0 ? "ابدأ المستوى" : "افتح المستوى")
+                    : "مقفول — كمّل " + percentage(80, 100) + " من " + tracks.get(index - 1).id, unlocked ? GREEN : LINE,
+                    unlocked ? Color.WHITE : MUTED);
+            go.setOnClickListener(v -> {
+                if (!unlocked) {
+                    toast("خلص ٨٠٪ من مستوى " + tracks.get(levelIndex - 1).id + " الأول. تقدر تلغي القفل من الإعدادات.");
+                    return;
+                }
+                trackIndex = levelIndex;
+                prefs.edit().putInt("last_track", levelIndex).apply();
+                path();
+            });
+            full(box, go);
+            full(body, box);
+            space(body, 12);
+        }
+        Button unlock = button(unlockAll() ? "🔓 إلغاء قفل المستويات مفعّل" : "🔒 ترتيب المنهج مفعّل (اضغط للتغيير)",
+                Color.WHITE, BLUE);
+        unlock.setOnClickListener(v -> {
+            prefs.edit().putBoolean("unlock_all", !unlockAll()).apply();
+            showLevels();
+        });
+        full(body, unlock);
+    }
+
+    // ---------- path ----------
+
+    private void path() {
+        screen = "path";
+        Track track = currentTrack();
+        setup(track.title, true, false);
+        int done = doneLessons(track);
+        LinearLayout banner = card();
+        banner.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR,
+                new int[]{DARK_GREEN, GREEN}));
+        banner.getBackground().setAlpha(255);
+        full(banner, text(track.titleEs + " ✨", 22, Color.WHITE, true));
+        space(banner, 6);
+        full(banner, text(track.goalEgy, 14, Color.WHITE, false));
+        space(banner, 8);
+        ProgressBar bannerProgress = progress(done, track.lessons.size());
+        bannerProgress.setProgressTintList(ColorStateList.valueOf(Color.WHITE));
+        full(banner, bannerProgress);
+        space(banner, 6);
+        full(banner, text(done + " من " + track.lessons.size() + " درس  •  " + percentage(done, track.lessons.size()),
+                14, Color.WHITE, true));
+        full(body, banner);
+        space(body, 14);
+        Lesson next = nextLesson(track);
+        if (next != null) {
+            Button start = button("▶  " + next.title, GREEN, Color.WHITE);
+            start.setOnClickListener(v -> startLesson(next, false));
+            full(body, start);
+            space(body, 10);
+        }
+        Set<String> doneIds = doneLessons();
+        for (Unit unit : track.units) {
+            LinearLayout unitCard = card();
+            unitCard.setBackground(bg(PALE, 0, 20));
+            full(unitCard, text(unit.title, 18, INK, true));
+            space(unitCard, 3);
+            full(unitCard, text(unit.titleEs, 13, MUTED, false));
+            space(unitCard, 4);
+            full(unitCard, text(unit.goalEgy, 13, MUTED, false));
+            int unitDone = 0;
+            for (Lesson lesson : unit.lessons) if (doneIds.contains(lesson.id)) unitDone++;
+            space(unitCard, 8);
+            full(unitCard, progress(unitDone, Math.max(1, unit.lessons.size())));
+            full(body, unitCard);
+            space(body, 8);
+            for (Lesson lesson : unit.lessons) {
+                boolean finished = doneIds.contains(lesson.id);
+                boolean unlocked = lessonUnlocked(track, lesson);
+                boolean current = next != null && next.id.equals(lesson.id);
+                LinearLayout row = card();
+                row.setBackground(bg(finished ? PALE : Color.WHITE, LINE, 18));
+                LinearLayout head = new LinearLayout(this);
+                head.setGravity(Gravity.CENTER_VERTICAL);
+                TextView state = text(finished ? "✓" : current ? "▶" : unlocked ? "◻" : "🔒", 18,
+                        finished ? Color.WHITE : unlocked ? Color.WHITE : MUTED, true);
+                state.setGravity(Gravity.CENTER);
+                state.setBackground(bg(finished ? DARK_GREEN : current ? GREEN : unlocked ? BLUE : LINE, 0, 14));
+                head.addView(state, new LinearLayout.LayoutParams(dp(42), dp(42)));
+                LinearLayout copy = column();
+                full(copy, text(lesson.title, 16, INK, true));
+                space(copy, 3);
+                full(copy, text(lesson.dialogueId.isEmpty()
+                        ? lesson.items.size() + " عنصر"
+                        : "حوار وفهم مسموع", 12, MUTED, false));
+                LinearLayout.LayoutParams copyParams = new LinearLayout.LayoutParams(0, -2, 1);
+                copyParams.setMargins(dp(10), 0, 0, 0);
+                head.addView(copy, copyParams);
+                full(row, head);
+                LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(-1, -2);
+                row.setOnClickListener(v -> {
+                    if (unlocked) startLesson(lesson, finished);
+                    else toast("أكمل الدرس اللي قبله الأول.");
+                });
+                full(body, row);
+                space(body, 6);
+            }
+            space(body, 10);
+        }
+        if (done == track.lessons.size() && trackIndex + 1 < tracks.size()) {
+            Button nextLevel = button("المستوى اللي بعده: " + tracks.get(trackIndex + 1).id, BLUE, Color.WHITE);
+            nextLevel.setOnClickListener(v -> showLevels());
+            full(body, nextLevel);
         }
     }
-    private int weakCount(){int n=0;for(Track t:tracks)for(Item i:t.items)if(prefs.getInt("misses_"+i.id,0)>0)n++;return n;}
-    private void showWeakWords(){
-        ArrayList<Item> weak=new ArrayList<>();for(Track t:tracks)for(Item i:t.items)if(prefs.getInt("misses_"+i.id,0)>0)weak.add(i);Collections.sort(weak,(a,b)->Integer.compare(prefs.getInt("misses_"+b.id,0),prefs.getInt("misses_"+a.id,0)));screen="weak";setup("كلمات تحتاج تدريبًا",true,false);if(weak.isEmpty()){full(body,text("ممتاز! لا توجد كلمات متعثرة حاليًا. ستظهر هنا الكلمات التي تخطئ فيها.",17,GREEN,true));return;}full(body,text("الأكثر تكرارًا في الأخطاء تظهر أولًا.",14,MUTED,false));space(body,10);for(Item i:weak){LinearLayout c=card();full(c,text(i.es+"   •   "+i.ar,17,INK,true));full(c,text("أخطاء مسجلة: "+prefs.getInt("misses_"+i.id,0),13,MUTED,false));space(body,7);full(body,c);}Button practice=button("تدرب على الكلمات المتعثرة",GREEN,Color.WHITE);full(body,practice);practice.setOnClickListener(v->{if(weak.size()>PER_LESSON)weak.subList(PER_LESSON,weak.size()).clear();reviewMode=true;intro(weak);});
+
+    // ---------- lesson session ----------
+
+    private Curriculum.Item resolveItem(String id) {
+        return id == null || id.isEmpty() ? null : curriculum.item(id);
     }
-    private Item findPhrase(String phrase){for(Track t:tracks)for(Item i:t.items)if(LearningLogic.normalize(i.es).equals(LearningLogic.normalize(phrase)))return i;return new Item("dialogue_"+phrase.hashCode(),phrase,"");}
-    private void showScenarios(){
-        screen="scenarios";setup("محادثات الحياة اليومية 🎭",true,false);
-        full(body,text("اختر موقفًا من مواقف إسبانيا الحقيقية: هتسمع جملة الرد، وتردّ بإسبانيتك وتصحيح تلقائي كل دور.",15,MUTED,false));space(body,10);
-        for(int s=0;s<RealLife.SCENARIOS.length;s++){
-            final int scenario=s;String[] data=RealLife.SCENARIOS[scenario];LinearLayout c=card();
-            full(c,text(data[0],19,INK,true));space(c,4);full(c,text(data[1],14,MUTED,false));space(c,8);
-            full(c,text((data.length-2)/2+" أدوار في الحوار",13,GREEN,true));space(c,10);
-            Button go=button("استعرض العبارات وتدرّب",GREEN,Color.WHITE);full(c,go);
-            go.setOnClickListener(v->showScenarioDetails(scenario));
-            full(body,c);space(body,10);
+
+    private Session currentSession() {
+        return cursor >= 0 && cursor < queue.size() ? queue.get(cursor) : null;
+    }
+
+    private void startLesson(Lesson lesson, boolean asReview) {
+        if (lesson == null) { toast("مفيش درس متاح."); return; }
+        activeLesson = lesson;
+        activeDialogue = lesson.dialogueId.isEmpty() ? null : curriculum.dialogue(lesson.dialogueId);
+        List<Curriculum.Exercise> plan = lesson.ref == null
+                ? new ArrayList<>() : LessonPlanner.plan(curriculum, lesson.ref);
+        beginSession(plan, asReview, lesson.dialogueId);
+    }
+
+    private void startItemSession(List<Curriculum.Item> items, boolean asReview) {
+        if (items.isEmpty()) { toast("مفيش عناصر للمراجعة دلوقتي."); return; }
+        Curriculum.Lesson synthetic = new Curriculum.Lesson();
+        synthetic.id = "review_" + todayKey() + "_" + items.size();
+        synthetic.title = "مراجعة سريعة";
+        synthetic.titleEs = "Repaso";
+        synthetic.goalEgy = "مراجعة العناصر المستحقة والكلمات المتعثرة.";
+        for (Curriculum.Item item : items) synthetic.itemIds.add(item.id);
+        activeLesson = new Lesson();
+        activeLesson.id = synthetic.id;
+        activeLesson.title = synthetic.title;
+        activeLesson.ref = synthetic;
+        for (Curriculum.Item item : items) {
+            Item local = findItemBySource(item.id);
+            if (local != null) activeLesson.items.add(local);
         }
+        activeDialogue = null;
+        beginSession(LessonPlanner.plan(curriculum, synthetic), asReview, "");
     }
-    private int openScenario=-1;
-    private void showScenarioDetails(int scenario){
-        openScenario=scenario;screen="scenario_detail";String[] data=RealLife.SCENARIOS[scenario];setup(data[0],true,false);
-        full(body,text(data[1],16,MUTED,false));space(body,12);
-        full(body,text("عباراتك في الموقف",21,INK,true));space(body,5);
-        full(body,text("هذه عبارات المتعلم ومواقفها، وليست نصاً كاملاً لكل المتحدثين.",14,MUTED,false));space(body,12);
-        for(int i=2;i+1<data.length;i+=2){Item item=findPhrase(data[i]);LinearLayout bubble=card();bubble.setBackground(bg(SKY,0,22));LinearLayout speaker=new LinearLayout(this);speaker.setGravity(Gravity.CENTER_VERTICAL);TextView avatar=text("أنت",13,DARK_GREEN,true);avatar.setGravity(Gravity.CENTER);avatar.setBackground(bg(PALE,0,22));speaker.addView(avatar,new LinearLayout.LayoutParams(dp(44),dp(44)));TextView context=text(data[i+1],14,MUTED,false);LinearLayout.LayoutParams contextLayout=new LinearLayout.LayoutParams(0,-2,1);contextLayout.setMargins(dp(10),0,0,0);speaker.addView(context,contextLayout);full(bubble,speaker);space(bubble,10);TextView phrase=text(data[i],20,INK,true);phrase.setTextDirection(View.TEXT_DIRECTION_LTR);full(bubble,phrase);space(bubble,6);if(!item.ar.isEmpty()){TextView translation=text(item.ar,15,INK,false);translation.setVisibility(View.GONE);full(bubble,translation);Button toggle=button("إظهار الترجمة",Color.WHITE,BLUE);full(bubble,toggle);toggle.setOnClickListener(v->{boolean show=translation.getVisibility()!=View.VISIBLE;translation.setVisibility(show?View.VISIBLE:View.GONE);toggle.setText(show?"إخفاء الترجمة":"إظهار الترجمة");});}space(bubble,6);Button play=button("استمع للعبارة",Color.WHITE,BLUE);full(bubble,play);play.setOnClickListener(v->speak(item.es,false));full(body,bubble);space(body,10);}
-        Button practice=button("ابدأ التدريب على الموقف",GREEN,Color.WHITE);full(body,practice);practice.setOnClickListener(v->startScenario(scenario));
+
+    private void beginSession(List<Curriculum.Exercise> plan, boolean asReview, String dialogueId) {
+        beginSession(plan, asReview, dialogueId, null);
     }
-    private void startScenario(int scenario){
-        String[] data=RealLife.SCENARIOS[scenario];int count=(data.length-2)/2;
-        String[][] turns=new String[count][];
-        for(int t=0;t<count;t++)turns[t]=new String[]{data[2+t*2],data[3+t*2],""};
-        queue.clear();sessionItems.clear();mistakes.clear();skippedItems.clear();for(int n=0;n<turns.length;n++){Item item=findPhrase(turns[n][0]);Exercise ex=new Exercise(item,CONVERSE,false);ex.prompt=turns[n][1];queue.add(ex);sessionItems.add(item);}dialogueMode=true;dialogueTurn=0;cursor=0;correct=0;attempted=0;firstCorrect=0;firstAttempted=0;lessonStarted=System.currentTimeMillis();showExercise();
-    }
-    private void showDialogueSummary(){
-        screen="summary";SharedPreferences.Editor edit=prefs.edit();edit.putInt("xp",prefs.getInt("xp",0)+correct);String day=new SimpleDateFormat("yyyy-MM-dd",Locale.US).format(new Date());int count=prefs.getString("daily_date","").equals(day)?prefs.getInt("daily_lessons",0):0;edit.putInt("total_first_correct",prefs.getInt("total_first_correct",0)+firstCorrect).putInt("total_first_attempted",prefs.getInt("total_first_attempted",0)+firstAttempted).putInt("acc_"+day+"_c",prefs.getInt("acc_"+day+"_c",0)+firstCorrect).putInt("acc_"+day+"_a",prefs.getInt("acc_"+day+"_a",0)+firstAttempted).putString("daily_date",day).putInt("daily_lessons",count+1).apply();dialogueMode=false;setup("الحوار اكتمل! 🎭",false,false);LinearLayout c=card();full(c,text("أحسنت! أكملت "+queue.size()+" أدوار في الحوار.",22,INK,true));space(c,8);full(c,text("✦ "+correct+" نقطة تدريب",17,GREEN,true));full(body,c);space(body,12);Button homeButton=button("العودة للرئيسية",GREEN,Color.WHITE);full(body,homeButton);homeButton.setOnClickListener(v->home());
-    }
-    private void begin(ArrayList<Item> items){
-        dialogueMode=false;matchMoves=0;queue.clear();mistakes.clear();skippedItems.clear();sessionItems.clear();sessionItems.addAll(items);cursor=0;correct=0;attempted=0;firstCorrect=0;firstAttempted=0;speechSkipped=0;listeningSkipped=0;lessonStarted=System.currentTimeMillis();
-        ArrayList<String> phrases=new ArrayList<>(), translations=new ArrayList<>();for(Item item:sessionItems){phrases.add(item.es);translations.add(item.ar);}
-        for(LearningLogic.Step step:LearningLogic.lessonPlan(phrases,translations))queue.add(new Exercise(sessionItems.get(step.itemIndex),step.type,false));
+
+    private void beginSession(List<Curriculum.Exercise> plan, boolean asReview, String dialogueId, LessonSession restore) {
+        queue.clear();
+        mistakes.clear();
+        skippedItems.clear();
+        srsGraded.clear();
+        firstOutcome.clear();
+        sessionItems.clear();
+        for (Curriculum.Exercise exercise : plan) {
+            queue.add(new Session(exercise, resolveItem(exercise.itemId), false, dialogueId));
+            Curriculum.Item item = resolveItem(exercise.itemId);
+            if (item != null && !containsItem(sessionItems, item.id)) sessionItems.add(findItemBySource(item.id));
+        }
+        if (sessionItems.isEmpty() && activeLesson != null) {
+            for (Item studied : activeLesson.items) {
+                if (studied != null && !containsItem(sessionItems, studied.id)) sessionItems.add(studied);
+            }
+        }
+        sessionItems.removeAll(Collections.singleton(null));
+        cursor = 0;
+        correct = 0;
+        attempted = 0;
+        firstCorrect = 0;
+        firstAttempted = 0;
+        speechSkipped = 0;
+        listeningSkipped = 0;
+        reviewMode = asReview;
+        lessonStarted = System.currentTimeMillis();
+        if (queue.isEmpty()) { toast("الدرس مفيش فيه تمارين."); path(); return; }
+        savedSession = LessonSession.begin(activeLesson == null ? "" : activeLesson.id, dialogueId, queue.size(),
+                asReview, lessonStarted);
+        java.util.List<String> plannedIds = new ArrayList<>();
+        for (Curriculum.Exercise planned : plan) {
+            if (!planned.itemId.isEmpty() && !plannedIds.contains(planned.itemId)) plannedIds.add(planned.itemId);
+        }
+        savedSession.setItems(plannedIds);
+        if (restore != null) {
+            cursor = Math.min(restore.cursor, queue.size());
+            firstCorrect = restore.firstCorrect;
+            firstAttempted = restore.firstAttempted;
+            attempted = restore.attempted;
+            correct = restore.correct;
+            lessonStarted = restore.startedAt > 0 ? restore.startedAt : lessonStarted;
+            savedSession = restore;
+        }
+        LessonSession.save(store, savedSession);
         showExercise();
     }
-    private ArrayList<Item> distractors(Item target,boolean arabic){
-        ArrayList<Item> pool=new ArrayList<>(sessionItems);Collections.shuffle(pool);ArrayList<Item> fallback=new ArrayList<>();for(Track t:tracks)fallback.addAll(t.items);Collections.shuffle(fallback);pool.addAll(fallback);
-        ArrayList<Item> out=new ArrayList<>();out.add(target);Set<String> seen=new HashSet<>();seen.add(arabic?target.ar.trim():LearningLogic.normalize(target.es));
-        for(Item i:pool){String value=arabic?i.ar:i.es;String key=arabic?value.trim():LearningLogic.normalize(value);if(!key.isEmpty()&&seen.add(key))out.add(i);if(out.size()==4)break;}Collections.shuffle(out);return out;
+
+    private boolean containsItem(List<Item> items, String id) {
+        for (Item item : items) if (item.id.equals(id)) return true;
+        return false;
     }
-    private void audioControls(LinearLayout box,String value){
-        LinearLayout row=new LinearLayout(this);Button normal=button("🔊 استمع",SKY,BLUE),slow=button("🐢 ببطء",Color.WHITE,BLUE);
-        LinearLayout.LayoutParams a=new LinearLayout.LayoutParams(0,-2,1);a.setMargins(0,0,dp(6),0);row.addView(normal,a);row.addView(slow,new LinearLayout.LayoutParams(0,-2,1));full(box,row);normal.setOnClickListener(v->speak(value,false));slow.setOnClickListener(v->speak(value,true));
-    }
-    private String conversationPrompt(Item item){String answer=LearningLogic.normalize(item.es);if(answer.contains("hola")||answer.contains("buenos dias")||answer.contains("buenas tardes")||answer.contains("buenas noches"))return "وصلتَ إلى مقهى في مدريد. ابدأ بتحية الموظف.";if(answer.contains("quiero")||answer.contains("me gustaria")||answer.contains("cafe")||answer.contains("agua")||answer.contains("comida"))return "أنت في مقهى إسباني. اطلب ما تراه في الجملة.";if(answer.contains("cuanto")||answer.contains("precio")||answer.contains("cuesta"))return "اسأل البائع عن السعر مستخدمًا العبارة.";if(answer.contains("donde")||answer.contains("calle")||answer.contains("estacion"))return "أنت سائح وتبحث عن مكان قريب. اسأل أحد المارة.";if(answer.contains("gracias")||answer.contains("por favor")||answer.contains("perdon"))return "أكمل حوارًا مهذبًا مستخدمًا العبارة المناسبة.";return "موقف يومي: استخدم العبارة الإسبانية التالية في حديثك.";}
-    private void showExercise(){
-        stopRecognizer();if(cursor>=queue.size()){finishLesson();return;}screen="exercise";answered=false;selectedId=null;selectedWord=null;selectedWords.clear();selectedChips.clear();input=null;action=null;
-        Exercise ex=queue.get(cursor);setup((dialogueMode?"موقف • ":"سؤال ")+(cursor+1)+" / "+queue.size(),true,true);full(body,progress(cursor,queue.size()));space(body,16);
-        String title=ex.type==INTRO?"كلمة أو تعبير جديد ✨":ex.type==MEANING?"اختر المعنى الصحيح":ex.type==REVERSE?"اختر الترجمة الإسبانية":ex.type==LISTEN?"اسمع واختر الإسباني":ex.type==ORDER?"رتّب الجملة بالإسباني":ex.type==MISSING?"كمّل الكلمة الناقصة":ex.type==MATCH?"طابق البطاقات 🃏":ex.type==CONVERSE?"موقف من الحياة اليومية 🎭":ex.type==TRANSFORM?"حوّل الجملة إلى المؤنث ♀":ex.type==TYPE?"اكتب بالإسباني":"قولها بالإسباني";
-        full(body,text(ex.retry?"مراجعة خطأ سابق  ↻":title,23,INK,true));if(ex.retry){space(body,4);full(body,text(title,15,MUTED,false));}space(body,12);
-        LinearLayout prompt=card();
-        if(ex.type==INTRO||ex.type==MEANING||ex.type==SPEAK){TextView es=text(ex.item.es,23,INK,true);es.setTextDirection(View.TEXT_DIRECTION_LTR);full(prompt,es);if(ex.type==INTRO||ex.type==SPEAK){space(prompt,7);full(prompt,text(ex.item.ar,16,MUTED,false));}space(prompt,12);audioControls(prompt,ex.item.es);}
-        else if(ex.type==LISTEN){full(prompt,text("اسمع كويس، وبعدها اختار اللي سمعته.",16,INK,true));space(prompt,12);audioControls(prompt,ex.item.es);}
-        else if(ex.type==MISSING){TextView blank=text(LearningLogic.sentenceWithBlank(ex.item.es),22,INK,true);blank.setTextDirection(View.TEXT_DIRECTION_LTR);full(prompt,blank);space(prompt,8);full(prompt,text(ex.item.ar,15,MUTED,false));}
-        else if(ex.type==MATCH){full(prompt,text("اقلب البطاقات ووصّل كل كلمة إسبانية بمعناها العربي.",16,INK,true));space(prompt,8);mascot(prompt,"ركز على المعاني—تقدر تعملها!");}
-        else if(ex.type==CONVERSE){if(ex.prompt.isEmpty())ex.prompt=conversationPrompt(ex.item);full(prompt,text(ex.prompt,17,INK,true));space(prompt,8);mascot(prompt,dialogueMode?"دورك في الحوار—اكتب ردك بالإسبانية.":"تخيل الموقف واتكلم بثقة!");space(prompt,8);TextView phrase=text(ex.item.es,21,BLUE,true);phrase.setTextDirection(View.TEXT_DIRECTION_LTR);full(prompt,phrase);space(prompt,7);if(!ex.item.ar.isEmpty())full(prompt,text(ex.item.ar,15,MUTED,false));audioControls(prompt,ex.item.es);}
-        else if(ex.type==TRANSFORM){TextView base=text(LearningLogic.maleVariant(ex.item.es),22,INK,true);base.setTextDirection(View.TEXT_DIRECTION_LTR);full(prompt,base);space(prompt,8);full(prompt,text(ex.item.ar,15,MUTED,false));space(prompt,8);full(prompt,text("اكتب نفس الجملة بصيغة المؤنث ♀",15,BLUE,true));}
-        else{full(prompt,text(ex.item.ar,20,INK,true));space(prompt,7);full(prompt,text(ex.type==ORDER?"اضغط الكلمات بالترتيب الصحيح.":ex.type==REVERSE?"اختار المقابل بالإسباني.":"اكتب الإجابة بدون مساعدة.",14,MUTED,false));}
-        prompt.setBackground(bg(ex.type==INTRO?PALE:ex.type==LISTEN||ex.type==CONVERSE?SKY:Color.WHITE,0,24));full(body,prompt);space(body,16);answers=column();full(body,answers);
-        if(ex.type==INTRO){full(answers,text("اسمع واقرأ المعنى، وبعدها جرّب بنفسك.",15,MUTED,false));}
-        else if(ex.type==MEANING||ex.type==LISTEN||ex.type==REVERSE)showChoices(ex);
-        else if(ex.type==ORDER)showWordBank(ex);
-        else if(ex.type==MISSING)showMissingChoices(ex);
-        else if(ex.type==MATCH){showMatchCards();space(answers,8);full(answers,text("الأزواج المطابقة تظل مكشوفة ✓",13,MUTED,false));}
-        else if(ex.type==CONVERSE){if(dialogueMode){input=new EditText(this);input.setTypeface(nunitoRegular);input.setSingleLine(false);input.setTextSize(19);input.setTextColor(foreground(INK));input.setHintTextColor(foreground(MUTED));input.setHint("اكتب ردك بالإسباني");input.setTextDirection(View.TEXT_DIRECTION_LTR);input.setPadding(dp(15),dp(12),dp(15),dp(12));input.setBackground(bg(Color.WHITE,LINE,16));full(answers,input);}else showConversationOptions(ex);}
-        else if(ex.type==TYPE||ex.type==TRANSFORM){input=new EditText(this);input.setTypeface(nunitoRegular);input.setSingleLine(false);input.setTextSize(19);input.setTextColor(foreground(INK));input.setHintTextColor(foreground(MUTED));input.setHint("اكتب هنا بالإسباني");input.setTextDirection(View.TEXT_DIRECTION_LTR);input.setPadding(dp(15),dp(12),dp(15),dp(12));input.setBackground(bg(Color.WHITE,LINE,16));full(answers,input);}
-        else {Button mic=button("🎙  اضغط وتكلم",BLUE,Color.WHITE);full(answers,mic);mic.setOnClickListener(v->{if(!answered)requestSpeech();});space(answers,8);Button skip=button("مش قادر أتكلم دلوقتي",Color.WHITE,MUTED);full(answers,skip);skip.setOnClickListener(v->skipExercise(true));}
-        if(ex.type==LISTEN){space(answers,7);Button skip=button("الصوت مش متاح؟ تخطي",Color.WHITE,MUTED);full(answers,skip);skip.setOnClickListener(v->skipExercise(false));}
-        space(answers,10);Button lookup=button("البحث في القاموس",Color.WHITE,BLUE);full(answers,lookup);lookup.setOnClickListener(v->showDictionaryDialog());
-        feedback=text("",15,INK,true);feedback.setVisibility(View.GONE);feedback.setPadding(dp(14),dp(12),dp(14),dp(12));full(footer,feedback);space(footer,8);
-        action=button(ex.type==INTRO?"فهمت، كمّل":ex.type==SPEAK?"اضغط الميكروفون للتحدث":ex.type==MATCH?"طابق كل البطاقات أولًا":"تحقق",GREEN,Color.WHITE);action.setEnabled(ex.type==INTRO);full(footer,action);if(input!=null)watchAnswerInput(input);
-        action.setOnClickListener(v->{if(answered||ex.type==INTRO){cursor++;showExercise();}else checkAnswer();});
-    }
-    private void showDictionaryDialog(){
-        LinearLayout panel=column();panel.setPadding(dp(16),dp(8),dp(16),dp(8));EditText query=new EditText(this);query.setTypeface(cairoRegular);query.setSingleLine(true);query.setTextColor(foreground(INK));query.setHintTextColor(foreground(MUTED));query.setHint("ابحث بالعربية أو الإسبانية");full(panel,query);
-        ScrollView resultsScroll=new ScrollView(this);LinearLayout results=column();resultsScroll.addView(results);panel.addView(resultsScroll,new LinearLayout.LayoutParams(-1,dp(280)));
-        Runnable render=()->{results.removeAllViews();String needle=query.getText().toString().trim().toLowerCase(Locale.ROOT);int count=0;if(needle.isEmpty()){full(results,text("اكتب كلمة للبحث في المنهج.",15,MUTED,false));return;}for(Track track:tracks)for(Item item:track.items){if(count>=20)break;if(item.es.toLowerCase(Locale.ROOT).contains(needle)||item.ar.contains(needle)){Button row=button(item.es+" — "+item.ar,Color.WHITE,INK);row.setOnClickListener(v->speak(item.es,false));full(results,row);count++;}}if(count==0)full(results,text("لا توجد نتائج مطابقة.",15,MUTED,false));};
-        query.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int a,int b,int c){}public void onTextChanged(CharSequence s,int a,int b,int c){render.run();}public void afterTextChanged(android.text.Editable s){}});render.run();new android.app.AlertDialog.Builder(this).setTitle("القاموس — اضغط النتيجة للاستماع").setView(panel).setPositiveButton("عودة للدرس",null).show();
-    }
-    private void watchAnswerInput(EditText field){
-        field.addTextChangedListener(new android.text.TextWatcher(){public void beforeTextChanged(CharSequence s,int start,int count,int after){}public void onTextChanged(CharSequence s,int start,int before,int count){if(action!=null&&!answered)action.setEnabled(!s.toString().trim().isEmpty());}public void afterTextChanged(android.text.Editable s){}});
-    }
-    private void showChoices(Exercise ex){
-        for(Item candidate:distractors(ex.item,ex.type==MEANING)){
-            String label=ex.type==MEANING?candidate.ar:candidate.es;Button b=button(label,Color.WHITE,INK);b.setMinHeight(dp(55));if(ex.type==LISTEN||ex.type==REVERSE)b.setTextDirection(View.TEXT_DIRECTION_LTR);full(answers,b);space(answers,7);
-            b.setOnClickListener(v->{if(answered)return;selectedId=candidate.id;action.setEnabled(true);for(int i=0;i<answers.getChildCount();i++){View child=answers.getChildAt(i);if(child instanceof Button)child.setBackground(bg(Color.WHITE,LINE,16));}b.setBackground(bg(SKY,BLUE,16));});
+
+    private String typeTitle(String type) {
+        switch (type) {
+            case "intro": return "كلمة جديدة ✨";
+            case "choose": return "اختار المعنى الصحيح";
+            case "listen": return "اسمع واختار";
+            case "order": return "رتّب الجملة";
+            case "fill": return "كمّل الجملة";
+            case "translate_es_ar": return "ترجم للعربي";
+            case "translate_ar_es": return "اكتب بالإسباني";
+            case "speak": return "قولها بصوتك 🎙";
+            case "match": return "وصّل الكلمات 🃏";
+            case "comprehend": return "فهم الحوار";
+            case "final": return "اختبار ختامي";
+            default: return "تمرين";
         }
     }
-    private void showConversationOptions(Exercise ex){
-        String[] options={"أقول العبارة بصوتي 🎙","أكتب العبارة بالإسبانية ✍","أستمع للنطق مرة أخرى 🔊"};
-        for(int i=0;i<options.length;i++){final int choice=i;Button option=button(options[i],Color.WHITE,INK);full(answers,option);space(answers,7);option.setOnClickListener(v->{if(answered)return;for(int n=0;n<answers.getChildCount();n++)if(answers.getChildAt(n) instanceof Button)((Button)answers.getChildAt(n)).setBackground(bg(Color.WHITE,LINE,16));option.setBackground(bg(SKY,BLUE,16));if(choice==0){requestSpeech();}else if(choice==1){if(input==null){input=new EditText(this);input.setTypeface(nunitoRegular);input.setSingleLine(false);input.setTextSize(19);input.setTextColor(foreground(INK));input.setHintTextColor(foreground(MUTED));input.setHint("اكتب ردك بالإسباني");input.setTextDirection(View.TEXT_DIRECTION_LTR);input.setPadding(dp(15),dp(12),dp(15),dp(12));input.setBackground(bg(Color.WHITE,LINE,16));answers.addView(input);watchAnswerInput(input);}action.setEnabled(!input.getText().toString().trim().isEmpty());input.requestFocus();((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).showSoftInput(input,InputMethodManager.SHOW_IMPLICIT);}else speak(ex.item.es,false);});}
-    }
-    private void showMatchCards(){
-        ArrayList<Item> pairItems=new ArrayList<>();Set<String> spanishSeen=new HashSet<>(), arabicSeen=new HashSet<>();ArrayList<Item> candidates=new ArrayList<>(sessionItems);Collections.shuffle(candidates);
-        for(Item item:candidates){String spanishKey=LearningLogic.normalize(item.es),arabicKey=item.ar.trim();if(spanishKey.isEmpty()||arabicKey.isEmpty()||!spanishSeen.add(spanishKey)||!arabicSeen.add(arabicKey))continue;pairItems.add(item);if(pairItems.size()==4)break;}
-        if(pairItems.size()<3){answered=true;action.setEnabled(true);action.setText("متابعة");return;}
-        ArrayList<String[]> pairs=new ArrayList<>();for(Item item:pairItems)pairs.add(new String[]{item.es,item.ar});final ArrayList<Item> matchedItems=pairItems;
-        matchCards=new MatchCards(this,pairs,moves->{matchMoves=moves;answered=true;correct+=pairs.size();attempted+=pairs.size();firstCorrect+=pairs.size();firstAttempted+=pairs.size();for(Item item:matchedItems)mistakes.remove(item.id+":"+MATCH);feedback.setVisibility(View.VISIBLE);feedback.setTextColor(foreground(DARK_GREEN));feedback.setBackground(bg(PALE,0,14));feedback.setText("ممتاز! طابقت "+pairs.size()+" أزواج في "+moves+" محاولة.");action.setEnabled(true);action.setText("متابعة");});full(answers,matchCards);
-    }
-    private void showMissingChoices(Exercise ex){
 
-        String correctWord=LearningLogic.missingWord(ex.item.es);ArrayList<String> options=new ArrayList<>();options.add(correctWord);Set<String> seen=new HashSet<>();seen.add(LearningLogic.normalize(correctWord));
-        ArrayList<Item> pool=new ArrayList<>(sessionItems);for(Track t:tracks)pool.addAll(t.items);Collections.shuffle(pool);
-        for(Item item:pool){if(!LearningLogic.canProduce(item.es))continue;ArrayList<String> words=new ArrayList<>(LearningLogic.words(item.es));Collections.shuffle(words);for(String word:words){String key=LearningLogic.normalize(word);if(key.length()>=2&&seen.add(key))options.add(word);if(options.size()>=4)break;}if(options.size()>=4)break;}
-        Collections.shuffle(options);WordFlow choices=new WordFlow(this);full(answers,choices);
-        for(String option:options){Button choice=button(option,Color.WHITE,INK);choices.addView(choice);choice.setOnClickListener(v->{if(answered)return;selectedWord=option;action.setEnabled(true);for(int i=0;i<choices.getChildCount();i++)choices.getChildAt(i).setBackground(bg(Color.WHITE,LINE,16));choice.setBackground(bg(SKY,BLUE,16));});}
+    private void showExercise() {
+        stopRecognizer();
+        if (cursor >= queue.size()) { finishLesson(); return; }
+        screen = "exercise";
+        answered = false;
+        selectedChoice = null;
+        selectedWord = null;
+        selectedWords.clear();
+        selectedChips.clear();
+        input = null;
+        action = null;
+        feedback = null;
+        Session session = queue.get(cursor);
+        Curriculum.Exercise ex = session.ex;
+        Curriculum.Item item = session.item;
+
+        setup((reviewMode ? "مراجعة • " : "سؤال ") + (cursor + 1) + " / " + queue.size(), true, true);
+        full(body, progress(cursor, queue.size()));
+        space(body, 12);
+        full(body, text(session.retry ? "مراجعة خطأ سابق ↻" : typeTitle(ex.type), 21, INK, true));
+        if (Tutor.hint(ex) != null && !Tutor.hint(ex).isEmpty()) {
+            space(body, 4);
+            full(body, text(Tutor.hint(ex), 13, MUTED, false));
+        }
+        space(body, 12);
+
+        LinearLayout prompt = card();
+        prompt.setBackground(bg(ex.type.equals("intro") ? PALE : ex.type.equals("listen") ? SKY : Color.WHITE, 0, 24));
+        if (activeDialogue != null && (ex.type.equals("comprehend") || ex.type.equals("listen"))) {
+            renderDialogueLines(prompt, activeDialogue);
+            space(prompt, 10);
+        }
+        if (ex.type.equals("intro")) {
+            renderIntro(prompt, ex, item);
+        } else if (ex.type.equals("listen")) {
+            full(prompt, text(ex.promptEgy, 16, INK, true));
+            space(prompt, 10);
+            audioControls(prompt, ex.audio);
+        } else if (ex.type.equals("order") || ex.type.equals("fill")) {
+            full(prompt, text(ex.promptEgy, 18, INK, true));
+            if (item != null && item.hasExample() && ex.type.equals("order")) {
+                space(prompt, 6);
+                full(prompt, text("المعنى: " + (item.egy.isEmpty() ? item.ar : item.egy), 14, MUTED, false));
+            }
+        } else if (ex.type.equals("translate_es_ar")) {
+            full(prompt, text(ex.promptEgy, 14, MUTED, false));
+            space(prompt, 6);
+            full(prompt, ltr(ex.audio.isEmpty() ? ex.promptEgy : ex.audio, 22, INK, true));
+            space(prompt, 8);
+            audioControls(prompt, ex.audio);
+        } else if (ex.type.equals("translate_ar_es")) {
+            full(prompt, text(ex.promptEgy, 20, INK, true));
+            if (item != null && !item.exEs.isEmpty()) {
+                space(prompt, 6);
+                full(prompt, ltr(item.exEs, 15, MUTED, false));
+                if (!item.exEgy.isEmpty()) full(prompt, text("مثال: " + item.exEgy, 13, MUTED, false));
+            }
+        } else if (ex.type.equals("speak")) {
+            full(prompt, text(ex.promptEgy, 18, INK, true));
+            space(prompt, 8);
+            full(prompt, ltr(ex.audio, 22, INK, true));
+            space(prompt, 8);
+            audioControls(prompt, ex.audio);
+            space(prompt, 6);
+            full(prompt, text("التقييم تقريبي بالتعرف على الكلام — مش تحليل صوتي احترافي للنطق.", 12, MUTED, false));
+        } else if (ex.type.equals("match")) {
+            full(prompt, text(ex.promptEgy, 17, INK, true));
+        } else {
+            full(prompt, text(ex.promptEgy, 19, INK, true));
+            if (!ex.promptFusha.isEmpty() && !ex.promptFusha.equals(ex.promptEgy)) {
+                space(prompt, 5);
+                full(prompt, text("بالفصحى: " + ex.promptFusha, 13, MUTED, false));
+            }
+        }
+        full(body, prompt);
+        space(body, 14);
+
+        answers = column();
+        full(body, answers);
+        renderAnswers(ex, item);
+
+        feedback = text("", 15, INK, true);
+        feedback.setVisibility(View.GONE);
+        feedback.setPadding(dp(14), dp(12), dp(14), dp(12));
+        full(footer, feedback);
+        space(footer, 8);
+        action = button("تحقق", GREEN, Color.WHITE);
+        if (ex.type.equals("intro")) action.setText("فهمت، كمّل");
+        if (ex.type.equals("speak")) action.setText("جرّب الميكروفون");
+        if (ex.type.equals("match")) action.setText("كمّل الأزواج");
+        action.setEnabled(ex.type.equals("intro") || ex.type.equals("speak") || ex.type.equals("match"));
+        full(footer, action);
+        action.setOnClickListener(v -> {
+            if (answered) { advanceSession(); showExercise(); return; }
+            if (ex.type.equals("intro")) { advanceSession(); showExercise(); return; }
+            if (ex.type.equals("speak")) { requestSpeech(speakTarget(ex)); return; }
+            if (ex.type.equals("match")) { hint("طابق كل الأزواج الأول."); return; }
+            checkAnswer(session);
+        });
+        if (input != null) watchInput(input);
     }
-    private void showWordBank(Exercise ex){
-        full(answers,text("إجابتك — اضغط كلمة لإزالتها",14,MUTED,false));space(answers,5);
-        selectedBank=new WordFlow(this);selectedBank.setMinimumHeight(dp(55));selectedBank.setPadding(dp(5),dp(5),dp(5),dp(5));selectedBank.setBackground(bg(Color.WHITE,LINE,14));full(answers,selectedBank);space(answers,12);
-        full(answers,text("اختار الكلمات بالترتيب",14,MUTED,false));space(answers,5);
-        bank=new WordFlow(this);full(answers,bank);
-        ArrayList<String> words=new ArrayList<>(LearningLogic.words(ex.item.es));Collections.shuffle(words);
-        for(String word:words){Button chip=button(word,Color.WHITE,BLUE);chip.setMinHeight(dp(48));bank.addView(chip);chip.setOnClickListener(v->{if(answered||!chip.isEnabled())return;selectedWords.add(word);selectedChips.add(chip);chip.setEnabled(false);renderSelectedWords();});}
-        space(answers,8);Button reset=button("↺  إعادة ترتيب",Color.WHITE,MUTED);full(answers,reset);reset.setOnClickListener(v->{if(answered)return;for(Button chip:selectedChips)chip.setEnabled(true);selectedWords.clear();selectedChips.clear();renderSelectedWords();});
+
+    /** Moves to the next exercise and persists the position immediately. */
+    private void advanceSession() {
+        cursor++;
+        if (savedSession != null) {
+            savedSession.cursor = cursor;
+            LessonSession.save(store, savedSession);
+        }
     }
-    private void renderSelectedWords(){
-        if(action!=null&&!answered)action.setEnabled(!selectedWords.isEmpty());
+
+    private String speakTarget(Curriculum.Exercise ex) {
+        if (!ex.audio.isEmpty()) return ex.audio;
+        if (!ex.answers.isEmpty()) return ex.answers.get(0);
+        return "";
+    }
+
+    private void renderIntro(LinearLayout box, Curriculum.Exercise ex, Curriculum.Item item) {
+        String spanishText = !ex.audio.isEmpty() ? ex.audio : (item != null ? item.es : "");
+        full(box, ltr(spanishText, 26, INK, true));
+        if (item != null && !item.ipa.isEmpty()) {
+            space(box, 5);
+            full(box, ltr("[" + item.ipa + "]", 15, BLUE, false));
+        }
+        space(box, 10);
+        if (item != null) {
+            full(box, text("الفصحى: " + item.ar, 17, INK, true));
+            if (!item.egy.isEmpty()) {
+                space(box, 5);
+                TextView egy = text("بالمصري: " + item.egy, 17, DARK_GREEN, true);
+                egy.setBackground(bg(PALE, 0, 12));
+                egy.setPadding(dp(10), dp(8), dp(10), dp(8));
+                full(box, egy);
+            }
+            if (!item.noteEgy.isEmpty()) {
+                space(box, 6);
+                full(box, text(item.noteEgy, 13, MUTED, false));
+            }
+            if (!item.exEs.isEmpty()) {
+                space(box, 8);
+                full(box, ltr("مثال: " + item.exEs, 15, INK, false));
+                full(box, text("بالمصري: " + item.exEgy, 13, MUTED, false));
+            }
+        }
+        space(box, 12);
+        audioControls(box, spanishText);
+    }
+
+    private void renderAnswers(Curriculum.Exercise ex, Curriculum.Item item) {
+        switch (ex.type) {
+            case "intro":
+                full(answers, text("اقرأ الكلمة واسمعها، وبعدها هتتدرب عليها.", 14, MUTED, false));
+                break;
+            case "choose":
+            case "fill":
+            case "listen":
+            case "comprehend":
+            case "final":
+                renderChoices(ex);
+                break;
+            case "order":
+                renderOrder(ex);
+                break;
+            case "translate_es_ar":
+                input = makeInput("اكتب المعنى بالعربي (فصحى أو مصري)", true);
+                full(answers, input);
+                break;
+            case "translate_ar_es":
+                input = makeInput("اكتب الجملة بالإسباني", false);
+                full(answers, input);
+                break;
+            case "speak":
+                full(answers, text("اضغط «جرّب الميكروفون» واتكلم بصوت واضح.", 14, MUTED, false));
+                Button skip = button("مش قادر أتكلم دلوقتي", Color.WHITE, MUTED);
+                skip.setOnClickListener(v -> skipExercise(true));
+                full(answers, skip);
+                break;
+            case "match":
+                renderMatch(ex);
+                break;
+            default:
+                full(answers, text("نوع تمرين غير معروف.", 14, RED, false));
+        }
+        if (item != null && !ex.type.equals("intro")) {
+            space(answers, 10);
+            Button lookup = button("🔍  شوف الكلمة في القاموس", Color.WHITE, BLUE);
+            lookup.setOnClickListener(v -> { Item local = findItemBySource(item.id); if (local != null) showWordSheet(local); });
+            full(answers, lookup);
+        }
+    }
+
+    private EditText makeInput(String hintText, boolean arabic) {
+        EditText field = new EditText(this);
+        field.setTypeface(arabic ? cairoRegular : nunitoRegular);
+        field.setSingleLine(false);
+        field.setTextSize(19);
+        field.setTextColor(foreground(INK));
+        field.setHintTextColor(foreground(MUTED));
+        field.setHint(hintText);
+        field.setTextDirection(arabic ? View.TEXT_DIRECTION_RTL : View.TEXT_DIRECTION_LTR);
+        field.setPadding(dp(15), dp(12), dp(15), dp(12));
+        field.setBackground(bg(Color.WHITE, LINE, 16));
+        return field;
+    }
+
+    private void renderChoices(Curriculum.Exercise ex) {
+        for (int i = 0; i < ex.options.size(); i++) {
+            final int index = i;
+            String label = ex.options.get(i);
+            Button choice = button(label, Color.WHITE, INK);
+            choice.setMinHeight(dp(56));
+            choice.setGravity(Gravity.CENTER_VERTICAL | Gravity.START);
+            if (!isArabicText(label)) choice.setTextDirection(View.TEXT_DIRECTION_LTR);
+            choice.setOnClickListener(v -> {
+                if (answered) return;
+                selectedChoice = index;
+                for (int child = 0; child < answers.getChildCount(); child++) {
+                    View view = answers.getChildAt(child);
+                    if (view instanceof Button) view.setBackground(bg(Color.WHITE, LINE, 16));
+                }
+                choice.setBackground(bg(SKY, BLUE, 16));
+                if (action != null) action.setEnabled(true);
+            });
+            full(answers, choice);
+            space(answers, 7);
+        }
+    }
+
+    private void renderOrder(Curriculum.Exercise ex) {
+        full(answers, text("إجابتك — اضغط كلمة لإزالتها", 13, MUTED, false));
+        space(answers, 5);
+        selectedBank = new WordFlow(this);
+        selectedBank.setMinimumHeight(dp(55));
+        selectedBank.setPadding(dp(5), dp(5), dp(5), dp(5));
+        selectedBank.setBackground(bg(Color.WHITE, LINE, 14));
+        full(answers, selectedBank);
+        space(answers, 10);
+        full(answers, text("اختار الكلمات بالترتيب الصح", 13, MUTED, false));
+        space(answers, 5);
+        bank = new WordFlow(this);
+        full(answers, bank);
+        for (String word : ex.options) {
+            Button chip = button(word, Color.WHITE, BLUE);
+            chip.setMinHeight(dp(46));
+            chip.setTextDirection(View.TEXT_DIRECTION_LTR);
+            bank.addView(chip);
+            chip.setOnClickListener(v -> {
+                if (answered || !chip.isEnabled()) return;
+                selectedWords.add(word);
+                selectedChips.add(chip);
+                chip.setEnabled(false);
+                renderSelectedWords();
+            });
+        }
+        space(answers, 8);
+        Button reset = button("↺ إعادة ترتيب", Color.WHITE, MUTED);
+        reset.setOnClickListener(v -> {
+            if (answered) return;
+            for (Button chip : selectedChips) chip.setEnabled(true);
+            selectedWords.clear();
+            selectedChips.clear();
+            renderSelectedWords();
+        });
+        full(answers, reset);
+    }
+
+    private void renderSelectedWords() {
+        if (action != null && !answered) action.setEnabled(!selectedWords.isEmpty());
+        if (selectedBank == null) return;
         selectedBank.removeAllViews();
-        for(int i=0;i<selectedWords.size();i++){final int index=i;Button chosen=button(selectedWords.get(i),SKY,BLUE);chosen.setMinHeight(dp(48));selectedBank.addView(chosen);chosen.setOnClickListener(v->{if(answered)return;selectedChips.remove(index).setEnabled(true);selectedWords.remove(index);renderSelectedWords();});}
+        for (int i = 0; i < selectedWords.size(); i++) {
+            final int index = i;
+            Button chosen = button(selectedWords.get(i), SKY, BLUE);
+            chosen.setMinHeight(dp(46));
+            chosen.setTextDirection(View.TEXT_DIRECTION_LTR);
+            selectedBank.addView(chosen);
+            chosen.setOnClickListener(v -> {
+                if (answered) return;
+                selectedChips.remove(index).setEnabled(true);
+                selectedWords.remove(index);
+                renderSelectedWords();
+            });
+        }
     }
-    private void checkAnswer(){
-        Exercise ex=queue.get(cursor);
-        if(ex.type==MEANING||ex.type==LISTEN||ex.type==REVERSE){if(selectedId==null){toast("اختار إجابة الأول.");return;}grade(selectedId.equals(ex.item.id),null);}
-        else if(ex.type==MISSING){if(selectedWord==null){toast("اختار كلمة الأول.");return;}grade(LearningLogic.normalize(selectedWord).equals(LearningLogic.normalize(LearningLogic.missingWord(ex.item.es))),null);}
-        else if(ex.type==ORDER){if(selectedWords.isEmpty()){toast("اضغط الكلمات بالترتيب الأول.");return;}grade(LearningLogic.matches(ex.item.es,android.text.TextUtils.join(" ",selectedWords)),null);}
-        else if(ex.type==TYPE||ex.type==TRANSFORM||ex.type==CONVERSE){if(input==null){toast("اختار طريقة الرد الأول: تحدث أو اكتب.");return;}String value=input.getText().toString();if(value.trim().isEmpty()){toast("اكتب إجابتك الأول.");return;}((InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(input.getWindowToken(),0);grade(LearningLogic.matches(ex.type==TRANSFORM?LearningLogic.femaleVariant(ex.item.es):ex.item.es,value),ex.type==CONVERSE?ex.prompt:null);}
+
+    private void renderMatch(Curriculum.Exercise ex) {
+        ArrayList<String[]> pairs = new ArrayList<>(ex.pairs);
+        if (pairs.size() < 2) {
+            full(answers, text("مش كفاية أزواج للمطابقة.", 14, MUTED, false));
+            return;
+        }
+        matchCards = new MatchCards(this, pairs, moves -> {
+            if (answered) return;
+            gradeCurrent(true, "طابقت " + pairs.size() + " أزواج في " + moves + " محاولة.");
+        });
+        full(answers, matchCards);
     }
-    private void skipExercise(boolean speech){
-        if(answered)return;stopRecognizer();Exercise ex=queue.get(cursor);if(speech)speechSkipped++;else listeningSkipped++;skippedItems.add(ex.item.id);answered=true;
-        feedback.setVisibility(View.VISIBLE);feedback.setTextColor(foreground(MUTED));feedback.setBackground(bg(SKY,0,14));feedback.setText("تم التخطي بدون تقييم. هنرجع للعنصر في المراجعة.");action.setEnabled(true);action.setText("متابعة");disableAnswers();
+
+    private void watchInput(EditText field) {
+        field.addTextChangedListener(new android.text.TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (action != null && !answered) action.setEnabled(!s.toString().trim().isEmpty());
+            }
+            public void afterTextChanged(android.text.Editable s) {}
+        });
     }
-    private void disableAnswers(){for(int i=0;i<answers.getChildCount();i++){View v=answers.getChildAt(i);v.setEnabled(false);if(v instanceof MatchCards)for(int j=0;j<((MatchCards)v).getChildCount();j++)((MatchCards)v).getChildAt(j).setEnabled(false);}}
-    private void grade(boolean ok,String extra){
-        if(answered||!screen.equals("exercise")||cursor>=queue.size())return;Exercise ex=queue.get(cursor);stopRecognizer();answered=true;attempted++;if(!ex.retry){firstAttempted++;if(ok)firstCorrect++;}if(ok){correct++;prefs.edit().putInt("misses_"+ex.item.id,Math.max(0,prefs.getInt("misses_"+ex.item.id,0)-1)).apply();}else{mistakes.add(ex.item.id+":"+ex.type);prefs.edit().putInt("misses_"+ex.item.id,prefs.getInt("misses_"+ex.item.id,0)+1).apply();queue.add(new Exercise(ex.item,ex.type,true));}
-        disableAnswers();feedback.setVisibility(View.VISIBLE);feedback.setTextColor(foreground(ok?DARK_GREEN:RED));feedback.setBackground(bg(ok?PALE:RED_BG,0,14));feedback.setAlpha(0f);feedback.animate().alpha(1f).setDuration(180).start();
-        String answer=ex.type==MEANING?ex.item.ar:ex.type==MISSING?LearningLogic.missingWord(ex.item.es):ex.type==TRANSFORM?LearningLogic.femaleVariant(ex.item.es):ex.item.es;feedback.setText((ok?"إجابة صحيحة! ✓":"مش مشكلة، الصحيح: "+answer+"\nهنرجع للسؤال في آخر الدرس.")+(extra==null?"":"\n"+extra));action.setEnabled(true);action.setText("متابعة");
+
+    private void checkAnswer(Session session) {
+        Curriculum.Exercise ex = session.ex;
+        AnswerChecker.Answer answer;
+        if (ex.type.equals("choose") || ex.type.equals("fill") || ex.type.equals("listen")
+                || ex.type.equals("comprehend") || ex.type.equals("final")) {
+            if (selectedChoice == null) { toast("اختار إجابة الأول."); return; }
+            answer = AnswerChecker.Answer.choice(selectedChoice);
+        } else if (ex.type.equals("order")) {
+            if (selectedWords.isEmpty()) { toast("اضغط الكلمات بالترتيب الأول."); return; }
+            answer = AnswerChecker.Answer.tokens(selectedWords);
+        } else if (ex.type.equals("translate_es_ar") || ex.type.equals("translate_ar_es")) {
+            if (input == null) { toast("اكتب إجابتك الأول."); return; }
+            String value = input.getText().toString();
+            if (value.trim().isEmpty()) { toast("اكتب إجابتك الأول."); return; }
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+            answer = AnswerChecker.Answer.text(value);
+        } else {
+            return;
+        }
+        AnswerChecker.Verdict verdict = AnswerChecker.check(ex, answer, session.item);
+        gradeCurrent(verdict.correct, verdict.diagnosis + (verdict.correct ? "" : "\n" + verdict.expected));
     }
-    private void requestSpeech(){
-        if(!SpeechRecognizer.isRecognitionAvailable(this)){toast("خدمة التعرف على الكلام غير متاحة. تقدر تتخطى التمرين.");return;}
-        if(checkSelfPermission(Manifest.permission.RECORD_AUDIO)!=PackageManager.PERMISSION_GRANTED){pendingSpeech=true;requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},MIC_PERMISSION);return;}listen();
+
+    private void gradeCurrent(boolean correctAnswer, String extra) {
+        if (answered) return;
+        Session session = currentSession();
+        if (session == null) return;
+        answered = true;
+        answered = true;
+        stopRecognizer();
+        hideKeyboard();
+        attempted++;
+        if (correctAnswer) correct++;
+        if (!session.retry) {
+            firstAttempted++;
+            if (correctAnswer) firstCorrect++;
+            firstOutcome.putIfAbsent(session.ex.itemId, correctAnswer);
+        } else if (!firstOutcome.containsKey(session.ex.itemId)) {
+            firstOutcome.put(session.ex.itemId, correctAnswer);
+        }
+        if (savedSession != null) {
+            savedSession.record(correctAnswer, session.retry, session.ex.itemId, session.ex.type);
+            LessonSession.save(store, savedSession);
+        }
+        if (!correctAnswer) {
+            mistakes.add(session.ex.itemId + ":" + session.ex.type);
+            if (session.ex.itemId != null && !session.ex.itemId.isEmpty()) {
+                prefs.edit().putInt("misses_" + session.ex.itemId,
+                        prefs.getInt("misses_" + session.ex.itemId, 0) + 1).apply();
+                // Enqueue the item for spaced review right away (once per session).
+                if (srsGraded.add(session.ex.itemId)) {
+                    ReviewScheduler.grade(store, session.ex.itemId, ReviewScheduler.AGAIN, System.currentTimeMillis());
+                }
+            }
+            queue.add(new Session(session.ex, session.item, true, session.dialogueId));
+        }
+        renderFeedback(session, correctAnswer, extra);
     }
-    @Override public void onRequestPermissionsResult(int requestCode,String[] permissions,int[] grants){super.onRequestPermissionsResult(requestCode,permissions,grants);if(requestCode==MIC_PERMISSION&&pendingSpeech){pendingSpeech=false;if(grants.length>0&&grants[0]==PackageManager.PERMISSION_GRANTED&&screen.equals("exercise")&&!answered)listen();else toast("إذن الميكروفون مطلوب للتحدث؛ يمكنك التخطي.");}if(requestCode==NOTIFY_PERMISSION){if(grants.length>0&&grants[0]==PackageManager.PERMISSION_GRANTED){ReminderReceiver.scheduleNext(this);toast("تم تفعيل التذكير اليومي.");}else toast("إذن الإشعارات مطلوب ليصلك التذكير اليومي.");showLearningSettings();}}
-    private void stopRecognizer(){if(recognizer!=null){recognizer.cancel();recognizer.destroy();recognizer=null;}}
-    private void listen(){
-        stopRecognizer();recognizer=SpeechRecognizer.createSpeechRecognizer(this);recognizer.setRecognitionListener(new RecognitionListener(){
-            public void onReadyForSpeech(Bundle p){feedback.setVisibility(View.VISIBLE);feedback.setTextColor(foreground(BLUE));feedback.setBackground(bg(SKY,0,14));feedback.setText("اتكلم دلوقتي بالإسباني...");}
-            public void onBeginningOfSpeech(){}public void onRmsChanged(float r){}public void onBufferReceived(byte[] b){}public void onEndOfSpeech(){feedback.setText("جاري فهم كلامك...");}
-            public void onError(int error){if(!screen.equals("exercise")||answered)return;feedback.setVisibility(View.VISIBLE);feedback.setText("الصوت مش واضح أو الخدمة غير متاحة. جرّب تاني أو تخطَّ التمرين.");}
-            public void onResults(Bundle results){if(!screen.equals("exercise")||answered)return;ArrayList<String> matches=results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);if(matches==null||matches.isEmpty()){feedback.setText("ما سمعتش الكلام بوضوح، حاول تاني.");return;}
-                String expected=queue.get(cursor).item.es;boolean match=false;for(String candidate:matches)if(LearningLogic.matches(expected,candidate)){match=true;break;}grade(match,"سمعت: "+matches.get(0));}
-            public void onPartialResults(Bundle b){}public void onEvent(int e,Bundle b){}
-        });Intent intent=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"es-ES");intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS,5);recognizer.startListening(intent);
+
+    private void renderFeedback(Session session, boolean correctAnswer, String extra) {
+        Curriculum.Exercise ex = session.ex;
+        Tutor.Feedback review = correctAnswer
+                ? Tutor.correct(curriculum, ex, session.item)
+                : Tutor.wrong(curriculum, ex, session.item, verdictFor(ex, extra));
+        if (feedback == null) return;
+        feedback.setVisibility(View.VISIBLE);
+        feedback.setTextColor(foreground(correctAnswer ? DARK_GREEN : RED));
+        feedback.setBackground(bg(correctAnswer ? PALE : RED_BG, 0, 14));
+        StringBuilder text = new StringBuilder();
+        if (correctAnswer) {
+            text.append("إجابة صحيحة ✓");
+            String correctLabel = AnswerChecker.expectedLabel(ex);
+            if (!correctLabel.isEmpty()) text.append("  —  ").append(correctLabel);
+        } else {
+            text.append(review.headline.isEmpty() ? "الإجابة مش صح" : review.headline);
+        }
+        if (review.explanationEgy != null && !review.explanationEgy.isEmpty()) text.append('\n').append(review.explanationEgy);
+        if (!review.ruleTitle.isEmpty()) text.append("\n📚 قاعدة: ").append(review.ruleTitle).append(" — ").append(review.ruleEgy);
+        feedback.setText(text.toString());
+        feedback.setAlpha(0f);
+        feedback.animate().alpha(1f).setDuration(160).start();
+        disableAnswers();
+        if (action != null) {
+            action.setEnabled(true);
+            action.setText("كمّل");
+        }
+        String speakable = AnswerChecker.expectedLabel(ex);
+        if (!speakable.isEmpty() && !isArabicText(speakable)) speak(speakable, false);
     }
-    private void finishLesson(){
-        if(dialogueMode){showDialogueSummary();return;}
-        screen="summary";SharedPreferences.Editor edit=prefs.edit();long now=System.currentTimeMillis();Set<String> touched=new HashSet<>();
-        for(Exercise ex:queue)if(ex.type!=INTRO&&ex.type!=MATCH&&ex.type!=TRANSFORM&&touched.add(ex.item.id)){boolean wrong=false;for(String key:mistakes)if(key.startsWith(ex.item.id+":")){wrong=true;break;}
-            boolean needsReview=wrong||skippedItems.contains(ex.item.id);float ease=prefs.getFloat("ease_"+ex.item.id,2.5f);long interval=prefs.getLong("interval_"+ex.item.id,0);
-            if(needsReview){ease=Math.max(1.3f,ease-0.2f);interval=0;edit.putLong("due_"+ex.item.id,now+3600000L);}
-            else{ease=Math.min(3.0f,ease+0.1f);interval=interval==0?86400000L:Math.min((long)(interval*ease),30L*86400000L);edit.putLong("due_"+ex.item.id,now+interval);}
-            edit.putFloat("ease_"+ex.item.id,ease).putLong("interval_"+ex.item.id,interval);}
-        if(!reviewMode&&lessonIndex==completed(trackIndex))edit.putInt("complete_"+trackIndex,lessonIndex+1);
-        if(!reviewMode){String day=new SimpleDateFormat("yyyy-MM-dd",Locale.US).format(new Date(now));int count=prefs.getString("daily_date","").equals(day)?prefs.getInt("daily_lessons",0):0;edit.putString("daily_date",day).putInt("daily_lessons",count+1);}
-        edit.putInt("total_first_correct",prefs.getInt("total_first_correct",0)+firstCorrect).putInt("total_first_attempted",prefs.getInt("total_first_attempted",0)+firstAttempted);
-        String statDay=new SimpleDateFormat("yyyy-MM-dd",Locale.US).format(new Date(now));edit.putInt("acc_"+statDay+"_c",prefs.getInt("acc_"+statDay+"_c",0)+firstCorrect).putInt("acc_"+statDay+"_a",prefs.getInt("acc_"+statDay+"_a",0)+firstAttempted);
-        int earned=10+correct;edit.putInt("xp",prefs.getInt("xp",0)+earned);
-        SimpleDateFormat date=new SimpleDateFormat("yyyy-MM-dd",Locale.US);String today=date.format(new Date(now));Calendar cal=Calendar.getInstance();cal.setTimeInMillis(now);cal.add(Calendar.DAY_OF_YEAR,-1);String yesterday=date.format(cal.getTime());String last=prefs.getString("last_day","");
-        if(!today.equals(last))edit.putInt("streak",yesterday.equals(last)?prefs.getInt("streak",0)+1:1).putString("last_day",today);edit.apply();
-        setup("أحسنت!",false,false);mascot(body,"خطوة جديدة في رحلتك!");space(body,14);LinearLayout c=card();c.setBackground(bg(PALE,0,24));full(c,text("درس جديد في رصيدك!",25,INK,true));space(c,10);
-        full(c,text("✦  "+earned+" نقطة",19,GREEN,true));space(c,7);full(c,text("إجابات صحيحة من أول محاولة: "+firstCorrect+" من "+firstAttempted,16,INK,true));space(c,7);full(c,text("دقة أول محاولة: "+(firstAttempted==0?"—":percentage(firstCorrect,firstAttempted)),17,INK,true));space(c,7);
-        for(Item item:sessionItems)full(c,text(item.es+"  —  "+item.ar,14,INK,false));space(c,7);
-        long seconds=Math.max(1,(now-lessonStarted)/1000);full(c,text("الوقت: "+(seconds/60)+" دقيقة و"+(seconds%60)+" ثانية",15,MUTED,false));
-        if(speechSkipped>0||listeningSkipped>0){space(c,8);full(c,text("تم تخطي "+speechSkipped+" نطق و"+listeningSkipped+" استماع؛ لم تُحسب في الدقة.",14,MUTED,false));}
-        String goalDay=new SimpleDateFormat("yyyy-MM-dd",Locale.US).format(new Date(now));int goalDone=prefs.getString("daily_date","").equals(goalDay)?prefs.getInt("daily_lessons",0):0;int goal=prefs.getInt("daily_goal",1);space(c,8);full(c,text("هدف اليوم: "+goalDone+" من "+goal+" درس",14,INK,true));full(c,progress(Math.min(goalDone,goal),goal));
-        space(c,8);full(c,text("العناصر اللي أخطأت فيها أو تخطيتها هتظهر بدري للمراجعة.",14,MUTED,false));full(c,text("مراجعة مستحقة الآن: "+dueCount()+" عنصر",14,BLUE,true));full(body,c);space(body,16);
-        if(weakCount()>0){Button weak=button("راجع أخطائي",Color.WHITE,BLUE);full(body,weak);weak.setOnClickListener(v->showWeakWords());space(body,8);}
-        if(!reviewMode&&completed(trackIndex)<tracks.get(trackIndex).lessons.size()){Button next=button("ابدأ الدرس التالي",GREEN,Color.WHITE);full(body,next);next.setOnClickListener(v->{lessonIndex=completed(trackIndex);reviewMode=false;intro(tracks.get(trackIndex).lessons.get(lessonIndex).items);});space(body,8);}
-        Button path=button(reviewMode?"الرئيسية":"العودة للمسار",Color.WHITE,BLUE);full(body,path);path.setOnClickListener(v->{if(reviewMode)home();else path();});
+
+    private AnswerChecker.Verdict verdictFor(Curriculum.Exercise ex, String extra) {
+        String expected = AnswerChecker.expectedLabel(ex);
+        String diagnosis = extra == null ? "" : extra;
+        return new AnswerChecker.Verdict(false, expected, diagnosis);
     }
-    @Override public boolean onKeyDown(int keyCode,android.view.KeyEvent event){if(Build.VERSION.SDK_INT<33&&keyCode==android.view.KeyEvent.KEYCODE_BACK&&event.getRepeatCount()==0){navigateBack();return true;}return super.onKeyDown(keyCode,event);}
-    private void navigateBack(){stopRecognizer();if(screen.equals("home"))finish();else if(screen.equals("flashcard"))showReview();else if(screen.equals("word_detail"))showDictionary();else if(screen.equals("scenario_detail"))showScenarios();else if(screen.equals("path"))home();else if(screen.equals("intro")){if(reviewMode)home();else path();}else if(screen.equals("exercise")){toast("خرجت من الدرس بدون حفظ تقدمه.");if(reviewMode)home();else path();}else home();}
-    @Override protected void onStop(){stopRecognizer();if(tts!=null)tts.stop();super.onStop();}
-    @Override protected void onDestroy(){stopRecognizer();if(tts!=null){tts.stop();tts.shutdown();}super.onDestroy();}
+
+    private void skipExercise(boolean speech) {
+        if (answered) return;
+        stopRecognizer();
+        Session session = currentSession();
+        if (session == null) return;
+        if (speech) speechSkipped++; else listeningSkipped++;
+        skippedItems.add(session.ex.itemId);
+        answered = true;
+        if (feedback != null) {
+            feedback.setVisibility(View.VISIBLE);
+            feedback.setTextColor(foreground(MUTED));
+            feedback.setBackground(bg(SKY, 0, 14));
+            feedback.setText("تم التخطي من غير تقييم. العنصر هيرجع في المراجعة، ومش هيتحسب صح أو غلط.");
+        }
+        if (action != null) { action.setEnabled(true); action.setText("كمّل"); }
+        disableAnswers();
+    }
+
+    private void disableAnswers() {
+        for (int i = 0; i < answers.getChildCount(); i++) {
+            View view = answers.getChildAt(i);
+            view.setEnabled(false);
+            if (view instanceof MatchCards) {
+                MatchCards cards = (MatchCards) view;
+                for (int j = 0; j < cards.getChildCount(); j++) cards.getChildAt(j).setEnabled(false);
+            }
+        }
+        if (input != null) input.setEnabled(false);
+    }
+
+    private void hideKeyboard() {
+        if (input == null) return;
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (imm != null) imm.hideSoftInputFromWindow(input.getWindowToken(), 0);
+    }
+
+    private void finishLesson() {
+        stopRecognizer();
+        stopSpeaking();
+        screen = "summary";
+        LessonSession.clear(store);
+        savedSession = null;
+        long now = System.currentTimeMillis();
+        SharedPreferences.Editor edit = prefs.edit();
+        int earned = 0;
+        String title;
+        if (reviewMode) {
+            for (Item item : sessionItems) earned += XpPolicy.reviewReward(store, item.id, todayKey());
+            title = "خلصت المراجعة";
+        } else if (activeLesson != null) {
+            earned = XpPolicy.lessonReward(store, activeLesson.id, firstCorrect);
+            if (activeLesson.dialogueId.isEmpty()) markLessonDone(activeLesson.id);
+            else {
+                Set<String> dialogues = new HashSet<>(prefs.getStringSet("done_dialogues", new HashSet<>()));
+                dialogues.add(activeLesson.dialogueId);
+                edit.putStringSet("done_dialogues", dialogues);
+            }
+            title = "خلصت الدرس";
+        } else {
+            title = "خلصت التمرين";
+        }
+        // spaced repetition outcome per item
+        for (Map.Entry<String, Boolean> entry : firstOutcome.entrySet()) {
+            if (srsGraded.contains(entry.getKey())) continue;
+            int quality = entry.getValue() ? ReviewScheduler.GOOD : ReviewScheduler.AGAIN;
+            ReviewScheduler.grade(store, entry.getKey(), quality, now);
+        }
+        // Items that the lesson teaches but no exercise carried (handwritten dialogue lessons)
+        // still enter the spaced-repetition queue once the lesson is finished.
+        for (Item studied : sessionItems) {
+            if (!firstOutcome.containsKey(studied.id) && !srsGraded.contains(studied.id)) {
+                ReviewScheduler.grade(store, studied.id, ReviewScheduler.GOOD, now);
+            }
+        }
+        for (String skipped : skippedItems) {
+            if (!firstOutcome.containsKey(skipped) && !srsGraded.contains(skipped))
+                ReviewScheduler.grade(store, skipped, ReviewScheduler.HARD, now);
+        }
+        int xp = prefs.getInt("xp", 0) + earned;
+        edit.putInt("xp", xp);
+        edit.putInt("total_first_correct", prefs.getInt("total_first_correct", 0) + firstCorrect);
+        edit.putInt("total_first_attempted", prefs.getInt("total_first_attempted", 0) + firstAttempted);
+        String day = todayKey();
+        edit.putInt("acc_" + day + "_c", prefs.getInt("acc_" + day + "_c", 0) + firstCorrect);
+        edit.putInt("acc_" + day + "_a", prefs.getInt("acc_" + day + "_a", 0) + firstAttempted);
+        int daily = day.equals(prefs.getString("daily_date", "")) ? prefs.getInt("daily_lessons", 0) : 0;
+        edit.putString("daily_date", day).putInt("daily_lessons", daily + 1);
+        Calendar previousDay = Calendar.getInstance();
+        previousDay.setTimeInMillis(now);
+        previousDay.add(Calendar.DAY_OF_YEAR, -1);
+        String yesterday = new SimpleDateFormat("yyyy-MM-dd", Locale.US).format(previousDay.getTime());
+        int streak = XpPolicy.nextStreak(prefs.getInt("streak", 0), prefs.getString("last_day", ""), day, yesterday);
+        edit.putInt("streak", streak).putString("last_day", day);
+        edit.apply();
+
+        setup(title, false, false);
+        mascot(body, earned > 0 ? "تمام! خلصت وربحت نقاط." : "مراجعة كويسة. النقاط بتتحسب مرة واحدة بس.");
+        space(body, 14);
+        LinearLayout summary = card();
+        summary.setBackground(bg(PALE, 0, 24));
+        full(summary, text(activeLesson == null ? "نتيجة الجلسة" : activeLesson.title, 20, INK, true));
+        space(summary, 8);
+        full(summary, text("✦  " + earned + " نقطة" + (reviewMode ? " (مكافأة مراجعة يومية)" : ""), 17, GREEN, true));
+        space(summary, 6);
+        full(summary, text("إجابات صحيحة من أول محاولة: " + firstCorrect + " من " + firstAttempted, 15, INK, false));
+        space(summary, 6);
+        full(summary, text("الدقة: " + (firstAttempted == 0 ? "—" : percentage(firstCorrect, firstAttempted)), 15, INK, false));
+        long seconds = Math.max(1, (now - lessonStarted) / 1000);
+        full(summary, text("الوقت: " + (seconds / 60) + " دقيقة و" + (seconds % 60) + " ثانية", 14, MUTED, false));
+        if (speechSkipped > 0 || listeningSkipped > 0) {
+            full(summary, text("تم تخطي " + speechSkipped + " نطق و" + listeningSkipped + " استماع — لم تُحسب في الدقة.",
+                    13, MUTED, false));
+        }
+        full(summary, progress(firstCorrect, Math.max(1, firstAttempted)));
+        full(body, summary);
+        space(body, 12);
+
+        if (!sessionItems.isEmpty()) {
+            LinearLayout studied = card();
+            full(studied, text("العناصر اللي اشتغلت عليها", 17, INK, true));
+            space(studied, 6);
+            for (Item item : sessionItems) {
+                LinearLayout row = column();
+                full(row, ltr(item.es, 16, INK, true));
+                full(row, text("فصحى: " + item.ar, 13, MUTED, false));
+                if (item.hasEgy()) full(row, text("مصري: " + item.egy, 13, DARK_GREEN, false));
+                space(studied, 6);
+                full(studied, row);
+            }
+            full(body, studied);
+            space(body, 12);
+        }
+        LinearLayout nextCard = card();
+        full(nextCard, text("المراجعة المتباعدة: " + dueCount() + " عنصر مستحق دلوقتي", 15, BLUE, true));
+        space(nextCard, 8);
+        Lesson next = activeLesson == null ? null : nextLesson(currentTrack());
+        if (!reviewMode && next != null && !next.id.equals(activeLesson.id)) {
+            Button nextButton = button("الدرس اللي بعده: " + next.title, GREEN, Color.WHITE);
+            nextButton.setOnClickListener(v -> startLesson(next, false));
+            full(nextCard, nextButton);
+            space(nextCard, 8);
+        }
+        Button repeat = button(reviewMode ? "الرئيسية" : "كرر الدرس (بدون نقاط)", Color.WHITE, BLUE);
+        repeat.setOnClickListener(v -> {
+            if (reviewMode) home();
+            else if (activeLesson != null) startLesson(activeLesson, true);
+            else path();
+        });
+        full(nextCard, repeat);
+        space(nextCard, 8);
+        Button backToPath = button("العودة للمسار", Color.WHITE, BLUE);
+        backToPath.setOnClickListener(v -> path());
+        full(nextCard, backToPath);
+        full(body, nextCard);
+    }
+
+    // ---------- review ----------
+
+    private void showReview() {
+        screen = "review";
+        setup("المراجعة", false, false);
+        List<String> ids = allItemIds();
+        int due = ReviewScheduler.dueCount(store, ids, System.currentTimeMillis());
+        int mastered = ReviewScheduler.masteredCount(store, ids);
+        LinearLayout hero = card();
+        hero.setBackground(bg(PALE, 0, 24));
+        full(hero, text("المراجعة المتباعدة", 22, INK, true));
+        space(hero, 6);
+        full(hero, text("الخوارزمية بترجّع كل كلمة قبل ما تنساها: العناصر الصعبة بترجع بدري، والسهلة بتتباعد.",
+                14, MUTED, false));
+        space(hero, 10);
+        full(hero, text(due + " عنصر مستحق دلوقتي  •  " + mastered + " عنصر متقن", 16, DARK_GREEN, true));
+        space(hero, 6);
+        full(hero, text(weakCount() + " كلمة عندك فيها أخطاء مسجّلة", 14, MUTED, false));
+        space(hero, 10);
+        full(hero, progress(mastered, Math.max(1, ids.size())));
+        space(hero, 12);
+        Button start = button(due > 0 ? "ابدأ مراجعة المستحق" : "مفيش مستحق — جرّب مراجعة الكلمات المتعثرة", GREEN, Color.WHITE);
+        start.setOnClickListener(v -> startReview());
+        full(hero, start);
+        full(body, hero);
+        space(body, 12);
+
+        Button flashcards = button("🃏  بطاقات المراجعة (تقييم ذاتي)", Color.WHITE, BLUE);
+        flashcards.setOnClickListener(v -> startFlashcards());
+        full(body, flashcards);
+        space(body, 8);
+        Button weak = button("🧠  الكلمات اللي بتغلط فيها", Color.WHITE, BLUE);
+        weak.setOnClickListener(v -> showWeakWords());
+        full(body, weak);
+        space(body, 8);
+        Button stats = button("📊  شوف تقدمك في الأرقام", Color.WHITE, BLUE);
+        stats.setOnClickListener(v -> showStats());
+        full(body, stats);
+        space(body, 14);
+        full(body, text("نظام المراجعة: SM-2 معدّل بأربع درجات (تاني / صعب / كويس / سهل)، مع حفظ عدد المحاولات "
+                + "ومستوى الإتقان وموعد المراجعة القادم على الجهاز.", 12, MUTED, false));
+    }
+
+    private void startReview() {
+        long now = System.currentTimeMillis();
+        List<String> due = ReviewScheduler.dueItems(store, allItemIds(), now, 10);
+        List<Curriculum.Item> items = new ArrayList<>();
+        for (String id : due) {
+            Curriculum.Item item = curriculum.item(id);
+            if (item != null) items.add(item);
+        }
+        if (items.isEmpty()) {
+            ArrayList<Item> weak = weakItems(10);
+            if (!weak.isEmpty()) {
+                startItemSession(toSourceItems(weak), true);
+                return;
+            }
+            toast("مفيش عناصر مستحقة. كمّل درس جديد وهنرجعلك بالمراجعة بعدين.");
+            return;
+        }
+        startItemSession(items, true);
+    }
+
+    private List<Curriculum.Item> toSourceItems(List<Item> items) {
+        List<Curriculum.Item> out = new ArrayList<>();
+        for (Item item : items) {
+            Curriculum.Item source = curriculum.item(item.id);
+            if (source != null) out.add(source);
+        }
+        return out;
+    }
+
+    private ArrayList<Item> weakItems(int limit) {
+        ArrayList<Item> weak = new ArrayList<>();
+        for (Track track : tracks) for (Item item : track.items) {
+            if (prefs.getInt("misses_" + item.id, 0) > 0) weak.add(item);
+        }
+        Collections.sort(weak, (a, b) -> Integer.compare(prefs.getInt("misses_" + b.id, 0), prefs.getInt("misses_" + a.id, 0)));
+        while (weak.size() > limit) weak.remove(weak.size() - 1);
+        return weak;
+    }
+
+    private void showWeakWords() {
+        screen = "weak";
+        setup("كلمات تحتاج تدريب", true, false);
+        ArrayList<Item> weak = weakItems(60);
+        if (weak.isEmpty()) {
+            full(body, text("مفيش كلمات متعثرة حاليًا. أي كلمة تغلط فيها هتظهر هنا لوحدها.", 16, GREEN, true));
+            return;
+        }
+        full(body, text("مرتبة حسب عدد مرات الخطأ. اضغط أي كلمة تسمعها أو تشوف تفاصيلها.", 14, MUTED, false));
+        space(body, 10);
+        for (Item item : weak) {
+            LinearLayout box = card();
+            full(box, ltr(item.es, 17, INK, true));
+            full(box, text("فصحى: " + item.ar, 13, MUTED, false));
+            if (item.hasEgy()) full(box, text("مصري: " + item.egy, 13, DARK_GREEN, false));
+            full(box, text("أخطاء مسجلة: " + prefs.getInt("misses_" + item.id, 0) + "  •  إتقان: "
+                    + ReviewScheduler.masteryLevel(store, item.id) + "/5", 12, MUTED, false));
+            LinearLayout row = new LinearLayout(this);
+            Button say = button("🔊", SKY, BLUE);
+            say.setOnClickListener(v -> speak(item.es, false));
+            Button details = button("التفاصيل", Color.WHITE, BLUE);
+            details.setOnClickListener(v -> showWordDetails(item));
+            row.addView(say, new LinearLayout.LayoutParams(dp(56), dp(50)));
+            LinearLayout.LayoutParams detailParams = new LinearLayout.LayoutParams(0, dp(50), 1);
+            detailParams.setMargins(dp(8), 0, 0, 0);
+            row.addView(details, detailParams);
+            space(box, 8);
+            full(box, row);
+            full(body, box);
+            space(body, 10);
+        }
+        Button practice = button("تدرب على الكلمات دي", GREEN, Color.WHITE);
+        practice.setOnClickListener(v -> startItemSession(toSourceItems(weakItems(8)), true));
+        full(body, practice);
+    }
+
+    private void startFlashcards() {
+        ArrayList<Item> due = new ArrayList<>();
+        long now = System.currentTimeMillis();
+        for (Track track : tracks) for (Item item : track.items) {
+            long when = prefs.getLong("due_" + item.id, 0);
+            if ((when > 0 && when <= now) || prefs.getInt("misses_" + item.id, 0) > 0) due.add(item);
+        }
+        if (due.isEmpty()) {
+            for (Track track : tracks) due.addAll(track.items);
+            Collections.shuffle(due);
+            while (due.size() > 8) due.remove(due.size() - 1);
+            if (due.isEmpty()) { toast("مفيش كروت متاحة."); return; }
+        }
+        Collections.sort(due, (a, b) -> Long.compare(prefs.getLong("due_" + a.id, 0), prefs.getLong("due_" + b.id, 0)));
+        while (due.size() > 10) due.remove(due.size() - 1);
+        showFlashcard(due, 0, false);
+    }
+
+    private void showFlashcard(ArrayList<Item> cards, int index, boolean revealed) {
+        if (index >= cards.size()) {
+            showReview();
+            toast("خلصت كروت المراجعة.");
+            return;
+        }
+        screen = "flashcard";
+        Item item = cards.get(index);
+        setup("بطاقة " + (index + 1) + " / " + cards.size(), true, false);
+        full(body, progress(index, cards.size()));
+        space(body, 16);
+        LinearLayout box = card();
+        full(box, ltr(item.es, 26, INK, true));
+        if (!item.ipa.isEmpty()) full(box, ltr("[" + item.ipa + "]", 14, BLUE, false));
+        space(box, 10);
+        audioControls(box, item.es);
+        space(box, 12);
+        if (revealed) {
+            full(box, text("فصحى: " + item.ar, 18, INK, true));
+            if (item.hasEgy()) full(box, text("مصري: " + item.egy, 18, DARK_GREEN, true));
+            if (item.hasExample()) {
+                space(box, 8);
+                full(box, ltr(item.exEs, 14, MUTED, false));
+            }
+            space(box, 12);
+            full(box, text("افتكرتها إزاي؟", 15, MUTED, false));
+            space(box, 6);
+            String[] labels = {"لم أتذكر", "صعبة", "كويسة", "سهلة"};
+            int[] qualities = {ReviewScheduler.AGAIN, ReviewScheduler.HARD, ReviewScheduler.GOOD, ReviewScheduler.EASY};
+            for (int i = 0; i < labels.length; i++) {
+                final int quality = qualities[i];
+                Button rate = button(labels[i], i == 3 ? GREEN : Color.WHITE, i == 3 ? Color.WHITE : BLUE);
+                rate.setOnClickListener(v -> {
+                    ReviewScheduler.grade(store, item.id, quality, System.currentTimeMillis());
+                    int xp = XpPolicy.reviewReward(store, item.id, todayKey());
+                    if (xp > 0) prefs.edit().putInt("xp", prefs.getInt("xp", 0) + xp).apply();
+                    showFlashcard(cards, index + 1, false);
+                });
+                full(box, rate);
+                space(box, 6);
+            }
+        } else {
+            Button reveal = button("اظهر المعنى", GREEN, Color.WHITE);
+            reveal.setOnClickListener(v -> showFlashcard(cards, index, true));
+            full(box, reveal);
+        }
+        full(body, box);
+    }
+
+    // ---------- dictionary ----------
+
+    private void showDictionary() {
+        screen = "dictionary";
+        dicLimit = 120;
+        setup("القاموس", true, false);
+        LinearLayout head = card();
+        head.setBackground(bg(PALE, 0, 24));
+        full(head, text("كل كلمات المنهج في مكان واحد", 20, INK, true));
+        space(head, 4);
+        full(head, text("ابحث بالإسباني أو بالعربي (فصحى ومصري)، اسمع النطق، واحفظ اللي يعجبك في المفضلة.",
+                13, MUTED, false));
+        space(head, 10);
+        dicSearch = makeInput("اكتب مثل: agua أو ماء", false);
+        dicSearch.setSingleLine(true);
+        dicSearch.setText(dicQuery);
+        dicSearch.addTextChangedListener(new android.text.TextWatcher() {
+            public void beforeTextChanged(CharSequence s, int a, int b, int c) {}
+            public void onTextChanged(CharSequence s, int a, int b, int c) {}
+            public void afterTextChanged(android.text.Editable s) {
+                dicQuery = s.toString().trim();
+                dicLimit = 120;
+                renderDictionaryList();
+            }
+        });
+        full(head, dicSearch);
+        space(head, 10);
+        LinearLayout chips = new LinearLayout(this);
+        chips.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        HorizontalScrollView chipScroll = new HorizontalScrollView(this);
+        chipScroll.setHorizontalScrollBarEnabled(false);
+        ArrayList<Button> chipButtons = new ArrayList<>();
+        String[] labels = new String[tracks.size() + 2];
+        labels[0] = "الكل";
+        labels[1] = "⭐ المفضلة";
+        for (int i = 0; i < tracks.size(); i++) labels[i + 2] = tracks.get(i).id;
+        for (int i = 0; i < labels.length; i++) {
+            final int mode = i;
+            Button chip = button(labels[i], Color.WHITE, INK);
+            chip.setTextSize(13);
+            chip.setMinHeight(dp(38));
+            chip.setPadding(dp(12), dp(4), dp(12), dp(4));
+            chip.setOnClickListener(v -> {
+                dicFavorites = mode == 1;
+                dicLevel = mode >= 2 ? tracks.get(mode - 2).id : "";
+                dicLimit = 120;
+                for (int b = 0; b < chipButtons.size(); b++) chipButtons.get(b).setBackground(bg(b == mode ? SKY : Color.WHITE, b == mode ? BLUE : LINE, 14));
+                renderDictionaryList();
+            });
+            chipButtons.add(chip);
+            chips.addView(chip, new LinearLayout.LayoutParams(-2, -2));
+            View gap = new View(this);
+            chips.addView(gap, new LinearLayout.LayoutParams(dp(6), 1));
+        }
+        chipScroll.addView(chips);
+        full(head, chipScroll);
+        full(body, head);
+        space(body, 10);
+        dicListContainer = column();
+        full(body, dicListContainer);
+        renderDictionaryList();
+    }
+
+    private LinearLayout dicListContainer;
+
+    private Set<String> favorites() {
+        Object value = prefs.getAll().get("dictionary_favorites");
+        if (value instanceof Set) return new HashSet<>((Set<String>) value);
+        return new HashSet<>();
+    }
+
+    private void saveFavorites(Set<String> favorites) {
+        prefs.edit().putStringSet("dictionary_favorites", new HashSet<>(favorites)).apply();
+    }
+
+    private void renderDictionaryList() {
+        if (dicListContainer == null) return;
+        dicListContainer.removeAllViews();
+        Set<String> favorites = favorites();
+        List<Curriculum.Item> results = curriculum.search(dicQuery, dicLevel, "", dicFavorites, favorites, 4000);
+        int shown = Math.min(results.size(), dicLimit);
+        full(dicListContainer, text(results.size() + " نتيجة" + (shown < results.size() ? " — بنعرض " + shown : ""),
+                13, MUTED, true));
+        space(dicListContainer, 8);
+        for (int i = 0; i < shown; i++) {
+            Curriculum.Item source = results.get(i);
+            Item item = findItemBySource(source.id);
+            if (item == null) continue;
+            LinearLayout row = new LinearLayout(this);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            row.setPadding(dp(14), dp(12), dp(14), dp(12));
+            row.setBackground(bg(Color.WHITE, LINE, 18));
+            LinearLayout copy = column();
+            TextView spanishText = ltr(item.es, 17, INK, true);
+            full(copy, spanishText);
+            full(copy, text("فصحى: " + item.ar, 13, MUTED, false));
+            if (item.hasEgy()) full(copy, text("مصري: " + item.egy, 13, DARK_GREEN, false));
+            TextView meta = text(item.level + "  •  " + item.pos + (item.ipa.isEmpty() ? "" : "  •  [" + item.ipa + "]"),
+                    11, MUTED, false);
+            full(copy, meta);
+            row.addView(copy, new LinearLayout.LayoutParams(0, -2, 1));
+            copy.setOnClickListener(v -> showWordDetails(item));
+            Button star = button(favorites.contains(item.id) ? "★" : "☆", Color.WHITE,
+                    favorites.contains(item.id) ? GOLD : MUTED);
+            star.setTextSize(19);
+            star.setPadding(0, 0, 0, 0);
+            star.setContentDescription(favorites.contains(item.id) ? "إزالة من المفضلة" : "أضف للمفضلة");
+            star.setOnClickListener(v -> {
+                Set<String> now = favorites();
+                if (!now.remove(item.id)) now.add(item.id);
+                saveFavorites(now);
+                renderDictionaryList();
+            });
+            row.addView(star, new LinearLayout.LayoutParams(dp(46), dp(46)));
+            Button say = button("🔊", SKY, BLUE);
+            say.setTextSize(15);
+            say.setPadding(0, 0, 0, 0);
+            say.setOnClickListener(v -> speak(item.es, false));
+            row.addView(say, new LinearLayout.LayoutParams(dp(46), dp(46)));
+            full(dicListContainer, row);
+            space(dicListContainer, 6);
+        }
+        if (shown < results.size()) {
+            Button more = button("عرض المزيد", Color.WHITE, BLUE);
+            more.setOnClickListener(v -> { dicLimit += 120; renderDictionaryList(); });
+            full(dicListContainer, more);
+        }
+        if (results.isEmpty()) full(dicListContainer, text("مفيش نتائج مطابقة. جرّب كلمة تانية.", 14, MUTED, false));
+    }
+
+    private void showWordDetails(Item item) {
+        screen = "word_detail";
+        setup("تفاصيل الكلمة", true, false);
+        LinearLayout box = card();
+        box.setBackground(bg(PALE, 0, 24));
+        full(box, ltr(item.es, 26, INK, true));
+        if (!item.ipa.isEmpty()) full(box, ltr("[" + item.ipa + "]", 15, BLUE, false));
+        space(box, 8);
+        full(box, text("الفصحى: " + item.ar, 18, INK, true));
+        if (item.hasEgy()) full(box, text("المصري: " + item.egy, 18, DARK_GREEN, true));
+        if (!item.noteEgy.isEmpty()) {
+            space(box, 6);
+            full(box, text(item.noteEgy, 13, MUTED, false));
+        }
+        if (item.hasExample()) {
+            space(box, 10);
+            full(box, text("مثال في جملة", 15, INK, true));
+            full(box, ltr(item.exEs, 16, INK, false));
+            full(box, text("فصحى: " + item.exFusha, 13, MUTED, false));
+            full(box, text("مصري: " + item.exEgy, 13, DARK_GREEN, false));
+            audioControls(box, item.exEs);
+        } else {
+            space(box, 10);
+            audioControls(box, item.es);
+        }
+        space(box, 10);
+        ReviewScheduler.State state = ReviewScheduler.read(store, item.id);
+        full(box, text("مستوى الإتقان: " + state.mastery + "/5  •  محاولات: " + state.attempts
+                + "  •  صحيحة: " + state.correct, 13, MUTED, false));
+        if (state.dueAt > 0) {
+            full(box, text("المراجعة الجاية: "
+                    + new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date(state.dueAt)),
+                    13, MUTED, false));
+        }
+        space(box, 10);
+        Button favorite = button(favorites().contains(item.id) ? "★ إزالة من المفضلة" : "☆ أضف للمفضلة",
+                Color.WHITE, favorites().contains(item.id) ? GOLD : BLUE);
+        favorite.setOnClickListener(v -> {
+            Set<String> now = favorites();
+            boolean added = now.add(item.id);
+            if (!added) now.remove(item.id);
+            saveFavorites(now);
+            showWordDetails(item);
+        });
+        full(box, favorite);
+        space(box, 8);
+        Button practice = button("تدرّب على الكلمة دي", GREEN, Color.WHITE);
+        practice.setOnClickListener(v -> {
+            Curriculum.Item source = curriculum.item(item.id);
+            if (source != null) startItemSession(Collections.singletonList(source), true);
+        });
+        full(box, practice);
+        full(body, box);
+        space(body, 10);
+        full(body, text("حالة التحقق: " + item.verification
+                + "\nالمحتوى مفحوص آليًا للتهجئة والترقيم والتكرار، ولسه محتاج مراجعة لغوية بشرية عشان يتحول لـ verified.",
+                12, MUTED, false));
+    }
+
+    private void showWordSheet(Item item) {
+        LinearLayout panel = column();
+        panel.setPadding(dp(16), dp(8), dp(16), dp(8));
+        full(panel, ltr(item.es, 22, INK, true));
+        if (!item.ipa.isEmpty()) full(panel, ltr("[" + item.ipa + "]", 14, BLUE, false));
+        full(panel, text("فصحى: " + item.ar, 15, INK, false));
+        if (item.hasEgy()) full(panel, text("مصري: " + item.egy, 15, DARK_GREEN, false));
+        if (item.hasExample()) {
+            space(panel, 6);
+            full(panel, ltr(item.exEs, 14, MUTED, false));
+            full(panel, text("مصري: " + item.exEgy, 12, MUTED, false));
+            if (!item.exampleSource.isEmpty()) {
+                full(panel, text("مصدر المثال: " + exampleSourceLabel(item.exampleSource), 11, MUTED, false));
+            }
+        }
+        full(panel, text(sourceLabel(item), 11, MUTED, false));
+        space(panel, 8);
+        audioControls(panel, item.es);
+        new android.app.AlertDialog.Builder(this).setTitle("القاموس السريع").setView(panel)
+                .setPositiveButton("رجوع للتمرين", null).show();
+    }
+
+    // ---------- profile / stats / achievements ----------
+
+    private void showProfile() {
+        screen = "profile";
+        setup("حسابي", false, false);
+        LinearLayout box = card();
+        box.setBackground(bg(PALE, 0, 24));
+        LinearLayout head = new LinearLayout(this);
+        head.setGravity(Gravity.CENTER_VERTICAL);
+        StudyBuddy buddy = new StudyBuddy(this);
+        head.addView(buddy, new LinearLayout.LayoutParams(dp(68), dp(68)));
+        LinearLayout copy = column();
+        full(copy, text("رحلتك في الإسباني", 21, INK, true));
+        space(copy, 3);
+        full(copy, text("كل تقدمك محفوظ على الجهاز وبيشتغل أوفلاين", 13, MUTED, false));
+        LinearLayout.LayoutParams copyParams = new LinearLayout.LayoutParams(0, -2, 1);
+        copyParams.setMargins(dp(12), 0, 0, 0);
+        head.addView(copy, copyParams);
+        full(box, head);
+        space(box, 8);
+        full(box, text(prefs.getInt("xp", 0) + " نقطة  •  " + prefs.getInt("streak", 0) + " يوم متتالي  •  مستوى "
+                + xpLevel() + " (" + XpPolicy.levelTitle(xpLevel()) + ")", 15, DARK_GREEN, true));
+        space(box, 6);
+        int doneAll = 0;
+        for (Track track : tracks) doneAll += doneLessons(track);
+        full(box, text(doneAll + " من " + curriculum.totalLessons() + " درس مكتمل  •  "
+                + masteredCount() + " عنصر متقن  •  " + favorites().size() + " في المفضلة", 13, MUTED, false));
+        full(body, box);
+        space(body, 12);
+        Button stats = button("📊  إحصائيات التقدم", Color.WHITE, BLUE);
+        stats.setOnClickListener(v -> showStats());
+        full(body, stats);
+        space(body, 8);
+        Button achievements = button("🏅  الإنجازات والمكافآت", Color.WHITE, BLUE);
+        achievements.setOnClickListener(v -> showAchievements());
+        full(body, achievements);
+        space(body, 8);
+        Button settings = button("⚙  الإعدادات والصوت والنسخ الاحتياطي", Color.WHITE, BLUE);
+        settings.setOnClickListener(v -> showSettings());
+        full(body, settings);
+        space(body, 8);
+        Button content = button("ℹ  عن المحتوى وحالة التحقق", Color.WHITE, BLUE);
+        content.setOnClickListener(v -> showContentInfo());
+        full(body, content);
+        space(body, 12);
+        stickerShelf(body);
+    }
+
+    private void stickerShelf(LinearLayout box) {
+        int lessons = 0;
+        for (Track track : tracks) lessons += doneLessons(track);
+        LinearLayout cardBox = card();
+        full(cardBox, text("ملصقات رحلتك 🏅", 17, INK, true));
+        space(cardBox, 8);
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        String[] labels = {"أول درس", "١٠ دروس", "سلسلة ٧ أيام"};
+        String[] icons = {"🌱", "🗺️", "🔥"};
+        boolean[] unlocked = {lessons >= 1, lessons >= 10, prefs.getInt("streak", 0) >= 7};
+        for (int i = 0; i < labels.length; i++) {
+            LinearLayout badge = column();
+            badge.setGravity(Gravity.CENTER);
+            TextView icon = text(unlocked[i] ? icons[i] : "🔒", 24, unlocked[i] ? GOLD : MUTED, true);
+            icon.setGravity(Gravity.CENTER);
+            badge.addView(icon, new LinearLayout.LayoutParams(-1, dp(40)));
+            TextView caption = text(labels[i], 11, unlocked[i] ? INK : MUTED, unlocked[i]);
+            caption.setGravity(Gravity.CENTER);
+            badge.addView(caption);
+            row.addView(badge, new LinearLayout.LayoutParams(0, -2, 1));
+        }
+        full(cardBox, row);
+        full(box, cardBox);
+    }
+
+    private void showStats() {
+        screen = "stats";
+        setup("إحصائياتك", true, false);
+        int streak = prefs.getInt("streak", 0), xp = prefs.getInt("xp", 0);
+        int firstC = prefs.getInt("total_first_correct", 0), firstA = prefs.getInt("total_first_attempted", 0);
+        int lessonsDone = 0;
+        for (Track track : tracks) lessonsDone += doneLessons(track);
+        LinearLayout hero = card();
+        hero.setBackground(new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{DARK_GREEN, GREEN}));
+        full(hero, text("🔥  " + streak + " يوم متتالي", 22, Color.WHITE, true));
+        space(hero, 6);
+        full(hero, text("✦  " + xp + " نقطة  •  " + lessonsDone + " درس مكتمل  •  مستوى " + xpLevel(),
+                14, Color.rgb(221, 245, 234), true));
+        full(body, hero);
+        space(body, 12);
+
+        LinearLayout accuracy = card();
+        full(accuracy, text("دقة الإجابات", 17, INK, true));
+        space(accuracy, 6);
+        full(accuracy, accuracyRing(firstC, firstA));
+        full(body, accuracy);
+        space(body, 12);
+
+        LinearLayout vocab = card();
+        full(vocab, text("حصيلتك", 17, INK, true));
+        space(vocab, 6);
+        full(vocab, text(masteredCount() + " عنصر متقن (مستوى إتقان ٣ من ٥ أو أكتر)", 14, INK, false));
+        full(vocab, text(dueCount() + " عنصر مستحق للمراجعة الآن", 14, INK, false));
+        full(vocab, text(weakCount() + " عنصر فيه أخطاء مسجلة", 14, INK, false));
+        int[] mastery = new int[6];
+        for (String id : allItemIds()) mastery[Math.max(0, Math.min(5, prefs.getInt("mastery_" + id, 0)))]++;
+        for (int level = 0; level <= 5; level++) {
+            if (mastery[level] == 0) continue;
+            full(vocab, text("مستوى إتقان " + level + ": " + mastery[level] + " عنصر", 13, MUTED, false));
+            full(vocab, progress(mastery[level], Math.max(1, allItemIds().size())));
+            space(vocab, 4);
+        }
+        full(body, vocab);
+        space(body, 12);
+
+        LinearLayout perLevel = card();
+        full(perLevel, text("التقدم حسب المستوى", 17, INK, true));
+        space(perLevel, 6);
+        for (Track track : tracks) {
+            int done = doneLessons(track);
+            full(perLevel, text(track.id + " — " + track.title.replace(track.id + " — ", ""), 15, INK, true));
+            full(perLevel, text(done + "/" + track.lessons.size() + " درس  •  " + learnedItemCount(track)
+                    + "/" + track.items.size() + " عنصر", 12, MUTED, false));
+            full(perLevel, progress(done, Math.max(1, track.lessons.size())));
+            space(perLevel, 8);
+        }
+        full(body, perLevel);
+        space(body, 12);
+
+        LinearLayout week = card();
+        full(week, text("آخر ٧ أيام", 17, INK, true));
+        space(week, 8);
+        String[] labels = new String[7];
+        int[] values = new int[7];
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        Calendar day = Calendar.getInstance();
+        for (int i = 6; i >= 0; i--) {
+            String key = format.format(day.getTime());
+            labels[6 - i] = key.substring(5);
+            values[6 - i] = prefs.getInt("acc_" + key + "_a", 0);
+            day.add(Calendar.DAY_OF_YEAR, -1);
+        }
+        DesignSystem.BarChartView chart = new DesignSystem.BarChartView(this, labels, values,
+                foreground(GREEN), surface(LINE), foreground(INK), foreground(MUTED), cairoRegular);
+        week.addView(chart, new LinearLayout.LayoutParams(-1, dp(140)));
+        full(body, week);
+        space(body, 12);
+        Button achievements = button("🏅  الإنجازات", Color.WHITE, BLUE);
+        achievements.setOnClickListener(v -> showAchievements());
+        full(body, achievements);
+    }
+
+    private LinearLayout accuracyRing(int correctCount, int attempts) {
+        LinearLayout row = new LinearLayout(this);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        int percent = attempts <= 0 ? 0 : Math.min(100, correctCount * 100 / attempts);
+        DesignSystem.RingProgressView ring = new DesignSystem.RingProgressView(this, percent,
+                attempts == 0 ? "—" : percent + "٪", "دقة أول محاولة", foreground(GREEN), surface(LINE),
+                foreground(INK), foreground(MUTED), cairoBold, nunitoRegular);
+        row.addView(ring, new LinearLayout.LayoutParams(dp(88), dp(88)));
+        LinearLayout copy = column();
+        full(copy, text("إجابات صحيحة من أول محاولة", 14, INK, true));
+        space(copy, 4);
+        full(copy, text(correctCount + " من " + attempts, 13, MUTED, false));
+        LinearLayout.LayoutParams copyParams = new LinearLayout.LayoutParams(0, -2, 1);
+        copyParams.setMargins(dp(12), 0, 0, 0);
+        row.addView(copy, copyParams);
+        return row;
+    }
+
+    private void showAchievements() {
+        screen = "achievements";
+        setup("الإنجازات", true, false);
+        int lessons = 0;
+        for (Track track : tracks) lessons += doneLessons(track);
+        int xp = prefs.getInt("xp", 0);
+        int streak = prefs.getInt("streak", 0);
+        int mastered = masteredCount();
+        int dialogues = prefs.getStringSet("done_dialogues", new HashSet<>()).size();
+        String[][] badges = {
+                {"🌱", "البداية", "أكمل أول درس", String.valueOf(lessons), "1"},
+                {"🗺️", "مستكشف", "١٠ دروس مكتملة", String.valueOf(lessons), "10"},
+                {"🏛️", "مثابر", "٥٠ درس مكتمل", String.valueOf(lessons), "50"},
+                {"🔥", "سلسلة أسبوع", "٧ أيام متتالية", String.valueOf(streak), "7"},
+                {"⭐", "جامع النقاط", "٥٠٠ نقطة", String.valueOf(xp), "500"},
+                {"🧠", "حافظ", "٥٠ عنصر متقن", String.valueOf(mastered), "50"},
+                {"☎️", "محترف الكول سنتر", "حوار خدمة عملاء واحد", String.valueOf(dialogues), "1"},
+                {"🎙️", "متحدث", "١٠٠ عنصر متقن", String.valueOf(mastered), "100"},
+        };
+        for (String[] badge : badges) {
+            int have = parseIntSafe(badge[3]);
+            int need = parseIntSafe(badge[4]);
+            boolean unlocked = have >= need;
+            LinearLayout box = card();
+            box.setBackground(bg(unlocked ? PALE : Color.WHITE, LINE, 20));
+            LinearLayout row = new LinearLayout(this);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            TextView icon = text(unlocked ? badge[0] : "🔒", 26, unlocked ? GOLD : MUTED, true);
+            icon.setGravity(Gravity.CENTER);
+            row.addView(icon, new LinearLayout.LayoutParams(dp(56), dp(56)));
+            LinearLayout copy = column();
+            full(copy, text(badge[1], 17, INK, true));
+            full(copy, text(badge[2], 13, MUTED, false));
+            full(copy, text(unlocked ? "تم ✓" : Math.min(have, need) + " / " + need, 12,
+                    unlocked ? DARK_GREEN : MUTED, true));
+            LinearLayout.LayoutParams copyParams = new LinearLayout.LayoutParams(0, -2, 1);
+            copyParams.setMargins(dp(10), 0, 0, 0);
+            row.addView(copy, copyParams);
+            full(box, row);
+            full(body, box);
+            space(body, 8);
+        }
+        full(body, text("المكافآت بتتحسب من نشاطك الفعلي؛ مفيش نقاط مضاعفة لإعادة نفس الدرس.", 12, MUTED, false));
+    }
+
+    private int parseIntSafe(String value) {
+        try { return Integer.parseInt(value.trim()); } catch (Exception e) { return 0; }
+    }
+
+    private void showContentInfo() {
+        screen = "content_info";
+        setup("عن المحتوى", true, false);
+        LinearLayout box = card();
+        full(box, text("Spanish 1000 — محتوى المنهج", 19, INK, true));
+        space(box, 6);
+        full(box, text(curriculum.summaryLine(), 15, INK, true));
+        space(box, 4);
+        full(box, text("تاريخ توليد المحتوى: " + curriculum.generated, 13, MUTED, false));
+        for (Track track : tracks) {
+            full(box, text(track.id + ": " + track.items.size() + " عنصر • " + track.lessons.size()
+                    + " درس • " + track.units.size() + " وحدة", 13, MUTED, false));
+        }
+        space(box, 8);
+        full(box, text("حالات التحقق المستخدمة: pending (مسودة) • machine_checked (فحص آلي) • "
+                + "source_checked (مصدر مستقل) • sound_verified (تحقق نطق) • verified (مراجعة نهائية).", 12, MUTED, false));
+        space(box, 6);
+        full(box, text("كل عناصر النسخة الحالية حالتها machine_checked: اتفحصت آليًا من ناحية التهجئة والترقيم "
+                + "والتكرار ووجود ترجمة فصحى ومصرية، لكن مفيش عنصر verified بمراجعة بشرية أو مصدر مستقل لكل مدخل.", 12, MUTED, false));
+        full(body, box);
+        space(body, 10);
+        Button sources = button("المصادر والقواعد المستخدمة", Color.WHITE, BLUE);
+        sources.setOnClickListener(v -> {
+            LinearLayout panel = column();
+            panel.setPadding(dp(16), dp(8), dp(16), dp(8));
+            String[] lines = {
+                    "• قواعد النطق والتهجئة: قواعد الأكاديمية الملكية الإسبانية (RAE) للأصوات والترقيم وعلامتي ¿ ¡.",
+                    "• تحويل الحروف لرموز النطق (IPA) بيتم آليًا بقواعد RAE المعروفة، وموسوم machine_checked مش sound_verified.",
+                    "• الترجمات العربية (فصحى ومصرية) مكتوبة يدويًا داخل المشروع، ولسه محتاجة مراجعة لغوية مستقلة.",
+                    "• الصوت: محرك TTS في الجهاز بصوت es-ES. مفيش تسجيلات بشرية ولا ادعاء بوجودها.",
+                    "• التعرف على الكلام: خدمة الجهاز فقط للتحدث، والتقييم تقريبي.",
+            };
+            for (String line : lines) {
+                full(panel, text(line, 14, INK, false));
+                space(panel, 6);
+            }
+            new android.app.AlertDialog.Builder(this).setTitle("المصادر").setView(panel)
+                    .setPositiveButton("تمام", null).show();
+        });
+        full(body, sources);
+    }
+
+    // ---------- settings ----------
+
+    private void showSettings() {
+        screen = "settings";
+        setup("الإعدادات", true, false);
+        LinearLayout audio = card();
+        full(audio, text("🔊 الصوت", 18, INK, true));
+        space(audio, 6);
+        full(audio, text(audioStatus(), 14, ttsReady ? DARK_GREEN : RED, true));
+        space(audio, 6);
+        full(audio, text("التشغيل بيستخدم TTS الجهاز. الإيقاف قبل كل جملة يمنع تداخل الأصوات، والسرعة العادية 0.92× والبطيئة حوالي 0.64×.",
+                12, MUTED, false));
+        space(audio, 8);
+        full(audio, text("السرعة", 15, INK, true));
+        final TextView speedValue = text(String.format(Locale.US, "%.2f×", prefs.getFloat("tts_rate", 0.92f)), 15, GREEN, true);
+        full(audio, speedValue);
+        android.widget.SeekBar seek = new android.widget.SeekBar(this);
+        seek.setMax(20);
+        seek.setProgress(Math.round((prefs.getFloat("tts_rate", 0.92f) - 0.5f) * 20));
+        seek.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(android.widget.SeekBar bar, int value, boolean fromUser) {
+                float rate = 0.5f + value * 0.05f;
+                speedValue.setText(String.format(Locale.US, "%.2f×", rate));
+                if (fromUser) prefs.edit().putFloat("tts_rate", rate).apply();
+            }
+            public void onStartTrackingTouch(android.widget.SeekBar bar) {}
+            public void onStopTrackingTouch(android.widget.SeekBar bar) {}
+        });
+        full(audio, seek);
+        space(audio, 8);
+        LinearLayout audioRow = new LinearLayout(this);
+        Button test = button("اسمّع تجربة", SKY, BLUE);
+        Button testSlow = button("تجربة ببطء", Color.WHITE, BLUE);
+        test.setOnClickListener(v -> speak("Hola, ¿cómo estás? Bienvenido a Spanish 1000.", false));
+        testSlow.setOnClickListener(v -> speak("Hola, ¿cómo estás? Bienvenido a Spanish 1000.", true));
+        audioRow.addView(test, new LinearLayout.LayoutParams(0, dp(50), 1));
+        LinearLayout.LayoutParams slowParams = new LinearLayout.LayoutParams(0, dp(50), 1);
+        slowParams.setMargins(dp(8), 0, 0, 0);
+        audioRow.addView(testSlow, slowParams);
+        full(audio, audioRow);
+        space(audio, 8);
+        full(audio, text("لو الصوت مش شغال: نزّل حزمة «Spanish (Spain)» من إعدادات تحويل النص إلى كلام في الهاتف. "
+                + "المحتوى والتمارين الكتابية بتعمل عادي بدون صوت.", 12, MUTED, false));
+        full(body, audio);
+        space(body, 12);
+
+        LinearLayout learning = card();
+        full(learning, text("🎯 التعلم", 18, INK, true));
+        space(learning, 8);
+        int goal = Math.max(1, prefs.getInt("daily_goal", 1));
+        final TextView goalValue = text(goal + " درس يوميًا", 15, GREEN, true);
+        full(learning, goalValue);
+        LinearLayout goalRow = new LinearLayout(this);
+        Button less = button("−", Color.WHITE, BLUE);
+        Button more = button("+", Color.WHITE, BLUE);
+        less.setOnClickListener(v -> {
+            prefs.edit().putInt("daily_goal", Math.max(1, prefs.getInt("daily_goal", 1) - 1)).apply();
+            goalValue.setText(prefs.getInt("daily_goal", 1) + " درس يوميًا");
+        });
+        more.setOnClickListener(v -> {
+            prefs.edit().putInt("daily_goal", Math.min(10, prefs.getInt("daily_goal", 1) + 1)).apply();
+            goalValue.setText(prefs.getInt("daily_goal", 1) + " درس يوميًا");
+        });
+        goalRow.addView(less, new LinearLayout.LayoutParams(0, dp(48), 1));
+        goalRow.addView(more, new LinearLayout.LayoutParams(0, dp(48), 1));
+        full(learning, goalRow);
+        space(learning, 8);
+        Button theme = button(dark() ? "🌙 الوضع الداكن مفعّل" : "☀️ الوضع الفاتح مفعّل", Color.WHITE, BLUE);
+        theme.setOnClickListener(v -> {
+            prefs.edit().putBoolean("dark_mode", !dark()).apply();
+            showSettings();
+        });
+        full(learning, theme);
+        space(learning, 8);
+        Button unlock = button(unlockAll() ? "🔓 إلغاء قفل المستويات مفعّل" : "🔒 ترتيب المستويات مقفول",
+                Color.WHITE, BLUE);
+        unlock.setOnClickListener(v -> {
+            prefs.edit().putBoolean("unlock_all", !unlockAll()).apply();
+            showSettings();
+        });
+        full(learning, unlock);
+        full(body, learning);
+        space(body, 12);
+
+        LinearLayout reminders = card();
+        full(reminders, text("🔔 التذكير اليومي", 18, INK, true));
+        space(reminders, 6);
+        boolean on = prefs.getBoolean("reminders_enabled", false);
+        Button toggle = button(on ? "المذكّرات مفعّلة — اضغط للإيقاف" : "المذكّرات موقوفة — اضغط للتفعيل",
+                on ? PALE : Color.WHITE, on ? DARK_GREEN : BLUE);
+        toggle.setOnClickListener(v -> {
+            if (prefs.getBoolean("reminders_enabled", false)) {
+                prefs.edit().putBoolean("reminders_enabled", false).apply();
+                ReminderReceiver.cancel(this);
+                toast("أوقفنا التذكير.");
+                showSettings();
+                return;
+            }
+            prefs.edit().putBoolean("reminders_enabled", true).apply();
+            if (Build.VERSION.SDK_INT >= 33 && checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, NOTIFY_PERMISSION);
+                return;
+            }
+            ReminderReceiver.scheduleNext(this);
+            toast("هنذكّرك لو ماكملتش هدفك.");
+            showSettings();
+        });
+        full(reminders, toggle);
+        full(body, reminders);
+        space(body, 12);
+
+        LinearLayout backup = card();
+        full(backup, text("💾 النسخ الاحتياطي", 18, INK, true));
+        space(backup, 6);
+        full(backup, text("صدّر تقدمك كملف JSON قبل حذف التطبيق أو تغيير الهاتف.", 13, MUTED, false));
+        space(backup, 8);
+        LinearLayout backupRow = new LinearLayout(this);
+        Button export = button("📤 تصدير", GREEN, Color.WHITE);
+        Button importButton = button("📥 استيراد", Color.WHITE, BLUE);
+        export.setOnClickListener(v -> exportProgress());
+        importButton.setOnClickListener(v -> importProgressPicker());
+        backupRow.addView(export, new LinearLayout.LayoutParams(0, dp(50), 1));
+        backupRow.addView(importButton, new LinearLayout.LayoutParams(0, dp(50), 1));
+        full(backup, backupRow);
+        space(backup, 8);
+        Button reset = button("🗑 حذف كل التقدم (لا يمكن الرجوع)", Color.WHITE, RED);
+        reset.setOnClickListener(v -> new android.app.AlertDialog.Builder(this)
+                .setTitle("حذف التقدم؟")
+                .setMessage("هيتم حذف النقاط والمراجعة وكل الدروس المكتملة من هذا الجهاز. المحتوى نفسه مش هيتأثر.")
+                .setNegativeButton("إلغاء", null)
+                .setPositiveButton("احذف", (dialog, which) -> {
+                    prefs.edit().clear().apply();
+                    toast("تم حذف التقدم.");
+                    home();
+                }).show());
+        full(backup, reset);
+        full(body, backup);
+    }
+
+    private String encodePref(Object value) {
+        if (value instanceof Boolean) return "b:" + value;
+        if (value instanceof Integer) return "i:" + value;
+        if (value instanceof Long) return "l:" + value;
+        if (value instanceof Float) return "f:" + value;
+        if (value instanceof Set) return "set:" + new JSONArray((Set<?>) value).toString();
+        return "s:" + value;
+    }
+
+    private String progressSnapshot() throws Exception {
+        JSONObject data = new JSONObject();
+        for (Map.Entry<String, ?> entry : prefs.getAll().entrySet()) data.put(entry.getKey(), encodePref(entry.getValue()));
+        return data.toString();
+    }
+
+    private void exportProgress() {
+        try {
+            pendingExport = progressSnapshot();
+            Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+            intent.setType("application/json");
+            intent.putExtra(Intent.EXTRA_TITLE, "habla-backup.json");
+            startActivityForResult(intent, EXPORT_REQUEST);
+        } catch (Exception e) {
+            toast("تعذر تجهيز النسخة الاحتياطية.");
+        }
+    }
+
+    private void importProgressPicker() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("*/*");
+        startActivityForResult(intent, IMPORT_REQUEST);
+    }
+
+    @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EXPORT_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            try (OutputStream out = getContentResolver().openOutputStream(data.getData())) {
+                if (pendingExport == null) pendingExport = progressSnapshot();
+                out.write(pendingExport.getBytes("UTF-8"));
+                toast("تم تصدير تقدمك.");
+            } catch (Exception e) {
+                toast("تعذر كتابة الملف.");
+            }
+            pendingExport = null;
+        } else if (requestCode == IMPORT_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            try (InputStream in = getContentResolver().openInputStream(data.getData())) {
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                byte[] buffer = new byte[8192];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    if (bytes.size() > MAX_BACKUP_BYTES - read) throw new IllegalArgumentException("backup too large");
+                    bytes.write(buffer, 0, read);
+                }
+                JSONObject parsed = new JSONObject(bytes.toString("UTF-8"));
+                Map<String, Object> decoded = new LinkedHashMap<>();
+                Iterator<String> keys = parsed.keys();
+                while (keys.hasNext()) {
+                    String key = keys.next();
+                    Object raw = parsed.get(key);
+                    if (!(raw instanceof String)) throw new IllegalArgumentException("invalid value");
+                    String encoded = (String) raw;
+                    Object value;
+                    if (encoded.startsWith("b:")) value = Boolean.valueOf(encoded.substring(2));
+                    else if (encoded.startsWith("i:")) value = Integer.valueOf(encoded.substring(2));
+                    else if (encoded.startsWith("l:")) value = Long.valueOf(encoded.substring(2));
+                    else if (encoded.startsWith("f:")) value = Float.parseFloat(encoded.substring(2));
+                    else if (encoded.startsWith("set:")) {
+                        JSONArray array = new JSONArray(encoded.substring(4));
+                        Set<String> values = new HashSet<>();
+                        for (int i = 0; i < array.length(); i++) values.add(array.getString(i));
+                        value = values;
+                    } else if (encoded.startsWith("s:")) value = encoded.substring(2);
+                    else throw new IllegalArgumentException("invalid type");
+                    if (!LearningLogic.validPreferenceType(key, value)) throw new IllegalArgumentException("bad key " + key);
+                    decoded.put(key, value);
+                }
+                SharedPreferences.Editor edit = prefs.edit();
+                for (Map.Entry<String, Object> entry : decoded.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    if (value instanceof Boolean) edit.putBoolean(key, (Boolean) value);
+                    else if (value instanceof Integer) edit.putInt(key, (Integer) value);
+                    else if (value instanceof Long) edit.putLong(key, (Long) value);
+                    else if (value instanceof Float) edit.putFloat(key, (Float) value);
+                    else if (value instanceof Set) edit.putStringSet(key, (Set<String>) value);
+                    else edit.putString(key, (String) value);
+                }
+                if (!edit.commit()) throw new IllegalStateException("could not save");
+                toast("تمت استعادة التقدم (" + decoded.size() + " مفتاح).");
+                home();
+            } catch (Exception e) {
+                toast("الملف مش نسخة احتياطية صالحة من التطبيق.");
+            }
+        }
+    }
+
+    // ---------- call centre & dialogues ----------
+
+    private void showCallCenter() {
+        screen = "call_center";
+        setup("كول سنتر وخدمة عملاء", true, false);
+        LinearLayout head = card();
+        head.setBackground(bg(SKY, 0, 24));
+        full(head, text("☎️  اتصل وتكلم بالإسباني", 20, INK, true));
+        space(head, 6);
+        full(head, text("محادثات خدمة عملاء حقيقية: بنك، تليفون، إنترنت، حجز، وشكوى. "
+                + "كل حوار فيه جمل بصوت إسباني وأسئلة فهم.", 13, MUTED, false));
+        full(body, head);
+        space(body, 12);
+        List<Curriculum.Dialogue> dialogues = curriculum.dialoguesInSection("call_center");
+        if (dialogues.isEmpty()) {
+            full(body, text("مفيش حوارات كول سنتر في النسخة الحالية من المحتوى.", 14, MUTED, false));
+            return;
+        }
+        Set<String> done = prefs.getStringSet("done_dialogues", new HashSet<>());
+        for (Curriculum.Dialogue dialogue : dialogues) {
+            LinearLayout box = card();
+            full(box, text(dialogue.titleAr.isEmpty() ? dialogue.titleEgy : dialogue.titleAr, 17, INK, true));
+            space(box, 4);
+            full(box, ltr(dialogue.titleEs, 13, BLUE, false));
+            space(box, 4);
+            full(box, text(dialogue.contextEgy, 13, MUTED, false));
+            space(box, 6);
+            full(box, text(dialogue.level + "  •  " + dialogue.lines.size() + " جملة  •  "
+                    + dialogue.questions.size() + " سؤال فهم" + (done.contains(dialogue.id) ? "  •  ✓ تم" : ""),
+                    12, MUTED, false));
+            space(box, 8);
+            LinearLayout row = new LinearLayout(this);
+            Button open = button("اقرأ واسمع", Color.WHITE, BLUE);
+            Button practice = button("تدرّب", GREEN, Color.WHITE);
+            open.setOnClickListener(v -> showDialogue(dialogue));
+            practice.setOnClickListener(v -> startDialogueLesson(dialogue));
+            row.addView(open, new LinearLayout.LayoutParams(0, dp(50), 1));
+            LinearLayout.LayoutParams practiceParams = new LinearLayout.LayoutParams(0, dp(50), 1);
+            practiceParams.setMargins(dp(8), 0, 0, 0);
+            row.addView(practice, practiceParams);
+            full(box, row);
+            full(body, box);
+            space(body, 10);
+        }
+        full(body, text("ملاحظة: النطق بيستخدم TTS الجهاز. مفيش تسجيلات بشرية هنا، والتقييم مش تحليل صوتي احترافي.",
+                12, MUTED, false));
+    }
+
+    private void showDialogue(Curriculum.Dialogue dialogue) {
+        screen = "dialogue";
+        setup(dialogue.titleEgy.isEmpty() ? dialogue.titleAr : dialogue.titleEgy, true, false);
+        LinearLayout intro = card();
+        intro.setBackground(bg(SKY, 0, 20));
+        full(intro, text(dialogue.contextEgy, 14, INK, false));
+        if (!dialogue.contextFusha.isEmpty()) {
+            space(intro, 4);
+            full(intro, text("بالفصحى: " + dialogue.contextFusha, 12, MUTED, false));
+        }
+        full(body, intro);
+        space(body, 12);
+        for (Curriculum.Line line : dialogue.lines) {
+            LinearLayout bubble = card();
+            boolean customer = line.who.contains("عميل") || line.who.toLowerCase(Locale.ROOT).contains("cliente");
+            bubble.setBackground(bg(customer ? PALE : SKY, 0, 20));
+            full(bubble, text(line.who, 12, customer ? DARK_GREEN : BLUE, true));
+            space(bubble, 4);
+            full(bubble, ltr(line.es, 18, INK, true));
+            full(bubble, text("فصحى: " + line.ar, 13, MUTED, false));
+            full(bubble, text("مصري: " + line.egy, 13, DARK_GREEN, false));
+            space(bubble, 6);
+            audioControls(bubble, line.es);
+            full(body, bubble);
+            space(body, 8);
+        }
+        Button practice = button("تدرّب على أسئلة الحوار", GREEN, Color.WHITE);
+        practice.setOnClickListener(v -> startDialogueLesson(dialogue));
+        full(body, practice);
+    }
+
+    private void renderDialogueLines(LinearLayout box, Curriculum.Dialogue dialogue) {
+        full(box, text(dialogue.titleEgy.isEmpty() ? dialogue.titleAr : dialogue.titleEgy, 15, INK, true));
+        space(box, 6);
+        for (int i = 0; i < dialogue.lines.size(); i++) {
+            Curriculum.Line line = dialogue.lines.get(i);
+            LinearLayout row = new LinearLayout(this);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            TextView who = text(line.who + ":", 12, BLUE, true);
+            row.addView(who);
+            TextView phrase = ltr(" " + line.es, 14, INK, false);
+            row.addView(phrase, new LinearLayout.LayoutParams(0, -2, 1));
+            Button say = button("🔊", Color.WHITE, BLUE);
+            say.setTextSize(12);
+            say.setPadding(0, 0, 0, 0);
+            say.setOnClickListener(v -> speak(line.es, false));
+            row.addView(say, new LinearLayout.LayoutParams(dp(40), dp(38)));
+            full(box, row);
+            if (i < dialogue.lines.size() - 1) space(box, 4);
+        }
+    }
+
+    private void startDialogueLesson(Curriculum.Dialogue dialogue) {
+        Curriculum.Lesson lesson = curriculum.lessonsById.get(dialogue.id + "_lesson");
+        if (lesson == null) {
+            toast("مفيش درس مرتبط بالحوار ده.");
+            return;
+        }
+        activeLesson = new Lesson();
+        activeLesson.id = lesson.id;
+        activeLesson.title = lesson.title;
+        activeLesson.ref = lesson;
+        activeLesson.dialogueId = dialogue.id;
+        activeDialogue = dialogue;
+        beginSession(LessonPlanner.plan(curriculum, lesson), false, dialogue.id);
+    }
+
+    // ---------- real life scenarios ----------
+
+    private void showScenarios() {
+        screen = "scenarios";
+        setup("مواقف الحياة اليومية", true, false);
+        full(body, text("مواقف من إسبانيا الحقيقية: كل موقف فيه عباراتك بالترتيب، مع النطق والمعنى بالفصحى والمصري.",
+                14, MUTED, false));
+        space(body, 12);
+        for (int i = 0; i < RealLife.SCENARIOS.length; i++) {
+            final int index = i;
+            String[] scenario = RealLife.SCENARIOS[index];
+            LinearLayout box = card();
+            full(box, text(scenario[0], 18, INK, true));
+            space(box, 4);
+            full(box, text(scenario[1], 13, MUTED, false));
+            space(box, 8);
+            Button open = button("افتح الموقف وتدرّب", GREEN, Color.WHITE);
+            open.setOnClickListener(v -> showScenarioDetails(index));
+            full(box, open);
+            full(body, box);
+            space(body, 10);
+        }
+    }
+
+    private void showScenarioDetails(int index) {
+        String[] scenario = RealLife.SCENARIOS[index];
+        screen = "scenario_detail";
+        setup(scenario[0], true, false);
+        full(body, text(scenario[1], 14, MUTED, false));
+        space(body, 10);
+        ArrayList<Curriculum.Item> practiceItems = new ArrayList<>();
+        for (int i = 2; i + 1 < scenario.length; i += 2) {
+            String phrase = scenario[i];
+            String prompt = scenario[i + 1];
+            Curriculum.Item source = curriculum.findBySpanish(phrase);
+            LinearLayout bubble = card();
+            bubble.setBackground(bg(SKY, 0, 20));
+            full(bubble, text(prompt, 13, MUTED, false));
+            space(bubble, 5);
+            full(bubble, ltr(phrase, 19, INK, true));
+            if (source != null) {
+                full(bubble, text("فصحى: " + source.ar, 13, INK, false));
+                if (!source.egy.isEmpty()) full(bubble, text("مصري: " + source.egy, 13, DARK_GREEN, false));
+                practiceItems.add(source);
+            } else {
+                full(bubble, text("العبارة دي مش في المنهج المحمّل بعد — تقدر تسمعها بس.", 12, MUTED, false));
+            }
+            space(bubble, 6);
+            audioControls(bubble, phrase);
+            full(body, bubble);
+            space(body, 8);
+        }
+        if (!practiceItems.isEmpty()) {
+            Button practice = button("تدرّب على عبارات الموقف", GREEN, Color.WHITE);
+            practice.setOnClickListener(v -> startItemSession(practiceItems, true));
+            full(body, practice);
+        }
+    }
+
+    // ---------- grammar ----------
+
+    private void showGrammar() {
+        screen = "grammar";
+        setup("قواعد بالعربي المصري", true, false);
+        full(body, text("قواعد مختصرة مربوطة بالجمل اللي بتتمرن عليها، مش حفظ نظري.", 14, MUTED, false));
+        space(body, 12);
+        if (!curriculum.grammar.isEmpty()) {
+            for (Curriculum.GrammarRule rule : curriculum.grammar) {
+                LinearLayout box = card();
+                full(box, text(rule.titleAr, 18, DARK_GREEN, true));
+                space(box, 4);
+                full(box, text(rule.level, 12, MUTED, true));
+                space(box, 6);
+                full(box, text(rule.ruleEgy, 14, INK, false));
+                if (!rule.ruleFusha.isEmpty()) {
+                    space(box, 4);
+                    full(box, text("بالفصحى: " + rule.ruleFusha, 12, MUTED, false));
+                }
+                for (String[] example : rule.examples) {
+                    space(box, 6);
+                    full(box, ltr(example[0], 15, INK, true));
+                    full(box, text("فصحى: " + example[1], 12, MUTED, false));
+                    if (example.length > 2 && !example[2].isEmpty()) {
+                        full(box, text("مصري: " + example[2], 12, DARK_GREEN, false));
+                    }
+                }
+                full(body, box);
+                space(body, 10);
+            }
+        }
+        for (String[] tip : GrammarTips.TIPS) {
+            LinearLayout box = card();
+            full(box, text(tip[0], 17, BLUE, true));
+            space(box, 5);
+            full(box, text(tip[1], 14, INK, false));
+            full(body, box);
+            space(body, 10);
+        }
+    }
+
+    // ---------- navigation ----------
+
+    @Override public boolean onKeyDown(int keyCode, android.view.KeyEvent event) {
+        if (Build.VERSION.SDK_INT < 33 && keyCode == android.view.KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            navigateBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private void navigateBack() {
+        stopRecognizer();
+        stopSpeaking();
+        switch (screen) {
+            case "home": finish(); break;
+            case "exercise": {
+                toast("خرجت من الدرس من غير حفظ نتيجته.");
+                if (reviewMode) home(); else path();
+                break;
+            }
+            case "summary": home(); break;
+            case "levels": home(); break;
+            case "path": home(); break;
+            case "review": home(); break;
+            case "flashcard": showReview(); break;
+            case "weak": showReview(); break;
+            case "dictionary": home(); break;
+            case "word_detail": showDictionary(); break;
+            case "stats": showProfile(); break;
+            case "achievements": showProfile(); break;
+            case "content_info": showProfile(); break;
+            case "settings": showProfile(); break;
+            case "call_center": home(); break;
+            case "dialogue": showCallCenter(); break;
+            case "scenarios": home(); break;
+            case "scenario_detail": showScenarios(); break;
+            case "grammar": home(); break;
+            case "profile": home(); break;
+            default: home();
+        }
+    }
+
+    @Override protected void onStop() {
+        stopRecognizer();
+        stopSpeaking();
+        super.onStop();
+    }
+
+    @Override protected void onDestroy() {
+        stopRecognizer();
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+            tts = null;
+        }
+        super.onDestroy();
+    }
 }
