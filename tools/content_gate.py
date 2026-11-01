@@ -4,10 +4,11 @@
 An item is PUBLISHABLE only when all are true:
   - verification == "verified"
   - source is a non-empty string (reference to an authoritative source)
-  - ar_egy is a non-empty string (Egyptian translation written and verified)
-  - example_es, example_fusha, example_egy are non-empty
+  - ar_egy and pronunciation are non-empty
+  - example_es is non-empty; phrase/verb/question items also need example_fusha and example_egy
 Unpublishable items are kept in the ledger (not deleted) so work can continue.
 
+Required fields depend on item type (see required_for).
 Usage:
   python tools/content_gate.py [content.json] [--ledger releases/CONTENT_LEDGER.csv] [--require-published N]
 Exit code 1 if --require-published N is given and fewer than N items are publishable.
@@ -16,13 +17,26 @@ import csv
 import json
 import sys
 
-REQUIRED_FOR_PUBLISH = ("ar_egy", "example_es", "example_fusha", "example_egy", "source")
+BASE_REQUIRED = ("ar_egy", "pronunciation", "example_es", "source")
+# Full sentence-level items need examples in all three languages.
+FULL_EXAMPLE_TYPES = {"phrase", "verb", "question"}
+
+
+def required_for(item):
+    req = list(BASE_REQUIRED)
+    if item.get("type", item.get("pos")) in FULL_EXAMPLE_TYPES:
+        req += ["example_fusha", "example_egy"]
+    return req
+
+
+def missing_fields(item):
+    return [k for k in required_for(item) if not (isinstance(item.get(k), str) and item.get(k).strip())]
 
 
 def is_publishable(item):
     if item.get("verification") != "verified":
         return False
-    return all(isinstance(item.get(k), str) and item.get(k).strip() for k in REQUIRED_FOR_PUBLISH)
+    return not missing_fields(item)
 
 
 def gate(data, ledger_path=None):
@@ -33,7 +47,7 @@ def gate(data, ledger_path=None):
                 total += 1
                 ok = is_publishable(item)
                 publishable += ok
-                missing = [k for k in REQUIRED_FOR_PUBLISH if not (isinstance(item.get(k), str) and item.get(k).strip())]
+                missing = missing_fields(item)
                 rows.append({
                     "id": f"{ti}_{ui}_{ii}",
                     "es": item.get("es", ""),

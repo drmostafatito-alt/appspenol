@@ -65,6 +65,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private EditText input;
     private Button action;
     private String selectedId=null, selectedWord=null, screen="home";
+    private int a0Track=-1;
     private int trackIndex=0, lessonIndex=0, cursor=0, correct=0, attempted=0, firstCorrect=0, firstAttempted=0, speechSkipped=0, listeningSkipped=0, matchMoves=0;
     private boolean dialogueMode=false;
     private int dialogueTurn=0;
@@ -104,6 +105,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         nunitoBold=Typeface.createFromAsset(getAssets(),"fonts/nunito-bold.ttf");
         trackIndex=prefs.getInt("last_track",0);
         try{loadContent();}catch(Exception e){throw new IllegalStateException("تعذر تحميل الدروس",e);}
+        if(!prefs.contains("last_track")&&a0Track>=0&&a0Track<tracks.size()&&prefs.getInt("complete_0",0)==0&&prefs.getInt("xp",0)==0)trackIndex=a0Track;
         if(trackIndex<0||trackIndex>=tracks.size())trackIndex=0;
         if(prefs.getBoolean("reminders_enabled",true))ReminderReceiver.scheduleNext(this);
         tts=new TextToSpeech(this,this); if(!prefs.getBoolean("onboarding_done",false)&&prefs.getInt("complete_0",0)==0&&prefs.getInt("complete_1",0)==0&&prefs.getInt("xp",0)==0)showWelcome();else home();
@@ -114,11 +116,13 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         JSONArray ts=new JSONObject(bytes.toString("UTF-8")).getJSONArray("tracks");
         for(int t=0;t<ts.length();t++){
             JSONObject tr=ts.getJSONObject(t); Track track=new Track(tr.getString("title")); JSONArray units=tr.getJSONArray("units");
+            if("A0".equals(tr.optString("id")))a0Track=t;
             for(int u=0;u<units.length();u++){
                 JSONObject unit=units.getJSONObject(u); JSONArray list=unit.getJSONArray("items"); Lesson lesson=null;
                 for(int i=0;i<list.length();i++){
-                    if(i%PER_LESSON==0){lesson=new Lesson(unit.getString("title")+" • "+(i/PER_LESSON+1));track.lessons.add(lesson);}
-                    JSONObject obj=list.getJSONObject(i); Item item=new Item(t+"_"+u+"_"+i,obj.getString("es"),obj.getString("ar"));
+                    JSONObject obj=list.getJSONObject(i);
+                    if(i%PER_LESSON==0){String st=obj.optString("verification","");String tag="verified".equals(st)?"":(st.isEmpty()?" • غير معتمد":" • قيد التحقق");lesson=new Lesson(unit.getString("title")+" • "+(i/PER_LESSON+1)+tag);track.lessons.add(lesson);}
+                    Item item=new Item(t+"_"+u+"_"+i,obj.getString("es"),obj.getString("ar"));
                     lesson.items.add(item); track.items.add(item);
                 }
             } tracks.add(track);

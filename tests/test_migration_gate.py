@@ -52,7 +52,7 @@ class GateTests(unittest.TestCase):
     def test_fully_verified_item_publishable(self):
         d = mig.forward(sample())
         it = d["tracks"][0]["units"][0]["items"][0]
-        it.update({"verification": "verified", "ar_egy": "أهلاً", "source": "RAE",
+        it.update({"verification": "verified", "ar_egy": "أهلاً", "source": "RAE", "pronunciation": "أولا",
                    "example_es": "Hola, ¿qué tal?", "example_fusha": "مرحبًا، كيف حالك؟",
                    "example_egy": "أهلاً، عامل إيه؟"})
         self.assertEqual(gate.gate(d)[1], 1)
@@ -70,8 +70,33 @@ class LiveContentTests(unittest.TestCase):
         data = json.loads((ROOT / "app/src/main/assets/content.json").read_text(encoding="utf-8"))
         self.assertEqual(data.get("schema_version"), 2)
         total, pub = gate.gate(data)
-        self.assertEqual(total, 2000)
+        self.assertEqual(total, sum(len(u["items"]) for t in data["tracks"] for u in t["units"]))
         self.assertEqual(pub, 0)
+
+    def test_a0_track_is_appended_and_complete(self):
+        data = json.loads((ROOT / "app/src/main/assets/content.json").read_text(encoding="utf-8"))
+        ids = [t.get("id") for t in data["tracks"]]
+        self.assertEqual(ids[:2], [None, None], "legacy tracks must keep their positions")
+        self.assertEqual(ids[2], "A0", "A0 must be appended, not inserted before saved tracks")
+        items = [it for u in data["tracks"][2]["units"] for it in u["items"]]
+        self.assertGreaterEqual(len(items), 80)
+        for it in items:
+            for k in ("es", "ar", "ar_egy", "pronunciation", "example_es", "source"):
+                self.assertTrue(str(it.get(k, "")).strip(), f"{k} empty in {it.get('es')}")
+        self.assertTrue(all(it["verification"] == "pending_verification" for it in items))
+        self.assertEqual(gate.gate(data)[1], 0)
+
+    def test_a0_spanish_text_is_unique(self):
+        data = json.loads((ROOT / "app/src/main/assets/content.json").read_text(encoding="utf-8"))
+        items = [it["es"] for u in data["tracks"][2]["units"] for it in u["items"]]
+        self.assertEqual(len(items), len(set(items)))
+
+    def test_phrase_requires_full_examples_but_letter_does_not(self):
+        phrase = {"type": "phrase", "verification": "verified", "ar_egy": "x", "pronunciation": "x",
+                  "example_es": "x", "source": "s"}
+        letter = dict(phrase, type="letter")
+        self.assertIn("example_fusha", gate.missing_fields(phrase))
+        self.assertEqual(gate.missing_fields(letter), [])
 
 
 if __name__ == "__main__":
