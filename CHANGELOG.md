@@ -1,5 +1,39 @@
 # Changelog
 
+## 8.1 — 2026-11-01 (جولة توسيع المحتوى + إصلاحات مصداقية)
+
+### المحتوى
+- **3101 عنصرًا** (2558 كلمة/تعبير + 543 جملة) في **106 وحدة** و**573 درسًا**، بدل 1584 عنصرًا في 8.0.
+- وحدات جديدة عبر المستويات الستة، آخرها في C1: `c1_empresa` (إدارة أعمال)، `c1_ciencia_avanzada`
+  (علم متقدم)، `c1_mediacion` (توسط وحل خلافات)، `c1_estilo` (أسلوب وبلاغة).
+- **أمثلة الاستخدام:** 390 → **1978** كلمة/تعبير لها `example_es`. أُضيف `fill_phrase_examples()`
+  في `tools/build_content.py` فلا تبقى عبارة متعددة الكلمات بلا مثال (تستخدم نفسها كمثال)،
+  ووسم `example_source` لكل مثال (curriculum / pattern / phrase_self).
+- **حالة مصدر لكل عنصر:** `source_status` = `spelling_attested` (1881) أو `unattested` (1220)،
+  مبنيّة على قائمة تكرار MIT/OpenSubtitles. **0 `verified`** — الترجمة والمعاني غير موثّقة بمصدر.
+- `content/sources/SOURCES.md`: سجل المصادر وسياسة الحالات الصريحة.
+
+### التطبيق
+- حذف إذن `android.permission.INTERNET` بعد التأكد أن لا استخدام شبكي في أي ملف Java.
+- `MainActivity`: حالات صوت صادقة (`LANG_MISSING_DATA` / `LANG_NOT_SUPPORTED` / فشل التهيئة)
+  برسائل عربية محددة في بطاقة الصوت والإعدادات.
+- بطاقة الكلمة تعرض مصدر الشكل الإسباني وحالته وترتيب التكرار ومصدر جملة المثال.
+- `Curriculum.Item` و`MainActivity.Item`: حقول `source`, `sourceStatus`, `exampleSource`, `freqRank`.
+
+### الأدوات والاختبارات
+- `tools/audit_wiring.py` جديد: تدقيق ثابت للشاشات/الأزرار/الأذونات/TTS. النتيجة: ✅ لا مشاكل.
+- `tools/dedupe_curriculum.py` جديد: كشف وحذف التكرار داخل المستوى قبل البناء.
+- `tools/fetch_toolchain.py` جديد: إعادة تنزيل JDK/android.jar/aapt2/ECJ/D8/apksigner ومفاتيح التوقيع.
+- `tools/java_tests/FlowTest.java` أُصلح بالكامل (كان يستخدم واجهات غير موجودة) وأُضيفت اختبارات
+  استمرارية XP بعد إعادة التحميل وتكرار المكافأة.
+- **`run_java_tests.py` → PASS — 168,209 فحصًا** (كان 57,052 في 8.0).
+- `validate_content.py` → 0 خطأ / 602 تنبيهًا • `content_gate.py` → 0 verified (صادق).
+
+### البناء
+- versionCode 11 / versionName 8.1، minSdk 23، targetSdk 36.
+- `releases/app-debug.apk` و`releases/app-release.apk` = **823,128 بايت** لكل منهما، موقّعان v1+v2+v3.
+  SHA-256: debug `51fbf716…6051ae`، release `c06a276f…5c4364`.
+
 ## 8.0 — 2026-11-01 (جولة استكمال المنهج A0→C1)
 
 ### المحتوى (content/)

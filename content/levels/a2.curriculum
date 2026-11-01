@@ -468,3 +468,526 @@ S|Hierve el arroz veinte minutos y luego sírvelo.|اسلق الأرز عشري�
 S|Esta receta necesita sal, pimienta y aceite.|هذه الوصفة تحتاج ملحًا وفلفلًا وزيتًا.|الوصفة دي محتاجة ملح وفلفل وزيت.
 S|Freímos el pescado con un poco de aceite de oliva.|نقلي السمك بقليل من زيت الزيتون.|بنقلي السمك بشوية زيت زيتون.
 S|Prefiero las verduras al horno con la carne.|أفضل الخضار في الفرن مع اللحم.|بفضّل الخضار في الفرن مع اللحمة.
+
+U|a2_profesiones|المهن|Profesiones|مهن يسمعها في الشارع والمستشفى والمكتب.
+W|el ingeniero|المهندس|المهندس|noun|المهن
+W|el abogado|المحامي|المحامي|noun|المهن
+W|el contable|المحاسب|المحاسب|noun|المهن
+W|el arquitecto|المهندس المعماري|مهندس معماري|noun|المهن
+W|el periodista|الصحفي|الصحفي|noun|المهن
+W|el cocinero|الطاهي|الطباخ|noun|المهن
+W|el panadero|الخباز|الخباز|noun|المهن
+W|el carnicero|الجزار|الجزار|noun|المهن
+W|el peluquero|الحلاق|الحلاق|noun|المهن
+W|el fontanero|سبّاك|سبّاك|noun|المهن
+W|el electricista|الكهربائي|الكهربائي|noun|المهن
+W|el carpintero|النجار|النجار|noun|المهن
+W|el mecánico|الميكانيكي|الميكانيكي|noun|المهن
+W|el conductor|السائق|السواق|noun|المهن
+W|el bombero|رجل الإطفاء|المطافي|noun|المهن
+W|el policía|الشرطي|الشرطي|noun|المهن
+W|el soldado|الجندي|العسكري|noun|المهن
+W|el agricultor|المزارع|الفلاح|noun|المهن
+W|el pescadero|بائع السمك|بياع السمك|noun|المهن
+W|el tendero|صاحب الدكان|صاحب الدكان|noun|المهن
+W|el comerciante|التاجر|التاجر|noun|المهن
+W|el empresario|رجل الأعمال|رجل أعمال|noun|المهن
+W|el empleado|الموظف|الموظف|noun|المهن
+W|el becario|المتدرب|المتدرب|noun|المهن
+W|el traductor|المترجم|المترجم|noun|المهن
+W|el diseñador|المصمم|المصمم|noun|المهن
+W|el programador|المبرمج|المبرمج|noun|المهن
+W|el investigador|الباحث|الباحث|noun|المهن
+W|el enfermero|الممرض|الممرض|noun|المهن
+W|el dentista|طبيب الأسنان|دكتور الأسنان|noun|المهن
+S|Mi hermano es ingeniero y trabaja en una empresa grande.|أخي مهندس ويعمل في شركة كبيرة.|أخويا مهندس وبيشتغل في شركة كبيرة.
+S|El fontanero arregló la tubería en una hora.|أصلح السبّاك الأنبوب في ساعة.|السبّاك صلّح الماسورة في ساعة.
+S|La periodista hizo una entrevista al alcalde.|أجرت الصحفية مقابلة مع رئيس البلدية.|الصحفية عملت انترفيو مع المحافظ.
+S|Necesito un mecánico porque el coche no arranca.|أحتاج ميكانيكيًا لأن السيارة لا تدور.|محتاج ميكانيكي عشان العربية مش بتدور.
+S|El dentista me dijo que lave los dientes tres veces al día.|قال لي طبيب الأسنان أغسل أسناني ثلاث مرات يوميًا.|دكتور الأسنان قالي أغسل سناني تلات مرات في اليوم.
+
+U|a2_herramientas|الأدوات والأشياء العملية|Herramientas|أدوات تستخدمها في الإصلاح والبيت.
+W|la herramienta|الأداة|العُدّة|noun|الأدوات
+W|el martillo|المطرقة|الشاكوش|noun|الأدوات
+W|el destornillador|المفك|المفك|noun|الأدوات
+W|la llave inglesa|المفتاح الإنجليزي|المفتاح الإنجليزي|noun|الأدوات
+W|el clavo|المسمار|المسمار|noun|الأدوات
+W|el tornillo|البرغي|البرغي|noun|الأدوات
+W|la cuerda|الحبل|الحبل|noun|الأدوات
+W|la cinta|الشريط|الشريط|noun|الأدوات
+W|el pegamento|الغراء|الغراء|noun|الأدوات
+W|la tijera|المقص|المقص|noun|الأدوات
+W|la sierra|المنشار|المنشار|noun|الأدوات
+W|el taladro|المثقاب|الشنيور|noun|الأدوات
+W|la escalera de mano|السلم الخشبي|السلم|noun|الأدوات
+W|el cable|السلك|السلك|noun|الأدوات
+W|el enchufe|المقبس|الفيشة|noun|الأدوات
+W|la bombilla|المصباح الكهربائي|اللمبة|noun|الأدوات
+W|la pila|البطارية الصغيرة|البطارية|noun|الأدوات
+W|el tornillo de banco|الملزمة|المشبك|noun|الأدوات
+W|la caja de herramientas|صندوق الأدوات|علبة العُدّة|noun|الأدوات
+W|el tubo|الأنبوب|الماسورة|noun|الأدوات
+W|la pintura|الدهان|البوية|noun|الأدوات
+W|la brocha|الفرشاة|الفرشة|noun|الأدوات
+W|el metro de medir|شريط القياس|المتر|noun|الأدوات
+W|el nivel|ميزان الاستواء|الميزان|noun|الأدوات
+W|la tuerca|الصامولة|الصامولة|noun|الأدوات
+W|apretar|يشد / يربط|يربط|verb|الأدوات
+W|aflojar|يرخي|يرخي|verb|الأدوات
+W|tapar|يسدّ|يسدّ|verb|الأدوات
+W|medir|يقيس|يقيس|verb|الأدوات
+W|pegar|يلصق|يلزق|verb|الأدوات
+S|Usa el destornillador para abrir la tapa.|استخدم المفك لفتح الغطاء.|استخدم المفك تفتح الغطا.
+S|La bombilla se ha fundido, necesito una nueva.|احترقت اللمبة، أحتاج واحدة جديدة.|اللمبة اتحرقت، محتاج واحدة جديدة.
+S|El enchufe no funciona y hay que cambiar el cable.|المقبس لا يعمل ويجب تغيير السلك.|الفيشة مش شغالة ولازم نغيّر السلك.
+S|Aprieta bien el tornillo con la llave inglesa.|اشدد البرغي جيدًا بالمفتاح الإنجليزي.|اربط البرغي كويس بالمفتاح الإنجليزي.
+S|Mide la pared antes de colgar el cuadro.|قِس الحائط قبل تعليق اللوحة.|قيس الحيطة قبل ما تعلّق اللوحة.
+
+U|a2_vehiculos|المركبات|Vehículos|مركبات الشارع وأجزاؤها الأساسية.
+W|el coche|السيارة|العربية|noun|المركبات
+W|la moto|الدراجة النارية|الموتوسيكل|noun|المركبات
+W|el camión|الشاحنة|النقل|noun|المركبات
+W|la furgoneta|الفان|الفان|noun|المركبات
+W|el barco|السفينة|المركب|noun|المركبات
+W|el helicóptero|الهليكوبتر|الهليكوبتر|noun|المركبات
+W|el tranvía|الترام|الترام|noun|المركبات
+W|la rueda|العجلة|الكاوتش|noun|المركبات
+W|el motor|المحرك|الموتور|noun|المركبات
+W|el volante|عجلة القيادة|الدركسيون|noun|المركبات
+W|el freno|الفرامل|الفرامل|noun|المركبات
+W|la gasolina|البنزين|البنزين|noun|المركبات
+W|el aparcamiento|موقف السيارات|الباركنج|noun|المركبات
+W|la multa|الغرامة|المخالفة|noun|المركبات
+W|el carné de conducir|رخصة القيادة|الرخصة|noun|المركبات
+W|el atasco|الزحام المروري|الزحمة|noun|المركبات
+W|el seguro|التأمين|التأمين|noun|المركبات
+W|conducir|يقود|يسوق|verb|المركبات
+W|aparcar|يركن|يركن|verb|المركبات
+W|arrancar|يدور (المحرك)|يدور|verb|المركبات
+W|frenar|يفرمل|يفرمل|verb|المركبات
+W|repostar|يتزود بالوقود|يفوّل|verb|المركبات
+W|chocar|يصطدم|يخبط|verb|المركبات
+S|El coche está aparcado delante del edificio.|السيارة مركونة أمام المبنى.|العربية مركونة قدام العمارة.
+S|Hay un atasco enorme en el centro a esta hora.|هناك زحام كبير في المركز في هذه الساعة.|في زحمة رهيبة في الوسط الساعة دي.
+S|Tengo que repostar gasolina antes de salir de viaje.|يجب أن أتزود بالبنزين قبل السفر.|لازم أفول بنزين قبل ما أسافر.
+S|El mecánico revisó el motor y los frenos.|فحص الميكانيكي المحرك والفرامل.|الميكانيكي كشف على الموتور والفرامل.
+S|Sin carné de conducir no puedes alquilar un coche.|بدون رخصة قيادة لا تستطيع استئجار سيارة.|من غير رخصة مش تقدر تأجر عربية.
+
+U|a2_clima_extra|الطقس والظواهر|El tiempo atmosférico|كلمات الطقس والتوقعات.
+W|la tormenta|العاصفة|العاصفة|noun|الطقس
+W|el rayo|البرق|البرق|noun|الطقس
+W|el trueno|الرعد|الرعد|noun|الطقس
+W|la nube|السحابة|السحابة|noun|الطقس
+W|el viento|الريح|الهوا|noun|الطقس
+W|la niebla|الضباب|الشبورة|noun|الطقس
+W|el hielo|الجليد|التلج|noun|الطقس
+W|el granizo|البَرَد|البَرَد|noun|الطقس
+W|la temperatura|درجة الحرارة|درجة الحرارة|noun|الطقس
+W|el grado|الدرجة|الدرجة|noun|الطقس
+W|el pronóstico|توقعات الطقس|توقعات الجو|noun|الطقس
+W|la sombra|الظل|الضل|noun|الطقس
+W|el arcoíris|قوس قزح|قوس قزح|noun|الطقس
+W|húmedo|رطب|رطب|adj|الطقس
+W|seco|جاف|ناشف|adj|الطقس
+W|nublado|غائم|مغيّم|adj|الطقس
+W|soleado|مشمس|مشمس|adj|الطقس
+W|llover|تمطر|تشتّي|verb|الطقس
+W|nevar|تثلج|تتلّج|verb|الطقس
+W|soplar|تهبّ|تهبّ|verb|الطقس
+W|amanecer|يطلع الفجر|يطلع النهار|verb|الطقس
+W|anochecer|يغرب النهار|يغرب النهار|verb|الطقس
+S|Dicen que mañana habrá tormenta por la tarde.|يقولون إن غدًا ستكون هناك عاصفة بعد الظهر.|بيقولوا بكرة في عاصفة بعد الضهر.
+S|El viento sopla fuerte y hace frío.|الريح تهب بقوة والجو بارد.|الهوا بيشد جامد والجو ساقع.
+S|La temperatura baja a cinco grados por la noche.|تنخفض الحرارة إلى خمس درجات ليلًا.|الحرارة بتنزل خمس درجات بالليل.
+S|Con niebla es peligroso conducir rápido.|مع الضباب من الخطر القيادة بسرعة.|مع الشبورة خطر تسوق بسرعة.
+S|El pronóstico dice que el fin de semana será soleado.|التوقعات تقول إن نهاية الأسبوع ستكون مشمسة.|التوقعات بتقول الويك إند هيبقى مشمس.
+
+U|a2_tiendas|المحلات والخدمات|Tiendas y servicios|أسماء المحلات اللي في أي حي.
+W|la panadería|المخبز|الفرن|noun|المحلات
+W|la carnicería|محل الجزارة|الجزارة|noun|المحلات
+W|la frutería|محل الفاكهة|محل الفاكهة|noun|المحلات
+W|la pescadería|محل السمك|محل السمك|noun|المحلات
+W|la peluquería|صالون الحلاقة|الكوافير|noun|المحلات
+W|la librería|مكتبة الكتب|مكتبة الكتب|noun|المحلات
+W|la papelería|مكتبة الأدوات|المكتبة|noun|المحلات
+W|la tintorería|المصبغة|الدراي كلين|noun|المحلات
+W|el taller|الورشة|الورشة|noun|المحلات
+W|el quiosco|الكشك|الكشك|noun|المحلات
+W|la joyería|محل المجوهرات|محل الدهب|noun|المحلات
+W|la zapatería|محل الأحذية|محل الجزمة|noun|المحلات
+W|la droguería|متجر المنظفات|محل المنظفات|noun|المحلات
+W|el centro comercial|مركز تجاري|المول|noun|المحلات
+W|la terraza|التراس|التراس|noun|المحلات
+W|el mostrador|المنضدة|الكاونتر|noun|المحلات
+W|el escaparate|واجهة العرض|الفاترينة|noun|المحلات
+W|la cola|الطابور|الطابور|noun|المحلات
+W|el horario de apertura|مواعيد الفتح|مواعيد الفتح|noun|المحلات
+W|el cierre|الإغلاق|القفل|noun|المحلات
+W|atender|يخدم|يخدم|verb|المحلات
+W|esperar el turno|ينتظر الدور|يستنى دوره|phrase|المحلات
+S|La panadería abre a las seis y cierra a las dos.|المخبز يفتح السادسة ويغلق الثانية.|الفرن بيفتح ستة ويقفل اتنين.
+S|Hay mucha cola en la carnicería los sábados.|هناك طابور طويل في محل الجزارة أيام السبت.|في طابور طويل في الجزارة يوم السبت.
+S|Llevé el traje a la tintorería y lo recojo el jueves.|أخذت البدلة إلى المصبغة وأستلمها الخميس.|وديت البدلة الدراي كلين وهستلمها الخميس.
+S|El escaparate de la joyería está muy bonito.|واجهة محل المجوهرات جميلة جدًا.|فاترينة محل الدهب حلوة أوي.
+S|El dependiente me atendió enseguida.|خدمَني البائع فورًا.|البائع خدمّني على طول.
+
+U|a2_escuela_materias|المواد الدراسية|Asignaturas|مواد المدرسة والجامعة.
+W|la asignatura|المادة|المادة|noun|المواد
+W|las matemáticas|الرياضيات|الرياضة (الحساب)|noun|المواد
+W|la historia|التاريخ|التاريخ|noun|المواد
+W|la geografía|الجغرافيا|الجغرافيا|noun|المواد
+W|las ciencias|العلوم|العلوم|noun|المواد
+W|la literatura|الأدب|الأدب|noun|المواد
+W|el arte|الفن|الفن|noun|المواد
+W|la educación física|التربية الرياضية|الرياضة|noun|المواد
+W|la informática|المعلوماتية|الحاسبات|noun|المواد
+W|la física|الفيزياء|الفيزياء|noun|المواد
+W|la química|الكيمياء|الكيمياء|noun|المواد
+W|la biología|الأحياء|الأحياء|noun|المواد
+W|la filosofía|الفلسفة|الفلسفة|noun|المواد
+W|la lengua extranjera|اللغة الأجنبية|اللغة الأجنبية|noun|المواد
+W|el idioma|اللغة|اللغة|noun|المواد
+W|el curso|الدورة / السنة الدراسية|السنة الدراسية|noun|المواد
+W|el semestre|الفصل الدراسي|الترم|noun|المواد
+W|el apunte|المذكرة|الملاحظات|noun|المواد
+W|el deber|الواجب|الواجب|noun|المواد
+W|el aprobado|النجاح|النجاح|noun|المواد
+W|el suspenso|الرسوب|الرسوب|noun|المواد
+W|suspender|يرسب|يسقط|verb|المواد
+W|aprobar|ينجح|ينجح|verb|المواد
+W|repasar|يراجع|يراجع|verb|المواد
+W|corregir|يصحح|يصحح|verb|المواد
+S|Mi asignatura favorita es la historia, pero apruebo mejor en ciencias.|مادتي المفضلة التاريخ، لكني أنجح أفضل في العلوم.|مادتي المفضلة التاريخ، بس بنجح أحسن في العلوم.
+S|El semestre termina en junio y después hay exámenes.|الفصل الدراسي ينتهي في يونيو وبعدها امتحانات.|الترم بيخلص في يونيو وبعد كده امتحانات.
+S|Repaso los apuntes antes de cada clase.|أراجع المذكرات قبل كل درس.|براجع الملاحظات قبل كل حصة.
+S|Si no estudias, vas a suspender la asignatura.|إذا لم تدرس، سترسب في المادة.|لو مادرستش هتسقط في المادة.
+S|El profesor de física explica muy claro.|مدرس الفيزياء يشرح بوضوح شديد.|مدرس الفيزياء بيشرح واضح أوي.
+
+U|a2_oficina|أدوات المكتب|La oficina|أدوات مكتبية وشغل إداري يومي.
+W|el bolígrafo|القلم الجاف|القلم الجاف|noun|المكتب
+W|el lápiz|قلم الرصاص|القلم الرصاص|noun|المكتب
+W|el papel|الورق|الورق|noun|المكتب
+W|el folio|الورقة الكبيرة|الورقة|noun|المكتب
+W|el sobre|المظروف|المظروف|noun|المكتب
+W|la grapa|الدبوس الورقي|الدبوس|noun|المكتب
+W|la impresora|الطابعة|الطابعة|noun|المكتب
+W|el escáner|الماسح الضوئي|الإسكانر|noun|المكتب
+W|la agenda|المفكرة|الأجندة|noun|المكتب
+W|el informe|التقرير|التقرير|noun|المكتب
+W|la fotocopia|النسخة|الكوبي|noun|المكتب
+W|la estantería|رف الكتب|رف الكتب|noun|المكتب
+W|el archivo|الملف|الملف|noun|المكتب
+W|la carpeta|الحافظة|الفولدر|noun|المكتب
+W|el sello|الخاتم|الخاتم|noun|المكتب
+W|la reunión de equipo|اجتماع الفريق|اجتماع الفريق|noun|المكتب
+W|el correo interno|البريد الداخلي|الميل الداخلي|noun|المكتب
+W|imprimir|يطبع|يطبع|verb|المكتب
+W|archivar|يحفظ في الملف|يحفظ|verb|المكتب
+W|enviar|يرسل|يبعت|verb|المكتب
+W|adjuntar|يرفق|يرفق|verb|المكتب
+W|organizar|ينظّم|ينظّم|verb|المكتب
+S|Imprime el informe y firma la última página.|اطبع التقرير ووقّع الصفحة الأخيرة.|اطبع التقرير ووقّع آخر صفحة.
+S|Adjunto la fotocopia del contrato en este correo.|أرفق نسخة العقد في هذا البريد.|برفق كوبي العقد في الميل ده.
+S|Archivo los documentos por fecha y cliente.|أحفظ المستندات حسب التاريخ والعميل.|بحفظ المستندات حسب التاريخ والعميل.
+S|La agenda está llena de reuniones esta semana.|المفكرة مليانة اجتماعات الأسبوع ده.|الأجندة مليانة اجتماعات الأسبوع ده.
+S|Necesito un bolígrafo y dos folios, por favor.|أحتاج قلمًا جافًا وورقتين، من فضلك.|محتاج قلم جاف وورقتين لو سمحت.
+
+U|a2_colocaciones|تعبيرات شائعة مع الأفعال|Colocaciones frecuentes|تعبيرات جاهزة تُستخدم كثيرًا في الحياة اليومية.
+W|hacer la compra|يتسوق|يعمل السوقة|phrase|التعابير اليومية
+W|hacer la cama|يرتب السرير|يرتب السرير|phrase|التعابير اليومية
+W|hacer la comida|يطبخ|يعمل الأكل|phrase|التعابير اليومية
+W|hacer deporte|يمارس الرياضة|يعمل رياضة|phrase|التعابير اليومية
+W|hacer la colada|يغسل الملابس|يغسل الهدوم|phrase|التعابير اليومية
+W|hacer los deberes|يعمل الواجب|يعمل الواجب|phrase|التعابير اليومية
+W|hacer una pregunta|يطرح سؤالًا|يسأل سؤال|phrase|التعابير اليومية
+W|hacer un favor|يقدم معروفًا|يعمل جميل|phrase|التعابير اليومية
+W|hacer caso|ينتبه / يطيع|يسمع الكلام|phrase|التعابير اليومية
+W|hacer planes|يخطط|يعمل خطط|phrase|التعابير اليومية
+W|tomar el sol|يتشمس|يتشمس|phrase|التعابير اليومية
+W|tomar un café|يشرب قهوة|يشرب قهوة|phrase|التعابير اليومية
+W|tomar una decisión|يتخذ قرارًا|ياخد قرار|phrase|التعابير اليومية
+W|tomar el autobús|يركب الأتوبيس|يركب الأتوبيس|phrase|التعابير اليومية
+W|tomar notas|يدوّن ملاحظات|يكتب ملاحظات|phrase|التعابير اليومية
+W|dar un paseo|يتمشى|يتمشى|phrase|التعابير اليومية
+W|dar las gracias|يشكر|يشكر|phrase|التعابير اليومية
+W|dar la bienvenida|يرحّب|يرحّب|phrase|التعابير اليومية
+W|dar una vuelta|يتجول|يلف لفة|phrase|التعابير اليومية
+W|dar de comer|يطعم|يطعم|phrase|التعابير اليومية
+W|tener ganas de|يرغب في|نفسه في|phrase|التعابير اليومية
+W|tener prisa|يكون مستعجلًا|يكون مستعجل|phrase|التعابير اليومية
+W|tener razón|يكون على حق|كلامه صح|phrase|التعابير اليومية
+W|tener cuidado|ينتبه|ياخد باله|phrase|التعابير اليومية
+W|tener hambre|يكون جائعًا|يكون جعان|phrase|التعابير اليومية
+W|tener sed|يكون عطشانًا|يكون عطشان|phrase|التعابير اليومية
+W|tener sueño|يكون نعسانًا|يكون نعسان|phrase|التعابير اليومية
+W|tener miedo|يكون خائفًا|يخاف|phrase|التعابير اليومية
+W|tener éxito|ينجح|ينجح|phrase|التعابير اليومية
+W|ponerse de acuerdo|يتفق|يتفق|phrase|التعابير اليومية
+W|ponerse en contacto|يتواصل|يتواصل|phrase|التعابير اليومية
+W|ponerse nervioso|يتوتر|يتوتر|phrase|التعابير اليومية
+W|echar una mano|يساعد|يساعد|phrase|التعابير اليومية
+W|echar de menos|يفتقد|يشتاق|phrase|التعابير اليومية
+W|llevar razón|يكون محقًا|كلامه صح|phrase|التعابير اليومية
+W|llevar tiempo|يستغرق وقتًا|ياخد وقت|phrase|التعابير اليومية
+W|perder el tiempo|يضيع الوقت|يضيع الوقت|phrase|التعابير اليومية
+W|perder el autobús|يفوّت الأتوبيس|يفوّت الأتوبيس|phrase|التعابير اليومية
+W|llamar la atención|يلفت الانتباه|يلفت النظر|phrase|التعابير اليومية
+W|guardar silencio|يلتزم الصمت|يسكت|phrase|التعابير اليومية
+W|prestar atención|ينتبه|يركّز|phrase|التعابير اليومية
+W|pedir perdón|يعتذر|يعتذر|phrase|التعابير اليومية
+W|pedir ayuda|يطلب مساعدة|يطلب مساعدة|phrase|التعابير اليومية
+W|salir de casa|يخرج من البيت|يخرج من البيت|phrase|التعابير اليومية
+W|llegar a tiempo|يصل في الوقت|يوصل في الميعاد|phrase|التعابير اليومية
+W|estar de acuerdo|يوافق|يوافق|phrase|التعابير اليومية
+W|estar en casa|يكون في البيت|يكون في البيت|phrase|التعابير اليومية
+W|estar de buen humor|يكون مزاجه جيدًا|مزاجه حلو|phrase|التعابير اليومية
+W|estar a punto de|يكون على وشك|على وشك|phrase|التعابير اليومية
+S|Tengo prisa porque tengo que hacer la compra antes de comer.|أنا مستعجل لأني يجب أن أتسوق قبل الغداء.|أنا مستعجل عشان لازم أعمل السوقة قبل الغدا.
+S|Me gusta tomar el sol y dar un paseo por la playa.|أحب التشمس والتمشي على الشاطئ.|بحب أتشمس وأتمشى على البحر.
+S|Hicimos los deberes juntos y después vimos una película.|عملنا الواجب معًا ثم شاهدنا فيلمًا.|عملنا الواجب مع بعض وبعدين شفنا فيلم.
+S|Te echo de menos cuando viajas tanto tiempo.|أفتقدك عندما تسافر هذه المدة الطويلة.|بوحشني لما تسافر المدة الطويلة دي.
+S|No pierdas el tiempo; ponte en contacto con el hotel ahora.|لا تضيع الوقت؛ تواصل مع الفندق الآن.|متضيّعش وقت؛ كلّم الفندق دلوقتي.
+S|Ella siempre presta atención y toma notas en clase.|هي تنتبه دائمًا وتدوّن ملاحظات في الحصة.|هي دايماً بتركز وبتكتب ملاحظات في الحصة.
+
+U|a2_formulas|عبارات التواصل الجاهزة|Fórmulas de cortesía|عبارات مهذبة تقال في المواقف اليومية.
+W|Buenos días, ¿cómo está usted?|صباح الخير، كيف حالك؟|صباح الخير، إزيك؟
+W|Encantado de conocerte|تشرفت بمعرفتك|تشرفت بمعرفتك
+W|¿Qué tal?|إيه الأخبار؟|إيه الأخبار؟
+W|Más o menos|نوعًا ما|نوعاً ما
+W|Lo siento mucho|أنا آسف جدًا|أنا آسف جدًا
+W|No pasa nada|لا مشكلة|ولا يهمك
+W|Con permiso|عن إذنك|عن إذنك
+W|Por supuesto|بالطبع|طبعاً
+W|Claro que sí|بالتأكيد|أكيد
+W|Desde luego|بالتأكيد|أكيد
+W|De acuerdo, perfecto|موافق، ممتاز|ماشي، تمام
+W|¿Me puedes ayudar, por favor?|هل يمكنك مساعدتي، من فضلك؟|تقدر تساعدني لو سمحت؟
+W|¿Puedes repetir más despacio?|هل يمكنك التكرار أبطأ؟|تقدر تعيد أبطأ؟
+W|No entiendo muy bien|لا أفهم جيدًا|مش فاهم كويس
+W|¿Qué significa esta palabra?|ما معنى هذه الكلمة؟|الكلمة دي معناها إيه؟
+W|¿Cómo se dice en español?|كيف يقال بالإسبانية؟|بتتقال بالإسباني إزاي؟
+W|Perdona por el retraso|عذرًا على التأخير|معلش على التأخير
+W|Muchas gracias por todo|شكرًا جزيلًا على كل شيء|شكراً جزيلاً على كل حاجة
+W|De nada, no hay problema|لا شكر على واجب، لا مشكلة|العفو، ولا يهمك
+W|Que tengas un buen día|أتمنى لك يومًا طيبًا|يوم سعيد
+W|Hasta pronto|إلى قريب|أشوفك قريب
+W|Nos vemos mañana|نراك غدًا|نشوفك بكرة
+W|Que descanses|اتمنى لك راحة|تصبح على خير
+W|Buen provecho|بالهناء والشفاء|بالهنا والشفا
+W|Salud|صحة (عند العطس)|ألف سلامة
+W|Enhorabuena|تهانينا|مبروك
+W|Lo mismo digo|وأنا كذلك|وأنا كمان
+W|No te preocupes|لا تقلق|متقلقش
+W|Todo bien, gracias|كل شيء بخير، شكرًا|كله تمام، شكراً
+S|—¿Cómo estás? —Muy bien, gracias, ¿y tú?|—كيف حالك؟ —بخير جدًا، شكرًا، وأنت؟|—إزيك؟ —تمام أوي، شكراً، وأنت؟
+S|Perdona, no entiendo muy bien. ¿Puedes repetir más despacio?|عذرًا، لا أفهم جيدًا. هل يمكنك التكرار أبطأ؟|معلش، مش فاهم كويس. تعيد أبطأ؟
+S|Muchas gracias por tu ayuda. —De nada, no hay problema.|شكرًا جزيلًا على مساعدتك. —لا شكر على واجب، لا مشكلة.|شكراً جزيلاً على مساعدتك. —العفو، ولا يهمك.
+S|Que tengas un buen día y hasta pronto.|أتمنى لك يومًا طيبًا وإلى قريب.|يوم سعيد وأشوفك قريب.
+S|¡Enhorabuena por el trabajo! Lo mismo digo de tu equipo.|تهانينا على العمل! وأقول نفس الشيء عن فريقك.|مبروك على الشغل! وأنا كمان أقول نفس الكلام عن فريقك.
+
+U|a2_salud_extra|أعراض وعلاج|Síntomas y tratamiento|كلمات عند الطبيب والصيدلية.
+W|el dolor de cabeza|صداع|صداع|noun|الصحة
+W|el dolor de garganta|ألم الحلق|وجع الزور|noun|الصحة
+W|el dolor de espalda|ألم الظهر|وجع الضهر|noun|الصحة
+W|el mareo|الدوار|الدوخة|noun|الصحة
+W|la náusea|الغثيان|الغثيان|noun|الصحة
+W|la diarrea|الإسهال|الإسهال|noun|الصحة
+W|la gripe|الأنفلونزا|الأنفلونزا|noun|الصحة
+W|la infección|العدوى|العدوى|noun|الصحة
+W|la fiebre alta|الحمى العالية|السخونية العالية|noun|الصحة
+W|la presión arterial|ضغط الدم|ضغط الدم|noun|الصحة
+W|el análisis de sangre|تحليل الدم|تحليل الدم|noun|الصحة
+W|la radiografía|الأشعة|الأشعة|noun|الصحة
+W|la vacuna|اللقاح|التطعيم|noun|الصحة
+W|la dosis|الجرعة|الجرعة|noun|الصحة
+W|el antibiótico|المضاد الحيوي|المضاد الحيوي|noun|الصحة
+W|la pomada|المرهم|المرهم|noun|الصحة
+W|la venda|الضمادة|اللزقة|noun|الصحة
+W|el especialista|الأخصائي|الأخصائي|noun|الصحة
+W|tener fiebre|يكون مصابًا بحمى|عنده سخونية|verb|الصحة
+W|tener tos|يكون مصابًا بكحة|عنده كحة|verb|الصحة
+W|estar mareado|يشعر بدوار|حاسس بدوخة|verb|الصحة
+W|sentirse mejor|يشعر بتحسن|حاسس أحسن|verb|الصحة
+W|recetar|يكتب روشتة|يكتب روشتة|verb|الصحة
+W|curar|يشفي|يشفي|verb|الصحة
+W|descansar en cama|يرتاح في السرير|يرتاح في السرير|verb|الصحة
+S|Tengo dolor de garganta y un poco de fiebre desde ayer.|عندي ألم في الحلق وحمى قليلة منذ أمس.|عندي وجع في الزور وسخونية شوية من إمبارح.
+S|El médico me recetó un antibiótico y una pomada.|كتب لي الطبيب مضادًا حيويًا ومرهمًا.|الدكتور كتبلي مضاد حيوي ومرهم.
+S|Necesito el análisis de sangre y una radiografía del pecho.|أحتاج تحليل الدم وأشعة على الصدر.|محتاج تحليل الدم وأشعة على الصدر.
+S|Estoy mareado y con náuseas; ¿puedo sentarme un momento?|أشعر بدوار وغثيان؛ هل يمكنني الجلوس لحظة؟|حاسس بدوخة وغثيان؛ أقدر أقعد لحظة؟
+S|La dosis es una pastilla cada ocho horas durante cinco días.|الجرعة قرص كل ثماني ساعات لمدة خمسة أيام.|الجرعة حباية كل تمان ساعات لمدة خمس تيام.
+
+U|a2_plantas|النباتات والأشجار|Plantas y árboles|نباتات وأشجار وزهور وما ينتج عنها.
+W|el árbol frutal|شجرة مثمرة|شجرة فاكهة|noun|النباتات
+W|el pino|الصنوبر|الصنوبر|noun|النباتات
+W|el olivo|الزيتون|الزيتون|noun|النباتات
+W|la palmera|النخلة|النخلة|noun|النباتات
+W|la rosa|الوردة|الوردة|noun|النباتات
+W|el girasol|عبّاد الشمس|عبّاد الشمس|noun|النباتات
+W|la hierba|العشب|النجيلة|noun|النباتات
+W|la hoja|الورقة|الورقة|noun|النباتات
+W|la rama|الغصن|الفرع|noun|النباتات
+W|la raíz|الجذر|الجذر|noun|النباتات
+W|la semilla|البذرة|البذرة|noun|النباتات
+W|la tierra|التراب|التراب|noun|النباتات
+W|el huerto|البستان|الجنينة|noun|النباتات
+W|la maceta|الأصيص|القصرية|noun|النباتات
+W|el césped|المرج|النجيلة|noun|النباتات
+W|la sombra del árbol|ظل الشجرة|ضل الشجرة|noun|النباتات
+W|el olor|الرائحة|الريحة|noun|النباتات
+W|el color verde|اللون الأخضر|اللون الأخضر|noun|النباتات
+W|regar|يسقي|يسقي|verb|النباتات
+W|plantar|يزرع|يزرع|verb|النباتات
+W|crecer|ينمو|يكبر|verb|النباتات
+W|florecer|يزهر|يزهر|verb|النباتات
+W|marchitarse|يذبل|يذبل|verb|النباتات
+S|Riego las plantas del balcón dos veces por semana.|أسقي نباتات الشرفة مرتين أسبوعيًا.|بسقي نباتات البلكونة مرتين في الأسبوع.
+S|En primavera florecen los árboles del parque.|في الربيع تزهر أشجار الحديقة.|في الربيع بتزهر شجر الجنينة.
+S|Plantamos una semilla y creció en dos meses.|زرعنا بذرة ونمت في شهرين.|زرعنا بذرة وكبرت في شهرين.
+S|La sombra de la palmera es fresca al mediodía.|ظل النخلة منعش في الظهيرة.|ضل النخلة بيبقى ساقع في الضهر.
+S|Corta las ramas secas antes del invierno.|اقطع الأغصان الجافة قبل الشتاء.|اقطع الفروع الناشفة قبل الشتا.
+
+U|a2_animales_salvajes|حيوانات برية وبحرية|Animales salvajes|حيوانات الغابة والبحر والطيور.
+W|la jirafa|الزرافة|الزرافة|noun|الحيوانات
+W|el mono|القرد|القرد|noun|الحيوانات
+W|la cebra|الحمار الوحشي|الحمار الوحشي|noun|الحيوانات
+W|el oso|الدب|الدب|noun|الحيوانات
+W|el lobo|الذئب|الذيب|noun|الحيوانات
+W|el zorro|الثعلب|التعلب|noun|الحيوانات
+W|el conejo|الأرنب|الأرنب|noun|الحيوانات
+W|el ciervo|الغزال|الغزال|noun|الحيوانات
+W|el tigre|النمر|النمر|noun|الحيوانات
+W|el cocodrilo|التمساح|التمساح|noun|الحيوانات
+W|la tortuga|السلحفاة|السلحفاة|noun|الحيوانات
+W|el delfín|الدولفين|الدولفين|noun|الحيوانات
+W|la ballena|الحوت|الحوت|noun|الحيوانات
+W|el tiburón|القرش|القرش|noun|الحيوانات
+W|el pulpo|الأخطبوط|الأخطبوط|noun|الحيوانات
+W|el cangrejo|السلطعون|الكابوريا|noun|الحيوانات
+W|la gamba|الجمبري|الجمبري|noun|الحيوانات
+W|la mariposa nocturna|العثّة|العثّة|noun|الحيوانات
+W|la araña|العنكبوت|العنكبوت|noun|الحيوانات
+W|la hormiga|النملة|النملة|noun|الحيوانات
+W|la mosca|الذبابة|الذبابة|noun|الحيوانات
+W|el mosquito|البعوضة|النموسة|noun|الحيوانات
+W|la rana|الضفدع|الضفدع|noun|الحيوانات
+W|la serpiente venenosa|الأفعى السامة|التعبان السام|noun|الحيوانات
+W|el águila|النسر|النسر|noun|الحيوانات
+W|el búho|البومة|البومة|noun|الحيوانات
+W|el loro|الببغاء|البغبغان|noun|الحيوانات
+W|la gallina|الدجاجة|الفرخة|noun|الحيوانات
+W|el gallo|الديك|الديك|noun|الحيوانات
+W|el burro|الحمار|الحمار|noun|الحيوانات
+S|Vi una jirafa y dos cebras en el zoo.|رأيت زرافة وحمارين وحشيين في حديقة الحيوان.|شفت زرافة وحمارين وحش في حديقة الحيوان.
+S|El delfín nada cerca del barco y juega con las olas.|الدولفين يسبح قريبًا من القارب ويلعب مع الأمواج.|الدولفين بيعوم قريب من المركب وبيعمل حركات مع الموج.
+S|Hay muchos mosquitos cerca del río por la noche.|هناك بعوض كثير قرب النهر ليلًا.|في نموس كتير جنب النهر بالليل.
+S|El águila vuela alto y busca comida.|النسر يطير عاليًا ويبحث عن الطعام.|النسر بيطير عالي ويدور على أكل.
+S|El loro repite las palabras que oye.|الببغاء يكرر الكلمات التي يسمعها.|البغبغان بيقول الكلام اللي بيسمعه.
+
+U|a2_deportes_extra|رياضات وألعاب|Deportes y juegos|رياضات وألعاب ومعداتها.
+W|el fútbol|كرة القدم|الكورة|noun|الرياضات
+W|el baloncesto|كرة السلة|كرة السلة|noun|الرياضات
+W|el tenis|التنس|التنس|noun|الرياضات
+W|la natación sincronizada|السباحة المتزامنة|السباحة المتزامنة|noun|الرياضات
+W|el atletismo|ألعاب القوى|ألعاب القوى|noun|الرياضات
+W|el ciclismo|رياضة الدراجات|العجلة|noun|الرياضات
+W|la gimnasia|الجمباز|الجمباز|noun|الرياضات
+W|el boxeo|الملاكمة|الملاكمة|noun|الرياضات
+W|el esquí|التزلج|التزلج|noun|الرياضات
+W|la vela|الإبحار الشراعي|الشراع|noun|الرياضات
+W|el ajedrez|الشطرنج|الشطرنج|noun|الرياضات
+W|las cartas|الورق (اللعب)|الكوتشينة|noun|الرياضات
+W|el dado|النرد|الزهر|noun|الرياضات
+W|el puzzle|أحجية الصور|البازل|noun|الرياضات
+W|el juguete|اللعبة|اللعبة|noun|الرياضات
+W|la pelota|الكرة|الكورة|noun|الرياضات
+W|la raqueta|المضرب|المضرب|noun|الرياضات
+W|la red|الشبكة|الشبكة|noun|الرياضات
+W|el campo de fútbol|ملعب كرة القدم|ملعب الكورة|noun|الرياضات
+W|el marcador|النتيجة|النتيجة|noun|الرياضات
+W|el campeonato|البطولة|البطولة|noun|الرياضات
+W|el récord|الرقم القياسي|الرقم القياسي|noun|الرياضات
+W|la medalla|الميدالية|الميدالية|noun|الرياضات
+W|el árbitro|الحكم|الحكم|noun|الرياضات
+W|competir|ينافس|ينافس|verb|الرياضات
+W|marcar un gol|يسجل هدفًا|يجيب جون|verb|الرياضات
+W|animar al equipo|يشجع الفريق|يشجع الفريق|verb|الرياضات
+W|entrenar cada día|يتدرب كل يوم|يتمرن كل يوم|verb|الرياضات
+W|empatar el partido|يتعادل في المباراة|يتعادل في الماتش|verb|الرياضات
+W|ganar la medalla|يفوز بالميدالية|ياخد الميدالية|verb|الرياضات
+S|Jugamos al baloncesto en el parque los domingos.|نلعب كرة السلة في الحديقة أيام الأحد.|بنلعب كرة السلة في الجنينة يوم الحد.
+S|El árbitro marcó un penalti en el último minuto.|الحكم احتسب ركلة جزاء في الدقيقة الأخيرة.|الحكم حسب بينالتي في آخر دقيقة.
+S|Mi equipo ganó el campeonato y recibió una medalla.|فريقي فاز بالبطولة ونال ميدالية.|فريقي كسب البطولة وأخد ميدالية.
+S|Prefiero el ajedrez porque es tranquilo y mental.|أفضل الشطرنج لأنه هادئ وذهني.|بفضّل الشطرنج عشان هادي وذهني.
+S|Los niños juegan con el puzzle y las cartas.|الأطفال يلعبون بالأحجية والورق.|الأطفال بيلعبوا بالبازل والكوتشينة.
+
+U|a2_musica|الموسيقى والآلات|Música e instrumentos|آلات موسيقية وأنواع موسيقى.
+W|la guitarra|الجيتار|الجيتار|noun|الموسيقى
+W|el piano|البيانو|البيانو|noun|الموسيقى
+W|el violín|الكمان|الكمان|noun|الموسيقى
+W|la flauta|الناي|الناي|noun|الموسيقى
+W|el tambor|الطبل|الطبل|noun|الموسيقى
+W|la trompeta|البوق|الترومبيت|noun|الموسيقى
+W|el laúd|العود|العود|noun|الموسيقى
+W|el órgano|الأرغن|الأورج|noun|الموسيقى
+W|la canción|الأغنية|الأغنية|noun|الموسيقى
+W|la letra|الكلمات|الكلمات|noun|الموسيقى
+W|la melodía|اللحن|اللحن|noun|الموسيقى
+W|el ritmo|الإيقاع|الإيقاع|noun|الموسيقى
+W|la orquesta|الأوركسترا|الأوركسترا|noun|الموسيقى
+W|el cantante|المغني|المطرب|noun|الموسيقى
+W|el músico|الموسيقي|الموسيقي|noun|الموسيقى
+W|el escenario|المسرح|المسرح|noun|الموسيقى
+W|el micrófono|الميكروفون|الميكروفون|noun|الموسيقى
+W|el altavoz|السماعة|السماعة|noun|الموسيقى
+W|el volumen|مستوى الصوت|الصوت|noun|الموسيقى
+W|el auricular|سماعة الأذن|الهيدفون|noun|الموسيقى
+W|tocar un instrumento|يعزف آلة|يعزف آلة|verb|الموسيقى
+W|cantar|يغني|يغني|verb|الموسيقى
+W|componer|يؤلف|يؤلف|verb|الموسيقى
+W|escuchar música|يسمع موسيقى|يسمع مزيكا|verb|الموسيقى
+W|subir el volumen|يرفع الصوت|يعلّي الصوت|verb|الموسيقى
+W|bajar el volumen|يخفض الصوت|يوطّي الصوت|verb|الموسيقى
+S|Toco la guitarra desde hace cinco años.|أعزف الجيتار منذ خمس سنوات.|بعزف جيتار من خمس سنين.
+S|La letra de esta canción es muy bonita.|كلمات هذه الأغنية جميلة جدًا.|كلمات الأغنية دي حلوة أوي.
+S|La orquesta tocó una melodía árabe en el concierto.|عزفت الأوركسترا لحنًا عربيًا في الحفل.|الأوركسترا عزفت لحن عربي في الحفلة.
+S|Baja el volumen, por favor; es muy tarde.|اخفض الصوت، من فضلك؛ الوقت متأخر.|وطّي الصوت لو سمحت؛ الوقت متأخر.
+S|Compré un auricular nuevo para escuchar música.|اشتريت سماعة أذن جديدة لأسمع الموسيقى.|اشتريت هيدفون جديد أسمع مزيكا.
+
+U|a2_materiales|المواد والأشكال والكميات|Materiales, formas y cantidades|مادة الشيء وشكله وكميته.
+W|la madera|الخشب|الخشب|noun|المواد
+W|el metal|المعدن|المعدن|noun|المواد
+W|el vidrio|الزجاج|الزجاج|noun|المواد
+W|el plástico|البلاستيك|البلاستيك|noun|المواد
+W|el papel de cocina|ورق المطبخ|ورق المطبخ|noun|المواد
+W|la tela|القماش|القماش|noun|المواد
+W|el hierro|الحديد|الحديد|noun|المواد
+W|el oro|الذهب|الدهب|noun|المواد
+W|la plata|الفضة|الفضة|noun|المواد
+W|la piedra|الحجر|الحجر|noun|المواد
+W|el cemento|الأسمنت|الأسمنت|noun|المواد
+W|el ladrillo|الطوب|الطوب|noun|المواد
+W|el cuadrado|المربع|المربع|noun|المواد
+W|el círculo|الدائرة|الدائرة|noun|المواد
+W|el triángulo|المثلث|المثلث|noun|المواد
+W|el rectángulo|المستطيل|المستطيل|noun|المواد
+W|la forma|الشكل|الشكل|noun|المواد
+W|el tamaño|الحجم|الحجم|noun|المواد
+W|el peso|الوزن|الوزن|noun|المواد
+W|el litro|اللتر|اللتر|noun|المواد
+W|el kilo|الكيلو|الكيلو|noun|المواد
+W|el gramo|الجرام|الجرام|noun|المواد
+W|la botella|الزجاجة|الإزازة|noun|المواد
+W|la lata|العلبة المعدنية|الكانز|noun|المواد
+W|el trozo|القطعة|القطعة|noun|المواد
+W|pesado|ثقيل|تقيل|adj|المواد
+W|ligero|خفيف|خفيف|adj|المواد
+W|blando|طري|طري|adj|المواد
+W|duro|صلب|ناشف|adj|المواد
+W|redondo|دائري|مدور|adj|المواد
+W|cuadrado de forma|مربع الشكل|مربع الشكل|adj|المواد
+S|Esta mesa es de madera y las sillas de metal.|هذه الطاولة من الخشب والكراسي من المعدن.|الترابيزة دي خشب والكراسي معدن.
+S|Necesito dos kilos de azúcar y un litro de leche.|أحتاج كيلوين من السكر ولترًا من الحليب.|محتاج كيلوين سكر ولتر لبن.
+S|La caja es ligera, pero la bolsa es muy pesada.|الصندوق خفيف، لكن الكيس ثقيل جدًا.|العلبة خفيفة، بس الكيس تقيل أوي.
+S|El espejo del baño tiene forma redonda.|مرآة الحمام شكلها دائري.|مراية الحمام شكلها مدور.
+S|Compra una botella de agua y una lata de refresco.|اشترِ زجاجة ماء وعلبة مشروب غازي.|هات إزازة مية وكانز بيبسي.

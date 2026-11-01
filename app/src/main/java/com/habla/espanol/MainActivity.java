@@ -78,6 +78,8 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private PrefStore store;
     private Typeface cairoRegular, cairoBold, nunitoRegular, nunitoBold;
     private TextToSpeech tts;
+    /** Empty when the Spanish voice works; otherwise a clear Egyptian-Arabic reason shown in the UI. */
+    private String ttsProblem = "";
     private SpeechRecognizer recognizer;
     private LinearLayout root, body, answers, footer;
     private WordFlow bank, selectedBank;
@@ -106,7 +108,9 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private static final class Item {
         String id = "", es = "", ar = "", egy = "", ipa = "", pos = "", topic = "", noteEgy = "", verification = "";
         String exEs = "", exFusha = "", exEgy = "", level = "", unitTitle = "";
+        String source = "", sourceStatus = "", exampleSource = "";
         int freq = 0;
+        int freqRank = 0;
         boolean hasEgy() { return !egy.isEmpty(); }
         boolean hasExample() { return !exEs.isEmpty(); }
         String egyOrFusha() { return hasEgy() ? egy : ar; }
@@ -246,6 +250,10 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         item.exFusha = source.exFusha;
         item.exEgy = source.exEgy;
         item.verification = source.verification;
+        item.source = source.source;
+        item.sourceStatus = source.sourceStatus;
+        item.exampleSource = source.exampleSource;
+        item.freqRank = source.freqRank;
         item.level = source.level;
         item.unitTitle = unitTitle;
         item.freq = source.freq;
@@ -282,10 +290,20 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     @Override public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS && tts != null) {
             int available = tts.isLanguageAvailable(spanish);
-            if (available >= TextToSpeech.LANG_AVAILABLE && tts.setLanguage(spanish) >= TextToSpeech.LANG_AVAILABLE) {
+            if (available == TextToSpeech.LANG_MISSING_DATA) {
+                ttsProblem = "محرك الصوت موجود لكن حزمة اللغة الإسبانية غير منزّلة. نزّلها من إعدادات تحويل النص إلى كلام.";
+            } else if (available == TextToSpeech.LANG_NOT_SUPPORTED) {
+                ttsProblem = "محرك الصوت على الجهاز لا يدعم الإسبانية. جرّب محركًا آخر من إعدادات النظام.";
+            } else if (available >= TextToSpeech.LANG_AVAILABLE
+                    && tts.setLanguage(spanish) >= TextToSpeech.LANG_AVAILABLE) {
                 ttsReady = true;
+                ttsProblem = "";
                 applyRate(false);
+            } else {
+                ttsProblem = "تعذر تفعيل الصوت الإسباني على هذا الجهاز.";
             }
+        } else if (status != TextToSpeech.SUCCESS) {
+            ttsProblem = "محرك تحويل النص إلى كلام غير متاح على الجهاز.";
         }
         if (!ttsReady) ttsFailures++;
     }
@@ -301,7 +319,9 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private void speak(String value, boolean slow) {
         if (value == null || value.trim().isEmpty()) return;
         if (!ttsReady) {
-            toast("الصوت الإسباني غير متاح على الجهاز. نزّل حزمة الصوت الإسباني من إعدادات تحويل النص إلى كلام، ثم أعد فتح التطبيق.");
+            toast(ttsProblem.isEmpty()
+                    ? "الصوت الإسباني غير متاح على الجهاز. نزّل حزمة الصوت الإسباني من إعدادات تحويل النص إلى كلام، ثم أعد فتح التطبيق."
+                    : ttsProblem);
             return;
         }
         String phrase = cleanForSpeech(value);
@@ -324,8 +344,29 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         if (tts != null) tts.stop();
     }
 
+    /** Where the example sentence comes from — never presented as hand-verified content. */
+    private String exampleSourceLabel(String kind) {
+        switch (kind) {
+            case "curriculum": return "جملة من المنهج نفسه";
+            case "pattern": return "مولّد بقالب جملة آمن (يحتاج مراجعة بشرية)";
+            case "phrase_self": return "التعبير نفسه";
+            default: return kind;
+        }
+    }
+
+    /** Honest provenance line: attested spelling/frequency vs. no external source at all. */
+    private String sourceLabel(Item item) {
+        if ("spelling_attested".equals(item.sourceStatus)) {
+            String rank = item.freqRank > 0 ? " (رتبة تكرار " + item.freqRank + ")" : "";
+            return "المصدر: قائمة تكرار OpenSubtitles 2018" + rank
+                    + " — تثبت التهجئة والتكرار فقط، لا المعنى. حالة العنصر: فحص آلي.";
+        }
+        return "المصدر: لا يوجد إسناد خارجي لهذا العنصر. حالة العنصر: فحص آلي، وليس verified.";
+    }
+
     private String audioStatus() {
         if (ttsReady) return "الصوت جاهز — محرك الجهاز بصوت es-ES (إسباني أوروبي).";
+        if (!ttsProblem.isEmpty()) return "الصوت غير متاح — " + ttsProblem;
         return "الصوت غير متاح: الجهاز لا يحتوي محرك TTS إسباني. التمارين الكتابية والقراءة تعمل عادي.";
     }
 
@@ -2089,7 +2130,11 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
             space(panel, 6);
             full(panel, ltr(item.exEs, 14, MUTED, false));
             full(panel, text("مصري: " + item.exEgy, 12, MUTED, false));
+            if (!item.exampleSource.isEmpty()) {
+                full(panel, text("مصدر المثال: " + exampleSourceLabel(item.exampleSource), 11, MUTED, false));
+            }
         }
+        full(panel, text(sourceLabel(item), 11, MUTED, false));
         space(panel, 8);
         audioControls(panel, item.es);
         new android.app.AlertDialog.Builder(this).setTitle("القاموس السريع").setView(panel)
@@ -2365,6 +2410,9 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         full(audio, text("🔊 الصوت", 18, INK, true));
         space(audio, 6);
         full(audio, text(audioStatus(), 14, ttsReady ? DARK_GREEN : RED, true));
+        space(audio, 6);
+        full(audio, text("التشغيل بيستخدم TTS الجهاز. الإيقاف قبل كل جملة يمنع تداخل الأصوات، والسرعة العادية 0.92× والبطيئة حوالي 0.64×.",
+                12, MUTED, false));
         space(audio, 8);
         full(audio, text("السرعة", 15, INK, true));
         final TextView speedValue = text(String.format(Locale.US, "%.2f×", prefs.getFloat("tts_rate", 0.92f)), 15, GREEN, true);

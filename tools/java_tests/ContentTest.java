@@ -84,8 +84,15 @@ final class ContentTest {
     /** The example must use the headword: literally, or through a defensible inflection. */
     static boolean exampleUsesWord(Curriculum.Item item, java.util.List<String> example) {
         java.util.List<String> head = TextNormalizers.words(TextNormalizers.spanishKey(item.es));
-        boolean literal = true;
+        // articles and the de+el contraction may legitimately disappear in the example sentence
+        java.util.List<String> meaningful = new java.util.ArrayList<>();
         for (String token : head) {
+            if (token.equals("el") || token.equals("la") || token.equals("los") || token.equals("las")
+                    || token.equals("un") || token.equals("una") || token.equals("de") || token.equals("del")) continue;
+            meaningful.add(token);
+        }
+        boolean literal = !meaningful.isEmpty();
+        for (String token : meaningful) {
             if (!example.contains(token)) { literal = false; break; }
         }
         if (literal) return true;

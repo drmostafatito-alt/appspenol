@@ -38,8 +38,8 @@ D8 = os.path.join(TOOLS, "minapk", "package", "tools", "d8.jar")
 APKSIGNER = os.path.join(TOOLS, "minapk", "package", "tools", "apksigner.jar")
 SIGNING = os.path.join(TOOLS, "signing")
 
-VERSION_CODE = "10"
-VERSION_NAME = "8.0"
+VERSION_CODE = "11"
+VERSION_NAME = "8.1"
 MIN_SDK = "23"
 TARGET_SDK = "36"
 

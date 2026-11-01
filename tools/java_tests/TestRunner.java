@@ -11,6 +11,7 @@ public final class TestRunner {
         PlannerTest.run(model);
         GradingTest.run(model);
         ScenarioTest.run(contentPath);
+        FlowTest.run(model);
         SchedulerTest.run();
         Curriculum parsedAgain = Curriculum.parse(new String(java.nio.file.Files.readAllBytes(java.nio.file.Path.of(contentPath)), java.nio.charset.StandardCharsets.UTF_8));
         TestSupport.check(parsedAgain.totalItems() == model.totalItems(), "deterministic reload");

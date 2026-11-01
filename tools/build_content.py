@@ -281,9 +281,23 @@ def item_plural(word):
     return word + "es"
 
 
+# Dialogue lines and grammar examples are real sentences too; they are merged into the pool
+# used to illustrate vocabulary items (they ship with MSA + Egyptian translations).
+EXTRA_EXAMPLES = []
+
+
+def collect_extra_examples(dialogues, grammar):
+    for dialogue in dialogues:
+        for line in dialogue["lines"]:
+            EXTRA_EXAMPLES.append({"es": line["es"], "ar": line["ar"], "ar_egy": line["egy"]})
+    for rule in grammar:
+        for example in rule["examples"]:
+            EXTRA_EXAMPLES.append({"es": example["es"], "ar": example["ar"], "ar_egy": example["egy"]})
+
+
 def attach_examples(items):
     """Attach the first model sentence that uses the word, allowing simple inflections."""
-    sentences = [i for i in items if i["type"] == "sentence"]
+    sentences = [i for i in items if i["type"] == "sentence"] + EXTRA_EXAMPLES
     for item in items:
         if item["type"] == "sentence":
             continue
@@ -305,6 +319,128 @@ def attach_examples(items):
                 item["example_fusha"] = sentence["ar"]
                 item["example_egy"] = sentence["ar_egy"]
                 break
+
+
+FREQ_PATH = os.path.join(CONTENT_DIR, "sources", "es_frequency_opensubtitles_50k.txt")
+FREQ_SOURCE = "hermitdave/FrequencyWords · OpenSubtitles 2018 (es_50k)"
+
+
+def load_frequency():
+    """Word → rank in an OpenSubtitles-derived Spanish frequency corpus (attestation of spelling)."""
+    if not os.path.exists(FREQ_PATH):
+        return {}
+    ranks = {}
+    with open(FREQ_PATH, encoding="utf-8") as handle:
+        for index, line in enumerate(handle, 1):
+            parts = line.split()
+            if not parts:
+                continue
+            ranks.setdefault(parts[0].lower(), index)
+    return ranks
+
+
+FREQUENCY = load_frequency()
+
+
+def attest(item):
+    """Record whether the Spanish spelling is attested in the corpus, with its rank."""
+    if item["type"] != "word" and item["type"] != "sentence":
+        return
+    core = headword(item) if item["type"] == "word" else item["es"]
+    candidates = [core, item_plural(core), item_plural(core)[:-1] if item_plural(core).endswith("es") else core]
+    for candidate in candidates:
+        rank = FREQUENCY.get(candidate)
+        if rank:
+            item["freq_rank"] = rank
+            item["source"] = f"{FREQ_SOURCE} · rank {rank}"
+            item["attestation"] = "opensubtitles-2018"
+            item["source_fields"] = ["orthography", "frequency"]
+            item["source_status"] = "spelling_attested"
+            return
+    item.setdefault("freq_rank", 0)
+    item.setdefault("source_status", "unattested")
+
+
+def noun_gender(entry):
+    low = entry.strip().lower()
+    if low.startswith(("el ", "los ")):
+        return "m"
+    if low.startswith(("la ", "las ")):
+        return "f"
+    return ""
+
+
+# Nouns whose bare meaning makes even a "talking about X" frame unnatural.
+SKIP_PATTERN_NAMES = {"la gente", "el señor", "la señora", "don", "doña"}
+
+
+def de_article(entry):
+    """«de + el» → «del», «de + la» stays «de la»."""
+    low = entry.strip()
+    lower = low.lower()
+    if lower.startswith("el "):
+        return "del " + low[3:]
+    return "de " + low
+
+
+def fill_phrase_examples(unit):
+    """An expression is its own usage example: keep the phrase as the model sentence.
+
+    This lets the planner build word-order and fill-in drills from collocations
+    («hacer la compra») without inventing a sentence around them.
+    """
+    for item in unit.items:
+        if item["type"] != "word" or item.get("example_es"):
+            continue
+        if item["pos"] != "phrase":
+            continue
+        if len(item["es"].split()) < 2:
+            continue
+        item["example_es"] = item["es"]
+        item["example_fusha"] = item["ar"]
+        item["example_egy"] = item["ar_egy"]
+        item["example_source"] = "phrase_self"
+
+
+def fill_pattern_examples(unit):
+    """Give a noun one short, grammatical usage sentence when no real sentence matched.
+
+    The frames («Es importante hablar de …», «Quiero aprender más sobre …») stay natural for
+    concrete and abstract nouns alike and only need article agreement, so no invented collocation
+    is claimed. Provenance is recorded as example_source = "pattern" and never mixed with
+    sentences written by hand or taken from the curriculum.
+    """
+    for item in unit.items:
+        if item["type"] != "word" or item.get("example_es"):
+            continue
+        if item["pos"] != "noun":
+            continue
+        entry = item["es"].strip()
+        if entry.lower() in SKIP_PATTERN_NAMES:
+            continue
+        if not entry.lower().startswith(("el ", "la ", "los ", "las ")):
+            continue
+        if "(" in entry or len(entry.split()) > 3:
+            continue
+        if not noun_gender(entry):
+            continue
+        variant = sum(ord(c) for c in entry) % 3
+        if variant == 0:
+            example = "Es importante hablar " + de_article(entry) + "."
+            fusha = "من المهم الحديث عن " + item["ar"] + "."
+            egy = "مهم نتكلم عن " + item["ar_egy"] + "."
+        elif variant == 1:
+            example = "En clase hablamos " + de_article(entry) + "."
+            fusha = "في الحصة نتكلم عن " + item["ar"] + "."
+            egy = "في الكلاس بنتكلم عن " + item["ar_egy"] + "."
+        else:
+            example = "Quiero aprender más sobre " + entry + "."
+            fusha = "أريد أن أعرف أكثر عن " + item["ar"] + "."
+            egy = "عايز أعرف أكتر عن " + item["ar_egy"] + "."
+        item["example_es"] = example
+        item["example_fusha"] = fusha
+        item["example_egy"] = egy
+        item["example_source"] = "pattern"
 
 
 def validate_items(level, unit, items, seen):
@@ -365,6 +501,7 @@ def main():
     levels = build_levels()
     dialogues = build_dialogues()
     grammar = build_grammar()
+    collect_extra_examples(dialogues, grammar)
 
     output_levels = []
     item_counter = 0
@@ -375,6 +512,8 @@ def main():
         seen = {}
         for unit in level.units:
             attach_examples(unit.items)
+            fill_phrase_examples(unit)
+            fill_pattern_examples(unit)
             validate_items(level, unit, unit.items, seen)
             out_items = []
             for index, item in enumerate(unit.items, 1):
@@ -383,6 +522,8 @@ def main():
                 item["id"] = item_id
                 item["freq"] = item_counter
                 item["verification"] = "machine_checked"
+                item.setdefault("example_source", "curriculum" if item.get("example_es") else "")
+                attest(item)
                 if item["type"] == "word":
                     core_rank += 1
                     item["core_rank"] = core_rank
@@ -524,6 +665,17 @@ def main():
         "levels": output_levels,
         "dialogues": dialogues,
         "grammar": grammar,
+        "sources": [
+            {
+                "id": "frequency_words",
+                "title": "hermitdave/FrequencyWords — es_50k (OpenSubtitles 2018)",
+                "url": "https://github.com/hermitdave/FrequencyWords",
+                "license": "MIT (repository) · corpus: OpenSubtitles 2018",
+                "supports": ["orthography", "frequency"],
+                "does_not_support": ["meaning", "ipa", "cefr_level", "example_sentence"],
+            }
+        ],
+        "source_status_note": "spelling/frequency only: an item is source-attested when its Spanish form appears in the frequency corpus. Arabic meanings, examples and IPA are machine-generated/authored and are NOT source-verified. No item is marked verified.",
         "audio_note": "النطق داخل التطبيق يستخدم محرك TTS في الجهاز بصوت es-ES عند توفره، ولا يوجد تسجيل بشري.",
         "verification_note": "المحتوى مفحوص آليًا (تهجئة، ترقيم، ازدواجية، اكتمال الترجمة الفصحى والمصرية) لكنه لا يحمل حالة verified بمراجعة بشرية أو مصدر مستقل لكل عنصر.",
     }

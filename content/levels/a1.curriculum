@@ -345,3 +345,176 @@ S|¿Sabes dónde está la estación?|هل تعرف أين المحطة؟|تعر�
 S|Te llamo por la tarde.|سأتصل بك بعد الظهر.|هكلمك بعد الضهر.
 S|Busco un supermercado cerca.|أبحث عن سوبرماركت قريب.|بدوّر على سوبر ماركت قريب.
 S|Pienso viajar en agosto.|أفكر في السفر في أغسطس.|بفكر أسافر في أغسطس.
+
+U|a1_cuerpo|الجسم والصحة الأساسية|El cuerpo|أعضاء الجسم وما يقوله الطبيب في المواقف البسيطة.
+W|el cuerpo|الجسم|الجسم|noun|الجسم
+W|la cabeza|الرأس|الدماغ|noun|الجسم
+W|el pelo|الشعر|الشعر|noun|الجسم
+W|el ojo|العين|العين|noun|الجسم
+W|la nariz|الأنف|المنخير|noun|الجسم
+W|la boca|الفم|البوز|noun|الجسم
+W|la oreja|الأذن|الودن|noun|الجسم
+W|el diente|السن|السنة|noun|الجسم
+W|la lengua|اللسان|اللسان|noun|الجسم
+W|el cuello|الرقبة|الرقبة|noun|الجسم
+W|el brazo|الذراع|الدراع|noun|الجسم
+W|la mano|اليد|الإيد|noun|الجسم
+W|el dedo|الإصبع|الصباع|noun|الجسم
+W|la pierna|الساق|الرجل|noun|الجسم
+W|el pie|القدم|الرجل|noun|الجسم
+W|la rodilla|الركبة|الركبة|noun|الجسم
+W|el corazón|القلب|القلب|noun|الجسم
+W|la piel|الجلد|الجلد|noun|الجسم
+W|la sangre|الدم|الدم|noun|الجسم
+W|el hueso|العظم|العضم|noun|الجسم
+W|el pecho|الصدر|الصدر|noun|الجسم
+W|la cara|الوجه|الوش|noun|الجسم
+W|el labio|الشفة|الشفايف|noun|الجسم
+W|el hombro|الكتف|الكتف|noun|الجسم
+W|el estómago|المعدة|المعدة|noun|الجسم
+W|sano|سليم / صحيح|سليم|adj|الجسم
+W|el síntoma|العَرَض|الأعراض|noun|الجسم
+W|la medicina|الدواء|الدوا|noun|الجسم
+W|la herida|الجرح|الجرح|noun|الجسم
+W|la salud mental|الصحة النفسية|الصحة النفسية|phrase|الجسم
+S|Me lavo las manos antes de comer.|أغسل يدي قبل الأكل.|بغسل إيديا قبل الأكل.
+S|Me duelen los pies después de caminar mucho.|قدماي تؤلمانني بعد المشي الكثير.|رجليا بتوجعني بعد المشي الكتير.
+S|Tengo el pelo largo y los ojos negros.|شعري طويل وعيناي سوداوان.|شعري طويل وعيني سودا.
+S|El médico dice que el corazón está bien.|يقول الطبيب إن القلب بخير.|الدكتور بيقول القلب تمام.
+S|Esta medicina se toma después de la comida.|يُؤخذ هذا الدواء بعد الأكل.|الدوا ده بيتاخد بعد الأكل.
+
+U|a1_casa_objetos|أدوات البيت|Objetos de casa|أسماء الأشياء اللي حوالينا في البيت.
+W|la lámpara|المصباح|اللمبة|noun|البيت
+W|el vaso|الكوب|الكباية|noun|البيت
+W|el plato|الطبق|الطبق|noun|البيت
+W|la taza|الفنجان|الفنجان|noun|البيت
+W|el tenedor|الشوكة|الشوكة|noun|البيت
+W|la cuchara|الملعقة|المعلقة|noun|البيت
+W|el cuchillo|السكين|السكينة|noun|البيت
+W|el horno|الفرن|الفرن|noun|البيت
+W|la televisión|التلفزيون|التلفزيون|noun|البيت
+W|la alfombra|السجادة|السجادة|noun|البيت
+W|la cortina|الستارة|الستارة|noun|البيت
+W|el armario|الدولاب|الدولاب|noun|البيت
+W|el cajón|الدرج|الدرج|noun|البيت
+W|el tejado|السطح|السطح|noun|البيت
+W|la planta|النبات|النبات|noun|البيت
+W|el cuadro|اللوحة|اللوحة|noun|البيت
+W|la basura|القمامة|الزبالة|noun|البيت
+W|la escoba|المكنسة|المقشة|noun|البيت
+W|el jabón|الصابون|الصابون|noun|البيت
+W|la toalla|المنشفة|الفوطة|noun|البيت
+W|ordenado|مرتب|مرتب|adj|البيت
+W|desordenado|غير مرتب|مكركب|adj|البيت
+W|amplio|واسع|واسع|adj|البيت
+W|estrecho|ضيق|ضيق|adj|البيت
+W|cómodo|مريح|مريح|adj|البيت
+W|el agua caliente|الماء الساخن|المية السخنة|phrase|البيت
+W|el mueble|الأثاث|الأثاث|noun|البيت
+S|La mesa está en el salón y las sillas alrededor.|الطاولة في الصالة والكراسي حولها.|الترابيزة في الصالة والكراسي حواليها.
+S|Necesito una toalla limpia para el baño.|أحتاج منشفة نظيفة للحمام.|محتاج فوطة نضيفة للحمام.
+S|La nevera está llena y la cocina está limpia.|الثلاجة مليانة والمطبخ نظيف.|التلاجة مليانة والمطبخ نضيف.
+S|Abre la ventana, por favor; hace calor aquí.|افتح الشباك من فضلك، الجو حر هنا.|افتح الشباك لو سمحت، الجو حر هنا.
+S|El armario es grande, pero la habitación es estrecha.|الدولاب كبير، لكن الغرفة ضيقة.|الدولاب كبير، بس الأوضة ضيقة.
+
+U|a1_comida_extra|طعام إضافي|Más comida|أطعمة ومشروبات شائعة.
+W|la pasta|المعكرونة|المكرونة|noun|الطعام
+W|la sopa|الشوربة|الشوربة|noun|الطعام
+W|la ensalada|السلطة|السلطة|noun|الطعام
+W|el plátano|الموز|الموز|noun|الطعام
+W|la uva|العنب|العنب|noun|الطعام
+W|la sandía|البطيخ|البطيخ|noun|الطعام
+W|la fresa|الفراولة|الفراولة|noun|الطعام
+W|el limón|الليمون|الليمون|noun|الطعام
+W|la patata|البطاطس|البطاطس|noun|الطعام
+W|el ajo|الثوم|التوم|noun|الطعام
+W|la zanahoria|الجزر|الجزر|noun|الطعام
+W|el pepino|الخيار|الخيار|noun|الطعام
+W|la miel|العسل|العسل|noun|الطعام
+W|el té|الشاي|الشاي|noun|الطعام
+W|el café|القهوة|القهوة|noun|الطعام
+W|el zumo|العصير|العصير|noun|الطعام
+W|el helado|المثلجات|الآيس كريم|noun|الطعام
+W|el pastel|الكيك|التورتة|noun|الطعام
+W|el chocolate|الشوكولاتة|الشوكولاتة|noun|الطعام
+W|el bocadillo|الساندويتش|الساندويتش|noun|الطعام
+W|fresco|طازج|طازج|adj|الطعام
+S|Como pan con queso y bebo té por la mañana.|آكل خبزًا بالجبن وأشرب الشاي صباحًا.|بأكل عيش بجبنة وبشرب شاي الصبح.
+S|La ensalada lleva tomate, pepino y cebolla.|السلطة فيها طماطم وخيار وبصل.|السلطة فيها طماطم وخيار وبصل.
+S|El zumo de naranja está frío y muy rico.|عصير البرتقال بارد ولذيذ جدًا.|عصير البرتقان ساقع ولذيذ أوي.
+S|No me gusta la comida picante, prefiero la sopa.|لا أحب الطعام الحار، أفضل الشوربة.|مش بحب الأكل الحرّاق، بفضّل الشوربة.
+S|Compramos fruta fresca: manzanas, uvas y fresas.|نشتري فاكهة طازجة: تفاحًا وعنبًا وفراولة.|بنشتري فاكهة طازجة: تفاح وعنب وفراولة.
+
+U|a1_ropa_extra|ملابس وإكسسوارات|Ropa y accesorios|تفاصيل الملابس والألوان والمقاسات.
+W|el abrigo|المعطف|المعطف|noun|الملابس
+W|el jersey|البلوفر|البلوفر|noun|الملابس
+W|las sandalias|الصندل|الشبشب|noun|الملابس
+W|la bufanda|الوشاح|الكوفية|noun|الملابس
+W|los guantes|القفازات|الجوانتي|noun|الملابس
+W|el cinturón|الحزام|الحزام|noun|الملابس
+W|la corbata|ربطة العنق|الكرافة|noun|الملابس
+W|el bolso|حقيبة اليد|الشنطة|noun|الملابس
+W|la cartera|المحفظة|المحفظة|noun|الملابس
+W|las gafas|النظارة|النضارة|noun|الملابس
+W|el anillo|الخاتم|الخاتم|noun|الملابس
+W|el collar|العقد|العقد|noun|الملابس
+W|los pendientes|الأقراط|الحلق|noun|الملابس
+W|el algodón|القطن|القطن|noun|الملابس
+W|la lana|الصوف|الصوف|noun|الملابس
+W|el cuero|الجلد|الجلد|noun|الملابس
+W|la moda|الموضة|الموضة|noun|الملابس
+W|nuevo|جديد|جديد|adj|الملابس
+W|viejo|قديم|قديم|adj|الملابس
+W|elegante|أنيق|شيك|adj|الملابس
+W|cómodo para llevar|مريح للّبس|مريح في اللبس|phrase|الملابس
+W|de color azul|باللون الأزرق|بلون أزرق|phrase|الملابس
+S|Llevo una camisa blanca y un pantalón negro.|أرتدي قميصًا أبيض وبنطلونًا أسود.|لابس قميص أبيض وبنطلون أسود.
+S|Este abrigo es muy elegante, pero es caro.|هذا المعطف أنيق جدًا، لكنه غالٍ.|المعطف ده شيك أوي، بس غالي.
+S|Necesito zapatos cómodos para caminar.|أحتاج حذاءً مريحًا للمشي.|محتاج جزمة مريحة للمشي.
+S|Me gustan las gafas de sol en verano.|أحب النظارة الشمسية في الصيف.|بحب النضارة الشمس في الصيف.
+S|El jersey de lana es caliente y suave.|البلوفر الصوفي دافئ وناعم.|البلوفر الصوف دافي وناعم.
+
+U|a1_animales|الحيوانات|Los animales|حيوانات البيت والمزرعة والحديقة.
+W|el perro|الكلب|الكلب|noun|الحيوانات
+W|el gato|القط|القط|noun|الحيوانات
+W|el pájaro|العصفور|العصفور|noun|الحيوانات
+W|el pez|السمكة|السمكة|noun|الحيوانات
+W|el caballo|الحصان|الحصان|noun|الحيوانات
+W|la vaca|البقرة|البقرة|noun|الحيوانات
+W|la oveja|الخروف|الخروف|noun|الحيوانات
+W|la cabra|العنزة|العنزة|noun|الحيوانات
+W|el pato|البطة|البطة|noun|الحيوانات
+W|el león|الأسد|الأسد|noun|الحيوانات
+W|el elefante|الفيل|الفيل|noun|الحيوانات
+W|el ratón|الفأر|الفار|noun|الحيوانات
+W|la serpiente|الأفعى|التعبان|noun|الحيوانات
+W|la abeja|النحلة|النحلة|noun|الحيوانات
+W|la mariposa|الفراشة|الفراشة|noun|الحيوانات
+W|el insecto|الحشرة|الحشرة|noun|الحيوانات
+W|el bosque|الغابة|الغابة|noun|الحيوانات
+W|la granja|المزرعة|المزرعة|noun|الحيوانات
+W|el zoo|حديقة الحيوان|حديقة الحيوان|noun|الحيوانات
+S|Mi gato duerme todo el día en el sofá.|قطي ينام طول اليوم على الكنبة.|قطي بينام طول اليوم على الكنبة.
+S|Los pájaros cantan por la mañana en el jardín.|العصافير تغني صباحًا في الحديقة.|العصافير بتغني الصبح في الجنينة.
+S|En la granja hay vacas, ovejas y patos.|في المزرعة بقر وأغنام وبط.|في المزرعة بقر وخراف وبط.
+S|El león es fuerte, pero vive lejos de la ciudad.|الأسد قوي، لكنه يعيش بعيدًا عن المدينة.|الأسد قوي، بس عايش بعيد عن المدينة.
+S|No me gustan los insectos en la cocina.|لا أحب الحشرات في المطبخ.|مش بحب الحشرات في المطبخ.
+
+U|a1_tiempo_extra|كلمات الوقت|Palabras de tiempo|تعبيرات الوقت والتكرار.
+W|rara vez|نادرًا|نادراً|adv|الوقت
+W|todavía|ما زال|لسه|adv|الوقت
+W|ya|بالفعل|خلاص|adv|الوقت
+W|pronto|قريبًا|قريب|adv|الوقت
+W|enseguida|فورًا|على طول|adv|الوقت
+W|de vez en cuando|من وقت لآخر|كل فترة|phrase|الوقت
+W|una vez por semana|مرة في الأسبوع|مرة في الأسبوع|phrase|الوقت
+W|el momento|اللحظة|اللحظة|noun|الوقت
+W|la fecha|التاريخ|التاريخ|noun|الوقت
+W|el minuto|الدقيقة|الدقيقة|noun|الوقت
+W|el siglo|القرن|القرن|noun|الوقت
+W|la temporada|الموسم|الموسم|noun|الوقت
+S|Casi siempre desayuno a las siete y media.|غالبًا أفطر في السابعة والنصف.|غالباً بفطر الساعة سبعة ونص.
+S|Todavía no he terminado la tarea de hoy.|لم أنهِ واجب اليوم بعد.|لسه ما خلصت واجب النهاردة.
+S|De vez en cuando cenamos fuera los viernes.|من وقت لآخر نتعشى خارجًا يوم الجمعة.|كل فترة بنتعشى بره يوم الجمعة.
+S|Llego temprano y vuelvo tarde del trabajo.|أصل مبكرًا وأعود متأخرًا من العمل.|بوصل بدري وبرجع متأخر من الشغل.
+S|Enseguida te llamo cuando salga de la reunión.|سأتصل بك فورًا عندما أخرج من الاجتماع.|هكلمك على طول أول ما أخرج من الاجتماع.

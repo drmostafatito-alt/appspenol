@@ -226,3 +226,126 @@ S|El café está muy caro hoy.|القهوة غالية جدًا اليوم.|ال
 S|Mi amigo trabaja en la escuela.|صديقي يعمل في المدرسة.|صاحبي بيشتغل في المدرسة.
 S|¿Dónde está el baño, por favor?|أين الحمام، من فضلك؟|فين الحمام لو سمحت؟
 S|Tengo un libro nuevo.|عندي كتاب جديد.|عندي كتاب جديد.
+
+U|a0_numeros_grandes|أرقام من 21 إلى 100|Números del 21 al 100|الأرقام الكبيرة والصيغة الصحيحة لكل رقم.
+W|veintiuno|واحد وعشرون|واحد وعشرين|num|الأرقام
+W|veintidós|اثنان وعشرون|اتنين وعشرين|num|الأرقام
+W|veintitrés|ثلاثة وعشرون|تلاتة وعشرين|num|الأرقام
+W|veinticuatro|أربعة وعشرون|أربعة وعشرين|num|الأرقام
+W|veinticinco|خمسة وعشرون|خمسة وعشرين|num|الأرقام
+W|veintiséis|ستة وعشرون|ستة وعشرين|num|الأرقام
+W|veintisiete|سبعة وعشرون|سبعة وعشرين|num|الأرقام
+W|veintiocho|ثمانية وعشرون|تمانية وعشرين|num|الأرقام
+W|veintinueve|تسعة وعشرون|تسعة وعشرين|num|الأرقام
+W|doscientos|مئتان|ميتين|num|الأرقام
+W|quinientos|خمسمئة|خمسمية|num|الأرقام
+W|un millón|مليون|مليون|num|الأرقام
+W|primero|الأول|الأول|num|الأرقام
+W|segundo|الثاني|التاني|num|الأرقام
+W|tercero|الثالث|التالت|num|الأرقام
+W|cuarto|الرابع|الرابع|num|الأرقام
+W|quinto|الخامس|الخامس|num|الأرقام
+W|la mitad|النصف|النص|noun|الأرقام
+W|el tercio|الثلث|التلت|noun|الأرقام
+W|el doble|الضعف|الضعف|noun|الأرقام
+W|la docena|الدزينة|الدستة|noun|الأرقام
+S|Mi número de teléfono termina en veintitrés.|رقم تليفوني ينتهي بثلاثة وعشرين.|رقم تليفوني بيخلص بتلاتة وعشرين.
+S|El billete cuesta cincuenta euros, no cien.|التذكرة بخمسين يورو، لا مئة.|التذكرة بخمسين يورو، مش مية.
+S|Somos doscientos estudiantes en la facultad.|نحن مئتا طالب في الكلية.|إحنا ميتين طالب في الكلية.
+S|La mitad del grupo llegó tarde y el resto a tiempo.|نصف المجموعة وصل متأخرًا والباقي في الوقت.|نص المجموعة وصل متأخر والباقي في الميعاد.
+S|Quiero dos docenas de huevos, por favor.|أريد دستتين من البيض، من فضلك.|عايز دستتين بيض لو سمحت.
+
+U|a0_colores|الألوان|Los colores|الألوان الأساسية والدرجات.
+W|el color|اللون|اللون|noun|الألوان
+W|blanco|أبيض|أبيض|adj|الألوان
+W|negro|أسود|أسود|adj|الألوان
+W|rojo|أحمر|أحمر|adj|الألوان
+W|azul|أزرق|أزرق|adj|الألوان
+W|verde|أخضر|أخضر|adj|الألوان
+W|amarillo|أصفر|أصفر|adj|الألوان
+W|naranja|برتقالي|برتقاني|adj|الألوان
+W|rosa|وردي|وردي|adj|الألوان
+W|morado|بنفسجي|بنفسجي|adj|الألوان
+W|marrón|بني|بني|adj|الألوان
+W|gris|رمادي|رمادي|adj|الألوان
+W|beige|بيج|بيج|adj|الألوان
+W|dorado|ذهبي|دهبي|adj|الألوان
+W|plateado|فضي|فضي|adj|الألوان
+W|claro|فاتح|فاتح|adj|الألوان
+W|oscuro|غامق|غامق|adj|الألوان
+W|brillante|لامع|لامع|adj|الألوان
+S|Mi color favorito es el azul claro.|لوني المفضل هو الأزرق الفاتح.|لوني المفضل الأزرق الفاتح.
+S|La camisa roja es más bonita que la gris.|القميص الأحمر أجمل من الرمادي.|القميص الأحمر أحلى من الرمادي.
+S|Quiero una taza blanca con letras doradas.|أريد فنجانًا أبيض بحروف ذهبية.|عايز فنجان أبيض بحروف دهبي.
+S|El cielo está gris y naranja al atardecer.|السماء رمادية وبرتقالية عند الغروب.|السما رمادي وبرتقاني وقت الغروب.
+
+U|a0_verbos_comunes|أفعال كثيرة الاستخدام|Verbos frecuentes|أهم 30 فعلًا في الكلام اليومي.
+W|hacer|يفعل / يصنع|يعمل|verb|الأفعال
+W|ir|يذهب|يروح|verb|الأفعال
+W|venir|يأتي|يجي|verb|الأفعال
+W|ver|يرى|يشوف|verb|الأفعال
+W|decir|يقول|يقول|verb|الأفعال
+W|dar|يعطي|يدّي|verb|الأفعال
+W|saber|يعرف|يعرف|verb|الأفعال
+W|querer|يريد|عايز|verb|الأفعال
+W|poder|يستطيع|يقدر|verb|الأفعال
+W|deber|يجب عليه|لازم|verb|الأفعال
+W|poner|يضع|يحط|verb|الأفعال
+W|salir|يخرج|يخرج|verb|الأفعال
+W|llegar|يصل|يوصل|verb|الأفعال
+W|pasar|يمر|يعدي|verb|الأفعال
+W|quedar|يبقى|يفضل|verb|الأفعال
+W|pensar|يفكر|يفكر|verb|الأفعال
+W|sentir|يشعر|يحس|verb|الأفعال
+W|escribir|يكتب|يكتب|verb|الأفعال
+W|leer|يقرأ|يقرأ|verb|الأفعال
+W|comprar|يشتري|يشتري|verb|الأفعال
+W|vender|يبيع|يبيع|verb|الأفعال
+W|abrir|يفتح|يفتح|verb|الأفعال
+W|cerrar|يغلق|يقفل|verb|الأفعال
+W|comer|يأكل|ياكل|verb|الأفعال
+W|beber|يشرب|يشرب|verb|الأفعال
+W|dormir|ينام|ينام|verb|الأفعال
+W|trabajar|يعمل|يشتغل|verb|الأفعال
+W|estudiar|يدرس|يدرس|verb|الأفعال
+W|escuchar|ينصت|يسمع|verb|الأفعال
+W|mirar|ينظر|يبص|verb|الأفعال
+W|caminar|يمشي|يمشي|verb|الأفعال
+W|querer aprender|يريد التعلّم|عايز يتعلم|verb|الأفعال
+S|Quiero aprender español para trabajar en el turismo.|أريد تعلم الإسبانية للعمل في السياحة.|عايز أتعلم إسباني عشان أشتغل في السياحة.
+S|Puedo hablar un poco, pero no escribo bien todavía.|أستطيع التكلم قليلًا، لكني لا أكتب جيدًا بعد.|أقدر أتكلم شوية، بس لسه مش بكتب كويس.
+S|Pongo el libro en la mesa y salgo de casa.|أضع الكتاب على الطاولة وأخرج من البيت.|بحط الكتاب على الترابيزة وبخرج من البيت.
+S|Llego al trabajo a las ocho y salgo a las cuatro.|أصل العمل الثامنة وأخرج الرابعة.|بوصل الشغل تمانية وبخرج أربعة.
+S|Antes de dormir, leo diez minutos y escucho música.|قبل النوم أقرأ عشر دقائق وأسمع موسيقى.|قبل ما أنام بقرأ عشر دقايق وبسمع مزيكا.
+
+U|a0_familia_extra|الأسرة الممتدة|Familia extensa|أقارب وأفراد العائلة.
+W|el nieto|الحفيد|الحفيد|noun|الأسرة
+W|la nieta|الحفيدة|الحفيدة|noun|الأسرة
+W|el sobrino|ابن الأخ|ابن الأخ|noun|الأسرة
+W|la sobrina|ابنة الأخ|بنت الأخ|noun|الأسرة
+W|el suegro|الحمو (والد الزوج)|حمو|noun|الأسرة
+W|la suegra|الحماة (والدة الزوج)|حماة|noun|الأسرة
+W|el cuñado|الشقيق (زوج الأخت)|زن الأخت|noun|الأسرة
+W|la cuñada|زوجة الأخ|مرات الأخ|noun|الأسرة
+W|el yerno|زوج الابنة|جوز البنت|noun|الأسرة
+W|la nuera|زوجة الابن|مرات الابن|noun|الأسرة
+W|el padrino|العرّاب|العرّاب|noun|الأسرة
+W|la madrina|العرّابة|العرّابة|noun|الأسرة
+W|el gemelo|التوأم|التوأم|noun|الأسرة
+W|el bebé|الرضيع|البيبي|noun|الأسرة
+W|el familiar|الفرد من العائلة|القريب|noun|الأسرة
+W|el pariente|القريب|القريب|noun|الأسرة
+W|la pareja|الشريك|الشريك|noun|الأسرة
+W|el novio|الخطيب|الخطيب|noun|الأسرة
+W|la novia|الخطيبة|الخطيبة|noun|الأسرة
+W|viudo|أرمل|أرمل|adj|الأسرة
+W|soltero|غير متزوج|أعزب|adj|الأسرة
+W|casado|متزوج|متجوز|adj|الأسرة
+W|divorciado|مطلق|مطلق|adj|الأسرة
+W|el embarazo|الحمل|الحمل|noun|الأسرة
+W|el nacimiento|الميلاد|الميلاد|noun|الأسرة
+S|Mis abuelos tienen cinco nietos y dos nietas.|جدّاي عندهما خمسة أحفاد وحفيدتان.|جدودي عندهم خمس أحفاد وحفيدتين.
+S|Mi suegra vive cerca y nos ayuda mucho.|حماي تعيش قريبًا وتساعدنا كثيرًا.|حمايا عايشة قريب وبتساعدنا كتير.
+S|Somos cuatro hermanos: dos casados y dos solteros.|نحن أربعة أشقاء: اثنان متزوجان واثنان غير متزوجين.|إحنا أربع أخوات: اتنين متجوزين واتنين عُزّاب.
+S|Mis primos son gemelos y su hermana es mi madrina.|أبناء عمي توأم وأختهم عرّابتي.|ولاد عمي توأم وأختهم عرّابتي.
+S|Toda la familia se reúne en el nacimiento del bebé.|تجتمع العائلة كلها عند ولادة الطفل.|العيلة كلها بتتجمع عند ولادة البيبي.

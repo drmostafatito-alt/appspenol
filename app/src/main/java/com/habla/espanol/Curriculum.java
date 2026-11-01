@@ -21,7 +21,9 @@ final class Curriculum {
         String id = "", es = "", ar = "", egy = "", ipa = "", pos = "", topic = "", noteEgy = "";
         String exEs = "", exFusha = "", exEgy = "", verification = "machine_checked", type = "word";
         String level = "", unit = "";
+        String source = "", sourceStatus = "", exampleSource = "";
         int freq = 0;
+        int freqRank = 0;
 
         boolean hasEgyptian() { return egy != null && !egy.isEmpty(); }
         boolean hasExample() { return exEs != null && !exEs.isEmpty(); }
@@ -195,6 +197,10 @@ final class Curriculum {
         item.type = Json.str(map, "type");
         if (item.type.isEmpty()) item.type = "word";
         item.freq = Json.integer(map, "freq", 0);
+        item.source = Json.str(map, "source");
+        item.sourceStatus = Json.str(map, "source_status");
+        item.exampleSource = Json.str(map, "example_source");
+        item.freqRank = Json.integer(map, "freq_rank", 0);
         item.level = levelId;
         item.unit = unitId;
         return item;
