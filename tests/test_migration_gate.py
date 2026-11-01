@@ -83,7 +83,9 @@ class LiveContentTests(unittest.TestCase):
         for it in items:
             for k in ("es", "ar", "ar_egy", "pronunciation", "example_es", "source"):
                 self.assertTrue(str(it.get(k, "")).strip(), f"{k} empty in {it.get('es')}")
-        self.assertTrue(all(it["verification"] == "pending_verification" for it in items))
+        self.assertTrue(all(it["verification"] in ("pending_verification", "sound_verified") for it in items))
+        self.assertTrue(all(it.get("ipa") for it in items), "every A0 item needs an IPA transcription")
+        self.assertFalse(any(it["verification"] == "verified" for it in items), "no A0 item may be fully verified yet")
         self.assertEqual(gate.gate(data)[1], 0)
 
     def test_a0_spanish_text_is_unique(self):

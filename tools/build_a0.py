@@ -123,17 +123,90 @@ UNIT_ORDER = ["الوحدة 1: الحروف والأصوات", "الوحدة 2: 
               "الوحدة 4: التحيات والتعارف", "الوحدة 5: السؤال عن الحال والجمل اليومية"]
 LONG_TYPES = {"phrase", "verb", "question"}
 
+# IPA transcriptions (Castilian/peninsular norm). Written by the author; see audit ledger for which are source-checked.
+IPA = {
+    "a": "a", "b": "b / β", "c": "k", "ce / ci": "θe / θi", "d": "d / ð", "e": "e", "f": "f", "g": "ɡ / ɣ",
+    "ge / gi": "xe / xi", "h": "(صامتة)", "i": "i", "j": "x", "k": "k", "l": "l", "m": "m", "n": "n", "ñ": "ɲ",
+    "o": "o", "p": "p", "q": "k", "r": "ɾ", "rr": "r", "s": "s", "t": "t", "u": "u", "v": "b", "w": "w / b",
+    "x": "ks", "y": "ʝ / i", "z": "θ", "ch": "tʃ", "ll": "ʝ",
+    "Hola": "ˈo.la", "Buenos días": "ˈbwe.nos ˈði.as", "Buenas tardes": "ˈbwe.nas ˈtaɾ.ðes",
+    "Buenas noches": "ˈbwe.nas ˈno.tʃes", "Adiós": "a.ˈðjos", "Hasta luego": "ˈas.ta ˈlwe.ɣo",
+    "Hasta mañana": "ˈas.ta ma.ˈɲa.na", "¿Cómo te llamas?": "ˈko.mo te ˈʝa.mas", "Me llamo...": "me ˈʝa.mo",
+    "Soy de Egipto": "soj de e.ˈxip.to", "Mucho gusto": "ˈmu.tʃo ˈɣus.to", "Encantado": "en.kan.ˈta.ðo",
+    "Encantada": "en.kan.ˈta.ða", "¿Cómo estás?": "ˈko.mo es.ˈtas", "Estoy bien": "es.ˈtoj ˈbjen",
+    "Estoy mal": "es.ˈtoj ˈmal", "Más o menos": "ˈmas o ˈme.nos", "Bien, gracias, ¿y tú?": "ˈbjen ˈɣɾa.sjas i ˈtu",
+    "Gracias": "ˈɣɾa.sjas", "De nada": "de ˈna.ða", "Por favor": "poɾ fa.ˈβoɾ", "Perdón": "peɾ.ˈðon",
+    "Sí": "si", "No": "no", "No entiendo": "no en.ˈtjen.do", "Habla más despacio, por favor": "ˈa.βla ˈmas des.ˈpa.sjo poɾ fa.ˈβoɾ",
+    "¿Cómo se dice...?": "ˈko.mo se ˈði.se", "Tengo hambre": "ˈten.ɡo ˈam.bɾe", "Tengo sed": "ˈten.ɡo ˈseð",
+    "Tengo prisa": "ˈten.ɡo ˈpɾi.sa", "No pasa nada": "no ˈpa.sa ˈna.ða", "Hace calor": "ˈa.θe ka.ˈlor",
+    "Hace frío": "ˈa.θe ˈfɾi.o", "Yo": "ʝo", "Tú": "tu", "Usted": "us.ˈteð", "Él": "el", "Ella": "ˈe.ʝa",
+    "Nosotros": "no.ˈso.tɾos", "Soy": "soj", "Eres": "ˈe.ɾes", "Es": "es", "Estoy": "es.ˈtoj", "Estás": "es.ˈtas",
+    "Está": "es.ˈta", "Tengo": "ˈten.ɡo", "Tienes": "ˈtje.nes", "Tiene": "ˈtje.ne", "Quiero": "ˈkje.ɾo",
+    "Quieres": "ˈkje.ɾes", "Voy": "boj", "Vas": "bas", "¿Qué?": "ke", "¿Cómo?": "ˈko.mo", "¿Dónde?": "ˈdon.de",
+    "¿Cuándo?": "ˈkwan.do", "¿Quién?": "kjen", "¿Cuánto?": "ˈkwan.to", "¿Por qué?": "poɾ ˈke", "¿Cuál?": "kwal",
+}
+
+# Items whose SOUND claim is supported by a fetched source (see audit ledger). Translation still pending independent review.
+SOUND_SOURCED = {
+    "c": "Abbey School PDF (El Alfabeto español): c antes de a/o/u = oclusiva sorda; Uta Pressbooks cap.5: casa [ká.sa]",
+    "ce / ci": "Uta Pressbooks cap.5 (distinción): ce/ci = [θ]; Hablar y Decir (Z la ceceante): ce/ci = /θ/ en España",
+    "z": "Uta Pressbooks cap.5 (caza [ká.θa]); Hablar y Decir: z = /θ/ en España centro-norte",
+    "j": "Uta Pressbooks cap.5: jota [xó.ta] en el español peninsular",
+    "ge / gi": "Uta Pressbooks cap.5: gesto [xés.to] en el español peninsular",
+}
+UTA = "https://uta.pressbooks.pub/espanolpractico/chapter/capitulo-5-variacion-en-espanol/"
+ABBEY = "https://www.abbeyschool.it/torino/wp-content/uploads/2022/05/Elalfabetoespanol.pdf"
+HABLAR = "https://hablarydecir.com/z-la-ceceante/"
+CHECKED_ON = "2026-11-01"
+LEDGER = "releases/A0_AUDIT_LEDGER.csv"
+
+
+
+def has_latin(text):
+    return any("a" <= ch.lower() <= "z" for ch in text)
+
 
 def make_item(row):
     typ, es, ar, egy, pron, ex, ex_ar, ex_egy, note, topic = row
     src = RAE_ALPHABET if typ == "letter" else INTERNAL
+    ipa = IPA[es]
+    if has_latin(pron):
+        pron = f"[{ipa}]"  # never ship mixed Latin/Arabic transliteration; IPA is the reference
+    sourced = es in SOUND_SOURCED
+    if sourced:
+        src = SOUND_SOURCED[es]
     return {
-        "es": es, "ar": ar, "ar_egy": egy, "pronunciation": pron,
+        "es": es, "ar": ar, "ar_egy": egy, "pronunciation": pron, "ipa": ipa,
         "example_es": ex, "example_fusha": ex_ar, "example_egy": ex_egy,
         "grammar_note": note, "pos": typ, "topic": topic,
         "difficulty": 1 if typ in ("letter", "sound") or topic in ("التحيات", "التعارف") else 2,
-        "source": src, "verification": "pending_verification", "type": typ,
+        "source": src,
+        "verification": "sound_verified" if sourced else "pending_verification",
+        "type": typ,
     }
+
+
+def write_ledger(track):
+    import csv
+    rows = []
+    for u in track["units"]:
+        for it in u["items"]:
+            sourced = it["verification"] == "sound_verified"
+            rows.append({
+                "es": it["es"], "type": it["type"], "ipa": it["ipa"],
+                "source": it["source"] if sourced else "لا يوجد مصدر خارجي مُتحقق منه بعد",
+                "source_url": " ; ".join(u for k, u in (("Abbey", ABBEY), ("Uta", UTA), ("Hablar", HABLAR)) if sourced and k in it["source"]),
+                "fact_supported": "نطق الصوت الإسباني (القشتالي)" if sourced else "لم يُتحقق",
+                "translation_fusha_checked": "لا (مراجعة مستقلة لم تُجرَ)",
+                "translation_egy_checked": "لا (مراجعة مستقلة لم تُجرَ)",
+                "checked_on": CHECKED_ON,
+                "result": "sound_verified" if sourced else "pending",
+                "reject_reason": "",
+            })
+    with open(LEDGER, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        w.writeheader(); w.writerows(rows)
+    return len(rows)
 
 
 def build_track():
@@ -151,6 +224,7 @@ def main(path):
     a0 = build_track()
     data["tracks"].append(a0)
     total = sum(len(u["items"]) for u in a0["units"])
+    write_ledger(a0)
     for u in a0["units"]:
         for it in u["items"]:
             for k in ("es", "ar", "ar_egy", "pronunciation"):
@@ -159,6 +233,7 @@ def main(path):
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=1)
         f.write("\n")
+    print(f"Ledger: {LEDGER}")
     print(f"A0 track: {total} items in {len(a0['units'])} units; track index {len(data['tracks'])-1}")
 
 
