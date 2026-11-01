@@ -10,7 +10,7 @@ import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-CONTENT = ROOT / "app/src/main/assets/content.json"
+CONTENT = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / "app/src/main/assets/content.json"
 EXPECTED_TRACK_ITEMS = 1000
 
 
