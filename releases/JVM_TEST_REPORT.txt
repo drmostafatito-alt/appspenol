@@ -1,0 +1,9 @@
+Spanish 1000 — JVM test run
+  content: 1584 عنصر • 300 درس • 96 تمرين • 12 حوار
+  planner: 300 lessons / 6223 exercises
+  grading: 5419 generated exercises round-tripped
+  scenarios: 8 موقف / 51 عبارة قابلة للتدرّب
+
+PASS — 57052 checks
++ /home/user/appspenol/.tools/jdkpkg/jdk4py/java-runtime/bin/java -cp /home/user/appspenol/.tools/minapk/package/tools/ecj-3.45.0.jar org.eclipse.jdt.internal.compiler.batch.Main -17 -nowarn -proc:none -encoding UTF-8 -cp /home/user/appspenol/.tools/platforms/android-36/android-api.jar -d /home/user/appspenol/build/jvm-tests @/home/user/appspenol/build/jvm-tests/sources.txt
++ /home/user/appspenol/.tools/jdkpkg/jdk4py/java-runtime/bin/java -cp /home/user/appspenol/build/jvm-tests com.habla.espanol.TestRunner /home/user/appspenol/app/src/main/assets/content.json

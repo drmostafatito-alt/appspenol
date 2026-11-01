@@ -1,0 +1,113 @@
+# Spanish 1000 — قواعد الاستخدام (Rule + examples with MSA + Egyptian)
+# G|id|level|title_ar|rule_egy|rule_fusha
+# GE|es|ar|egy
+
+G|g_articulos|A0|أدوات التعريف والتنكير|el للمذكر وla للمؤنث، والجمع los / las. لو الكلمة مفردة مؤنثة خدها la، والمذكر el.|أدوات التعريف: el للمذكر، la للمؤنث، los و las للجمع.
+GE|El libro es nuevo.|الكتاب جديد.|الكتاب جديد.
+GE|La casa es grande.|البيت كبير.|البيت كبير.
+GE|Los amigos llegaron.|الأصدقاء وصلوا.|الأصحاب وصلوا.
+
+G|g_genero|A0|المذكر والمؤنث|كتير من الكلمات اللي بتخلص بـ a مؤنث (mesa)، واللي بتخلص بـ o مذكر (libro)، لكن في استثناءات لازم تحفظها (el día, la mano).|غالبًا ما تنتهي المؤنث بـ a والمذكر بـ o، مع استثناءات تُحفظ.
+GE|La mesa está limpia.|الطاولة نظيفة.|الترابيزة نضيفة.
+GE|El día es largo.|اليوم طويل.|اليوم طويل.
+GE|La mano me duele.|يدي تؤلمني.|إيدي بتوجعني.
+
+G|g_plural|A0|الجمع|بنضيف s لو الكلمة بتخلص بحرف متحرك، و es لو بتخلص بحرف ساكن. ولو خلصت بـ z بنحوّلها z → ces.|تُضاف s بعد المتحرك و es بعد الساكن، وتتحول z إلى ces.
+GE|Casa → casas.|بيت → بيوت.|بيت → بيوت.
+GE|Ciudad → ciudades.|مدينة → مدن.|مدينة → مدن.
+GE|Lápiz → lápices.|قلم → أقلام.|قلم → أقلام.
+
+G|g_ser_estar|A1|Ser و Estar|ser للصفة الثابتة والهوية (soy egipcio)، و estar للحالة والمكان (estoy cansado / estoy en casa).|ser للهوية والصفات الثابتة، estar للحالة والمكان.
+GE|Soy profesor.|أنا مدرّس.|أنا مدرّس.
+GE|Estoy cansado hoy.|أنا متعب اليوم.|أنا تعبان النهاردة.
+GE|La farmacia está cerca.|الصيدلية قريبة.|الصيدلية قريبة.
+
+G|g_presente|A0|المضارع المنتظم|بنحذف ar / er / ir وبنحط النهاية: -o, -as, -a, -amos, -áis, -an. مثال: hablar → hablo.|نحذف النهاية ونضيف: -o, -as, -a, -amos, -áis, -an.
+GE|Hablo español todos los días.|أتحدث الإسبانية كل يوم.|بتكلم إسباني كل يوم.
+GE|Comemos a las dos.|نأكل في الثانية.|بناكل الساعة اتنين.
+GE|Vives en El Cairo.|أنت تعيش في القاهرة.|أنت عايش في القاهرة.
+
+G|g_reflexivos|A1|الأفعال الانعكاسية|أفعال زي levantarse و ducharse بتحتاج ضمير (me, te, se, nos, os, se) قبل الفعل.|الأفعال الانعكاسية تحتاج ضميرًا مطابقًا قبل الفعل.
+GE|Me levanto a las siete.|أستيقظ في السابعة.|بصحى الساعة سبعة.
+GE|¿Te duchas por la mañana?|هل تستحم في الصباح؟|بتستحم الصبح؟
+GE|Se acuesta tarde.|ينام متأخرًا.|بينام متأخر.
+
+G|g_pasado|B1|الماضي (Pretérito indefinido)|للسرد: hablé, hablaste, habló… وبكده بتحكي حاجة خلصت في وقت محدد.|ماضٍ محدد للانتهاء، يُستخدم في السرد.
+GE|Ayer hablé con mi jefe.|أمس تحدثت مع مديري.|إمبارح كلمت مديري.
+GE|Viajamos a Madrid el año pasado.|سافرنا إلى مدريد العام الماضي.|سافرنا مدريد السنة اللي فاتت.
+GE|Comieron en un restaurante pequeño.|أكلوا في مطعم صغير.|أكلوا في مطعم صغير.
+
+G|g_imperfecto|B1|الماضي الوصفي (Imperfecto)|بنستخدمه للوصف والعادات في الماضي: hablaba, comía, vivía. يعني "كنت بعمل".|للوصف والعادات في الماضي: «كان يفعل».
+GE|Cuando era niño, jugaba en la calle.|عندما كنت طفلًا، كنت ألعب في الشارع.|لما كنت صغير كنت بلعب في الشارع.
+GE|Mi abuela cocinaba muy bien.|كانت جدتي تطبخ جيدًا جدًا.|تيتا كانت بتطبخ حلو أوي.
+GE|Todos los veranos íbamos al mar.|كل صيف كنا نذهب إلى البحر.|كل صيف كنا بنروح البحر.
+
+G|g_futuro|B1|المستقبل القريب|أسهل طريقة: ir + a + مصدر. voy a estudiar = هأدرس.|المستقبل القريب: ir + a + المصدر.
+GE|Voy a estudiar esta noche.|سأدرس هذه الليلة.|هدرس النهاردة بالليل.
+GE|¿Vas a venir mañana?|هل ستأتي غدًا؟|هتيجي بكرة؟
+GE|Vamos a cambiar el plan.|سنغيّر الخطة.|هنغيّر الخطة.
+
+G|g_gustar|A1|Gustar وما شابهها|الفكرة مقلوبة: "الحاجة بتعجبني". me gusta + مفرد، me gustan + جمع.|الفاعل هو الشيء المُعجب به، لا الشخص.
+GE|Me gusta el café.|أحب القهوة.|بحب القهوة.
+GE|Nos gustan estos libros.|نحب هذه الكتب.|بنحب الكتب دي.
+GE|Le duele la cabeza.|رأسه يؤلمه.|دماغه بتوجعه.
+
+G|g_por_para|B1|Por و Para|para للهدف والاتجاه والموعد النهائي، و por للسبب والوسيلة والمدة.|para للهدف والغاية، por للسبب والوسيلة.
+GE|Este regalo es para ti.|هذه الهدية لك.|الهدية دي ليك.
+GE|Estudio español por trabajo.|أدرس الإسبانية بسبب العمل.|بدرس إسباني بسبب الشغل.
+GE|Gracias por tu ayuda.|شكرًا لمساعدتك.|شكراً على مساعدتك.
+
+G|g_preguntas|A0|السؤال وأدوات الاستفهام|في الإسباني بنحط ¿ في الأول و ? في الآخر، وأدوات الاستفهام: qué, quién, dónde, cuándo, cómo, cuánto, por qué.|تُحيط الأسئلة بعلامتي ¿ ?، وتُستخدم أدوات استفهام متنوعة.
+GE|¿Dónde vives?|أين تعيش؟|بتعيش فين؟
+GE|¿Cuánto cuesta esto?|كم سعر هذا؟|ده بكام؟
+GE|¿Por qué estudias español?|لماذا تدرس الإسبانية؟|بتدرس إسباني ليه؟
+
+G|g_negacion|A0|النفي|بنحط no قبل الفعل، والنفي المزدوج شائع: No hablo nada.|تُوضع no قبل الفعل، والنفي المزدوج مقبول.
+GE|No entiendo.|لا أفهم.|مش فاهم.
+GE|No hay problema.|لا توجد مشكلة.|مفيش مشكلة.
+GE|No quiero nada más.|لا أريد شيئًا آخر.|مش عايز حاجة تانية.
+
+G|g_muy_mucho|A1|Muy و Mucho|muy + صفة (muy caro)، و mucho + اسم أو فعل (mucho dinero / trabajo mucho).|muy قبل الصفة، mucho قبل الاسم أو مع الفعل.
+GE|Este hotel es muy caro.|هذا الفندق غالي جدًا.|الفندق ده غالي أوي.
+GE|Tengo mucho trabajo.|لدي عمل كثير.|عندي شغل كتير.
+GE|Trabajo mucho los lunes.|أعمل كثيرًا أيام الاثنين.|بشتغل كتير يوم الاتنين.
+
+G|g_comparativos|A2|المقارنة|más … que (أكثر من)، menos … que (أقل من)، tan … como (بنفس). والشواذ: mejor / peor.|المقارنة بـ más/menos … que و tan … como.
+GE|El tren es más rápido que el autobús.|القطار أسرع من الأتوبيس.|القطر أسرع من الأتوبيس.
+GE|Esta habitación es menos cara que la otra.|هذه الغرفة أقل سعرًا من الأخرى.|الأوضة دي أرخص من التانية.
+GE|Mi hermano es tan alto como yo.|أخي بنفس طولي.|أخويا بنفس طولي.
+
+G|g_imperativo|A2|الأمر|الأمر للمخاطب: habla, come, escribe. وللأدب بنستخدم usted: hable. والنفي: no hables.|صيغة الأمر للمخاطب، وللأدب صيغة usted.
+GE|Habla más despacio, por favor.|تكلم أبطأ، من فضلك.|اتكلم أبطأ لو سمحت.
+GE|Escriba su nombre aquí.|اكتب اسمك هنا.|اكتب اسمك هنا.
+GE|No cruces la calle aquí.|لا تعبر الشارع هنا.|متعديش الشارع هنا.
+
+G|g_condicional|B2|الشرط|لو: si + ماضي بسيط، فالجواب شرطي. Si tuviera tiempo, viajaría.|si + ماضٍ، ثم صيغة شرطية.
+GE|Si tuviera dinero, viajaría a España.|لو كان عندي مال، لسافرت إلى إسبانيا.|لو كان معايا فلوس، كنت سافرت إسبانيا.
+GE|Si estudias, aprobarás.|إذا درست، ستنجح.|لو درست هتنجح.
+GE|Yo en tu lugar hablaría con el jefe.|لو كنت مكانك لتحدثت مع المدير.|لو كنت مكانك كنت كلمت المدير.
+
+G|g_subjuntivo|B2|صيغة الشك (Subjuntivo)|بعد التعبيرات زي quiero que و es importante que بنستخدم صيغة مختلفة: hable, comas, viva.|بعد أفعال الرغبة والتقييم تُستخدم صيغة الشك.
+GE|Quiero que hables con él.|أريد أن تتحدث معه.|عايزك تتكلم معاه.
+GE|Es importante que practiques cada día.|من المهم أن تتمرن كل يوم.|مهم إنك تتمرن كل يوم.
+GE|No creo que sea fácil.|لا أعتقد أنه سهل.|مش بعتقد إنه سهل.
+
+G|g_relativos|B2|الجمل الوصلية|que للشيء أو الشخص، quien للأشخاص بعد حرف جر، donde للمكان.|تُستخدم que و quien و donde لربط الجمل.
+GE|El libro que leo es interesante.|الكتاب الذي أقرأه مثير للاهتمام.|الكتاب اللي بقراه مشوق.
+GE|La ciudad donde vivo es tranquila.|المدينة التي أعيش فيها هادئة.|المدينة اللي عايش فيها هادية.
+GE|El compañero con quien trabajo es amable.|الزميل الذي أعمل معه لطيف.|الزميل اللي بشتغل معاه لطيف.
+
+G|g_tilde|B1|النبر والحركات (Tilde)|الحركات بتغيّر المعنى: si (لو) / sí (نعم)، el (الـ) / él (هو)، esta / está. اكتبها صح.|الحركة تُغيّر المعنى، لذا يجب كتابتها بدقة.
+GE|Si vienes, te espero.|إن أتيت، أنتظرك.|لو جيت هستناك.
+GE|Sí, quiero un café.|نعم، أريد قهوة.|أيوه، عايز قهوة.
+GE|Él está en casa.|هو في البيت.|هو في البيت.
+
+G|g_perifrasis|C1|التراكيب الفعلية|estar + gerundio للتقدم (estoy trabajando)، ir a + مصدر للمستقبل، acabar de + مصدر لحاجة لسه حصلت.|تراكيب للتعبير عن الاستمرار والمستقبل والحدث القريب.
+GE|Estoy trabajando en un proyecto nuevo.|أنا أعمل على مشروع جديد.|أنا شغال على مشروع جديد.
+GE|Acabo de llegar del aeropuerto.|وصلت للتو من المطار.|لسه واصل من المطار.
+GE|Seguimos esperando la respuesta.|ما زلنا ننتظر الرد.|لسه مستنيين الرد.
+
+G|g_registro|C1|الرسمي والودي|في الرسمي: usted و le agradezco و no obstante. وفي الودي: tú و gracias و pero.|تختلف الصيغ بين الرسمي والودي، ويجب اختيار المناسب.
+GE|Le agradezco su atención.|أشكرك على اهتمامك.|شاكر لك اهتمامك.
+GE|Gracias por tu ayuda, eres muy amable.|شكرًا لمساعدتك، أنت لطيف جدًا.|شكراً على مساعدتك، أنت لطيف أوي.
+GE|No obstante, necesitamos más información.|غير أننا نحتاج مزيدًا من المعلومات.|مع ذلك، محتاجين معلومات أكتر.

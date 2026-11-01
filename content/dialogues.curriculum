@@ -1,0 +1,143 @@
+# Spanish 1000 — الحوارات (عامة + قسم خدمة العملاء / الكول سنتر)
+# D|id|section|level|title_es|title_ar|title_egy|context_egy|context_fusha
+# DL|المتحدث|es|ar|egy
+# DQ|سؤال بالعامية|خيار|خيار|خيار|رقم الإجابة (0..)|شرح بالعامية
+
+D|cc_pedido|call_center|A2|Consultar el estado de un pedido|الاستفسار عن حالة طلب|استفسار عن الأوردر|مكالمة من عميل يسأل عن طلب متأخر.|مكالمة من عميل يسأل عن طلب متأخر.
+DL|Agente|Buenos días, atención al cliente, le atiende Sara. ¿En qué puedo ayudarle?|صباح الخير، خدمة العملاء، معك سارة. كيف أساعدك؟|صباح الفل، خدمة العملاء، معاك سارة. أساعدك إزاي؟
+DL|Cliente|Hola, hice un pedido la semana pasada y todavía no ha llegado.|مرحبًا، قدمت طلبًا الأسبوع الماضي ولم يصل بعد.|أهلاً، عملت أوردر الأسبوع اللي فات ولسه ماوصلش.
+DL|Agente|¿Me facilita el número de pedido, por favor?|هل تعطيني رقم الطلب، من فضلك؟|تديني رقم الأوردر لو سمحت؟
+DL|Cliente|Sí, es el 47821. Lo pedí el martes.|نعم، هو 47821. طلبته الثلاثاء.|أيوه، هو 47821. طلبته يوم التلات.
+DL|Agente|Lo veo. Está en reparto y llegará mañana antes de las seis.|أراه. إنه في التوزيع وسيصل غدًا قبل السادسة.|شايفه. في التوزيع وهيوصل بكرة قبل ستة.
+DL|Cliente|Perfecto, muchas gracias. ¿Me avisan por mensaje?|ممتاز، شكرًا جزيلًا. هل تخبرونني برسالة؟|تمام، شكراً أوي. هتبلغوني برسالة؟
+DL|Agente|Sí, le enviaremos un mensaje con el horario del reparto. Que tenga buen día.|نعم، سنرسل لك رسالة بموعد التوزيع. أتمنى لك يومًا طيبًا.|أيوه، هنبعتلك رسالة بميعاد التوزيع. يوم سعيد.
+DQ|العميل طلب إيه؟|طلب أكل|طلب بضاعة أونلاين|حجز غرفة|1|هو بيتكلم على أوردر لسه ماوصلش.
+DQ|الأوردر هيوصل إمتى؟|امبارح|بكرة قبل ستة|الأسبوع الجاي|1|الموظفة قالت هيوصل بكرة قبل الساعة ستة.
+DQ|الموظفة هتبلغه إزاي؟|بمكالمة|برسالة|بإيميل|1|قالت هتبعتله رسالة بميعاد التوزيع.
+
+D|cc_factura|call_center|B1|Reclamar un cobro incorrecto|الاعتراض على مبلغ خاطئ في الفاتورة|مشكلة في الفاتورة|عميل اعترض على مبلغ مخصوم مرتين.|عميل اعترض على مبلغ خصم مرتين.
+DL|Agente|Buenas tardes, ¿en qué puedo ayudarle?|مساء الخير، كيف أساعدك؟|مساء الخير، أساعدك إزاي؟
+DL|Cliente|Buenas tardes. Me han cobrado dos veces la misma factura.|مساء الخير. خصموا مني نفس الفاتورة مرتين.|مساء الخير. خصموا مني نفس الفاتورة مرتين.
+DL|Agente|Disculpe las molestias. ¿Puede darme el número de la factura?|أعتذر عن الإزعاج. هل يمكنك إعطائي رقم الفاتورة؟|معلش على الإزعاج. تديني رقم الفاتورة؟
+DL|Cliente|Sí, la factura de octubre, número 90215.|نعم، فاتورة أكتوبر، رقم 90215.|أيوه، فاتورة أكتوبر، رقم 90215.
+DL|Agente|Veo un error en el sistema: el segundo cargo fue un fallo técnico.|أرى خطأً في النظام: الخصم الثاني كان خطأً تقنيًا.|شايف غلط في النظام: الخصم التاني كان غلطة تقنية.
+DL|Cliente|¿Cuándo me devuelven el dinero?|متى تعيدون لي المال؟|هترجعولي الفلوس إمتى؟
+DL|Agente|La devolución se hará en un plazo de cinco días laborables. Le envío la confirmación por correo.|سيتم الاسترداد خلال خمسة أيام عمل. سأرسل لك التأكيد بالبريد.|الاسترداد هيتم في خمس تيام عمل. هبعتلك تأكيد على الإيميل.
+DQ|مشكلة العميل إيه؟|الخصم مرتين|الفاتورة مالهاش رقم|الخط مش شغال|0|قال إنهم خصموا نفس الفاتورة مرتين.
+DQ|الموظف وصف الخطأ بأنه؟|خطأ من العميل|خطأ تقني في النظام|خطأ من البنك|1|قال الخصم التاني كان غلطة تقنية.
+DQ|الفلوس هترجع في قد إيه؟|خمس أيام عمل|شهر|أسبوعين|0|الموظف قال خمس تيام عمل.
+
+D|cc_soporte|call_center|B1|Soporte técnico de internet|الدعم الفني للإنترنت|الدعم الفني للنت|عميل الإنترنت عنده بطيء جداً.|عميل الإنترنت عنده بطيء أوي.
+DL|Agente|Soporte técnico, buenas tardes. ¿Cuál es el problema?|الدعم الفني، مساء الخير. ما المشكلة؟|الدعم الفني، مساء الخير. المشكلة إيه؟
+DL|Cliente|Mi conexión va muy lenta desde ayer. No puedo trabajar.|اتصالي بطيء جدًا منذ أمس. لا أستطيع العمل.|النت عندي بطيء أوي من إمبارح. مش قادر أشتغل.
+DL|Agente|¿Ha reiniciado el router? A veces se soluciona así.|هل أعدت تشغيل الراوتر؟ أحيانًا يُحل الأمر هكذا.|عملت ريستارت للراوتر؟ ساعات بيتحل كده.
+DL|Cliente|Sí, lo reinicié dos veces y sigue igual.|نعم، أعدت تشغيله مرتين وما زال كما هو.|أيوه، عملتله ريستارت مرتين وبرضه زي ما هو.
+DL|Agente|Voy a revisar la línea. ¿Puede hacer una prueba de velocidad y decirme el resultado?|سأفحص الخط. هل يمكنك إجراء اختبار سرعة وإخباري بالنتيجة؟|هراجع الخط. تقدر تعمل تست سرعة وتقولي النتيجة؟
+DL|Cliente|Ahora mismo: veinte megas de bajada y dos de subida.|الآن: عشرون ميجا تنزيل واثنان رفع.|دلوقتي: عشرين ميجا داونلود واتنين أبلود.
+DL|Agente|Hay una avería en su zona. Nuestros técnicos la están revisando; calculamos resolverla esta noche.|هناك عطل في منطقتك. فنيونا يراجعونه، ونتوقع حله الليلة.|في عطل في منطقتك. الفنيين بيراجعوه، متوقعين يتحل النهاردة بالليل.
+DQ|شكوى العميل إيه؟|النت بطيء|الراوتر مكسور|مفيش كهربا|0|قال إن الاتصال بطيء جدًا من أمس.
+DQ|العميل عمل إيه قبل المكالمة؟|غيّر الشبكة|عمل ريستارت للراوتر|اتصل بالبنك|1|قال إنه عمل ريستارت مرتين.
+DQ|سبب المشكلة حسب الموظف؟|عطل في المنطقة|العميل مش دافع|جهاز العميل|0|الموظف قال في عطل في المنطقة.
+
+D|cc_reclamacion|call_center|B2|Escalar una reclamación|تصعيد شكوى|تصعيد شكوى|عميل غير راضٍ عن الحل ويطلب مسؤولاً.|عميل مش راضي عن الحل وبيطلب مسؤول.
+DL|Cliente|Llevo tres semanas esperando una respuesta y nadie me ha llamado.|أنا منتظر ثلاثة أسابيع ردًا ولم يتصل بي أحد.|من تلات أسابيع مستني رد ومحدش كلمني.
+DL|Agente|Entiendo su frustración y le pido disculpas. Voy a revisar el expediente ahora mismo.|أتفهم إحباطك وأعتذر لك. سأراجع الملف الآن.|فاهم إحباطك وبعتذرلك. هراجع الملف دلوقتي.
+DL|Cliente|No quiero otra disculpa, quiero una solución concreta.|لا أريد اعتذارًا آخر، أريد حلًا ملموسًا.|مش عايز اعتذار تاني، عايز حل عملي.
+DL|Agente|Tiene razón. Le propongo dos opciones: compensación en la factura o cancelación sin coste.|أنت على حق. أقترح عليك خيارين: تعويض في الفاتورة أو إلغاء بلا رسوم.|كلامك صح. باقترح عليك حلين: تعويض في الفاتورة أو إلغاء من غير رسوم.
+DL|Cliente|Prefiero la compensación, pero quiero el compromiso por escrito.|أفضل التعويض، لكني أريد الالتزام كتابةً.|بفضّل التعويض، بس عايز الالتزام مكتوب.
+DL|Agente|De acuerdo. Se lo envío por correo hoy y, si quiere, le paso con mi supervisor.|موافق. سأرسله لك بالبريد اليوم، وإن أردت أحوّلك إلى مشرفي.|ماشي. هبعتهولك على الإيميل النهاردة، ولو تحب أحوّلك للمشرف بتاعي.
+DQ|العميل مستني من قد إيه؟|تلات أسابيع|يومين|شهرين|0|قال إنه مستني تلات أسابيع.
+DQ|العميل طلب إيه؟|اعتذار تاني|حل عملي وكتابي|مكالمة من المدير|1|قال إنه عايز حل ملموس ومكتوب.
+DQ|الموظف عرض عليه إيه؟|تعويض أو إلغاء بدون رسوم|خصم 50%|هدية|0|العرض كان تعويض في الفاتورة أو إلغاء من غير رسوم.
+
+D|cc_venta|call_center|A2|Ofrecer una oferta por teléfono|تقديم عرض عبر التليفون|عرض باقة على التليفون|موظف مبيعات بيقدم باقة إنترنت.|موظف مبيعات بيقدم باقة نت.
+DL|Agente|Buenos días, le llamo de la compañía de telefonía. ¿Tiene un minuto?|صباح الخير، أتصل بك من شركة الاتصالات. هل لديك دقيقة؟|صباح الخير، بكلمك من شركة الاتصالات. عندك دقيقة؟
+DL|Cliente|Sí, dígame, pero tengo prisa.|نعم، تفضل، لكني مستعجل.|أيوه، اتفضل، بس أنا مستعجل.
+DL|Agente|Tenemos una oferta: el doble de datos por el mismo precio durante seis meses.|لدينا عرض: ضعف البيانات بنفس السعر لمدة ستة أشهر.|عندنا عرض: ضعف الباقة بنفس السعر لمدة ست شهور.
+DL|Cliente|¿Hay compromiso de permanencia?|هل هناك التزام بالبقاء مع الشركة؟|في التزام إني أفضّل معاكم؟
+DL|Agente|Ninguno. Puede cancelarla cuando quiera sin penalización.|لا يوجد. يمكنك إلغاءها وقتما تشاء دون غرامة.|ولا حاجة. تقدر تلغيها وقت ما تحب من غير غرامة.
+DL|Cliente|Entonces acepto. ¿Me lo confirma por escrito?|إذًا أقبل. هل تؤكد لي كتابةً؟|يبقى موافق. تأكدهولي مكتوب؟
+DL|Agente|Claro, recibirá un mensaje con las condiciones hoy mismo.|طبعًا، ستتلقى رسالة بالشروط اليوم نفسه.|أكيد، هيوصلك رسالة بالشروط النهاردة.
+DQ|العرض إيه؟|ضعف الباقة بنفس السعر|نص السعر|باقة مجانية للأبد|0|الموظف قال ضعف البيانات بنفس السعر ست شهور.
+DQ|في التزام بالبقاء؟|أيوه سنة|لا، مفيش|أيوه سنتين|1|الموظف قال مفيش التزام ولا غرامة.
+DQ|العميل طلب إيه في الآخر؟|تأكيد مكتوب|زيارة فرع|فاتورة|0|طلب تأكيد مكتوب بالشروط.
+
+D|a0_saludo|general|A0|Primer encuentro|التعارف الأول|التعارف الأول|حوار تعارف بسيط بين شخصين.|حوار تعارف بسيط بين شخصين.
+DL|Ana|¡Hola! Me llamo Ana. ¿Cómo te llamas?|مرحبًا! اسمي آنا. ما اسمك؟|أهلاً! أنا اسمي آنا. اسمك إيه؟
+DL|Samir|Hola, Ana. Me llamo Samir. Soy de Egipto.|مرحبًا يا آنا. اسمي سمير. أنا من مصر.|أهلاً آنا. أنا سمير. من مصر.
+DL|Ana|Encantada, Samir. ¿Hablas español?|تشرفت يا سمير. هل تتكلم الإسبانية؟|تشرفت يا سمير. بتتكلم إسباني؟
+DL|Samir|Un poco. Estudio español todos los días.|قليلًا. أدرس الإسبانية كل يوم.|شوية. بدرس إسباني كل يوم.
+DL|Ana|¡Muy bien! Y yo estudio árabe.|جيد جدًا! وأنا أدرس العربية.|جميل أوي! وأنا بدرس عربي.
+DL|Samir|¡Qué bien! Hasta luego, Ana.|ما أجمل ذلك! إلى اللقاء يا آنا.|جميل! سلام يا آنا.
+DQ|اسم الشخص الأول إيه؟|آنا|سمير|سارة|0|البنت قالت اسمي آنا.
+DQ|سمير من فين؟|إسبانيا|مصر|المكسيك|1|قال أنا من مصر.
+DQ|آنا بتدرس إيه؟|إسباني|عربي|إنجليزي|1|آنا قالت أنا بدرس عربي.
+
+D|a1_casa|general|A1|En casa de un amigo|في بيت صديق|في بيت صاحبك|زيارة بسيطة وحوار عن البيت والعيلة.|زيارة بسيطة وحوار عن البيت والعيلة.
+DL|Pablo|¡Bienvenido a mi casa! Pasa, por favor.|أهلًا بك في بيتي! تفضل بالدخول، من فضلك.|نورت بيتي! اتفضل.
+DL|Nadia|Gracias. Tu casa es muy bonita y grande.|شكرًا. بيتك جميل وكبير جدًا.|شكراً. بيتك حلو وكبير أوي.
+DL|Pablo|Gracias. Aquí está el salón y allí la cocina.|شكرًا. هنا الصالة وهناك المطبخ.|شكراً. هنا الصالة وهناك المطبخ.
+DL|Nadia|¿Y tu familia? ¿Dónde están tus padres?|وعائلتك؟ أين والديك؟|وعيلتك؟ والدك ووالدتك فين؟
+DL|Pablo|Mi padre está en el trabajo y mi madre compra comida.|والدي في العمل ووالدتي تشتري طعامًا.|أبويا في الشغل وأمي بتشتري أكل.
+DL|Nadia|Voy a ayudar en la cocina.|سأساعد في المطبخ.|هساعد في المطبخ.
+DQ|نادية قالت إيه عن البيت؟|صغير|جميل وكبير|قديم|1|قالت البيت حلو وكبير أوي.
+DQ|والد بابلو فين؟|في البيت|في الشغل|في السوق|1|قال والدي في العمل.
+DQ|نادية هتساعد فين؟|المطبخ|الصالة|الحديقة|0|قالت هساعد في المطبخ.
+
+D|a2_hotel_checkin|general|A2|Registro en el hotel|تسجيل الدخول في الفندق|تسجيل الدخول في الفندق|وصل عميل الفندق ويسأل عن حجزه.|عميل وصل الفندق بيسأل عن حجزه.
+DL|Recepcionista|Buenas noches, bienvenido al hotel. ¿Tiene reserva?|مساء الخير، أهلًا بك في الفندق. هل لديك حجز؟|مساء الخير، نورت الفندق. عندك حجز؟
+DL|Huésped|Sí, una habitación doble para tres noches a nombre de Mahmud.|نعم، غرفة مزدوجة لثلاث ليالٍ باسم محمود.|أيوه، أوضة دبل لتلات ليالي باسم محمود.
+DL|Recepcionista|Perfecto. ¿Me enseña el pasaporte, por favor?|ممتاز. هل تعطيني جواز السفر، من فضلك؟|تمام. تشوفلي الباسبور لو سمحت؟
+DL|Huésped|Aquí está. ¿El desayuno está incluido?|ها هو. هل الفطور مشمول؟|آه، خده. الفطار مشمول؟
+DL|Recepcionista|Sí, de siete a diez en la primera planta. Su habitación es la 304.|نعم، من السابعة إلى العاشرة في الطابق الأول. غرفتك 304.|أيوه، من سبعة لعشرة في الدور الأول. أوضتك 304.
+DL|Huésped|¿Hay wifi gratis en la habitación?|هل يوجد واي فاي مجاني في الغرفة؟|في واي فاي مجاني في الأوضة؟
+DL|Recepcionista|Sí, la contraseña está en la tarjeta de la habitación.|نعم، كلمة المرور على كارت الغرفة.|أيوه، الباسورد على كارت الأوضة.
+DQ|الحجز لكام ليلة؟|تلات ليالي|ليلتين|أربع ليالي|0|قال أوضة دبل لتلات ليالي.
+DQ|الفطار من إمتى لإمتى؟|من 7 لـ10|من 8 لـ11|من 6 لـ9|0|الموظف قال من سبعة لعشرة.
+DQ|الباسورد فين؟|على كارت الأوضة|في الأسانسير|عند الاستقبال|0|قال الباسورد على كارت الأوضة.
+
+D|a2_restaurante_pedido|general|A2|Pedir en un restaurante|الطلب في مطعم|الطلب في مطعم|عميل بيطلب أكل ويسأل عن مكونات.|عميل بيطلب أكل ويسأل عن مكونات.
+DL|Camarero|Buenas tardes, ¿qué desea tomar?|مساء الخير، ماذا تريد أن تأخذ؟|مساء الخير، تحب تاخد إيه؟
+DL|Cliente|¿Qué me recomienda del menú del día?|بماذا تنصحني من وجبة اليوم؟|ترشحلي إيه من وجبة اليوم؟
+DL|Camarero|El pollo con arroz está muy bueno. También hay sopa de verduras.|الدجاج بالأرز جيد جدًا. وهناك أيضًا شوربة خضار.|الفراخ بالرز حلوة أوي. وكمان في شوربة خضار.
+DL|Cliente|Quiero el pollo, pero sin cebolla. Tengo alergia.|أريد الدجاج، لكن بدون بصل. لدي حساسية.|عايز الفراخ، بس من غير بصل. عندي حساسية.
+DL|Camarero|Entendido, sin cebolla. ¿Para beber?|فهمت، بدون بصل. وللشرب؟|تمام، من غير بصل. وللشرب؟
+DL|Cliente|Agua sin hielo, por favor. Y la cuenta al final.|ماء بدون ثلج، من فضلك. والحساب في النهاية.|مية من غير تلج لو سمحت. والحساب في الآخر.
+DL|Camarero|Muy bien. Enseguida se lo traigo.|جيد جدًا. سأحضره لك فورًا.|تمام. هجيبهولك حالاً.
+DQ|العميل عايز يأكل إيه؟|فراخ بالرز|لحمة|سمك|0|طلب الفراخ بالرز لكن من غير بصل.
+DQ|ليه من غير بصل؟|مش بيحبه|عنده حساسية|صايم|1|قال عندي حساسية.
+DQ|طلب يشرب إيه؟|مية من غير تلج|عصير|قهوة|0|طلب مية من غير تلج.
+
+D|b1_entrevista|general|B1|Entrevista de trabajo|مقابلة عمل|انترفيو شغل|مقابلة لوظيفة خدمة عملاء.|انترفيو لوظيفة خدمة عملاء.
+DL|Entrevistador|Buenos días, siéntese, por favor. ¿Por qué quiere este puesto?|صباح الخير، تفضل بالجلوس. لماذا تريد هذا المنصب؟|صباح الخير، اتفضل اقعد. ليه عايز الوظيفة دي؟
+DL|Candidato|Porque me gusta tratar con la gente y ya tengo experiencia en atención al cliente.|لأنني أحب التعامل مع الناس ولدي خبرة بالفعل في خدمة العملاء.|عشان بحب التعامل مع الناس وعندي خبرة في خدمة العملاء.
+DL|Entrevistador|¿Cómo reacciona si un cliente está enfadado?|كيف تتصرف إذا كان العميل غاضبًا؟|بتتصرف إزاي لو العميل متعصب؟
+DL|Candidato|Escucho primero, no interrumpo y busco una solución concreta.|أستمع أولًا، لا أقاطع، وأبحث عن حل ملموس.|بسمع الأول، مش بقاطع، وبحاول أوصل لحل عملي.
+DL|Entrevistador|¿Puede trabajar por turnos, incluso de noche?|هل يمكنك العمل بالورديات، بما فيها الليل؟|تقدر تشتغل ورديات، حتى بالليل؟
+DL|Candidato|Sí, siempre que el horario sea claro y haya transporte.|نعم، بشرط أن يكون الدوام واضحًا ويوجد مواصلات.|أيوه، بشرط المواعيد تبقى واضحة وفي مواصلات.
+DL|Entrevistador|Bien. Le llamaremos esta semana con la decisión.|جيد. سنتصل بك هذا الأسبوع بالقرار.|تمام. هنكلمك الأسبوع ده بالقرار.
+DQ|الوظيفة في مجال إيه؟|خدمة العملاء|محاسبة|تعليم|0|الكلام عن التعامل مع العملاء.
+DQ|المتقدم هيتصرف إزاي مع عميل متعصب؟|يقاطعه|يسمع ويحل|يقفل الخط|1|قال يسمع الأول ويبحث عن حل.
+DQ|شرط المتقدم للورديات الليلية؟|مواصلات ومواعيد واضحة|زيادة مرتب|مفيش|0|قال بشرط الدوام واضح والمواصلات موجودة.
+
+D|b2_debate|general|B2|Debate sobre el coche en la ciudad|مناقشة عن العربية في المدينة|مناقشة عن العربية في المدينة|حوار بين شخصين عن السيارات والتلوث.|حوار بين شخصين عن العربيات والتلوث.
+DL|Lucía|En mi opinión, el centro debería cerrarse a los coches privados.|في رأيي، يجب إغلاق المركز أمام السيارات الخاصة.|في رأيي، لازم نقفل الوسط على العربيات الخاصة.
+DL|Omar|Estoy de acuerdo en parte, pero no todos pueden usar el transporte público.|أوافق جزئيًا، لكن ليس الجميع يستطيع استخدام النقل العام.|موافقك جزئياً، بس مش كل الناس تقدر تستخدم المواصلات العامة.
+DL|Lucía|Por eso propongo mejorar primero el metro y los autobuses.|لهذا أقترح تحسين المترو والأتوبيسات أولًا.|عشان كده باقترح نحسّن المترو والأتوبيسات الأول.
+DL|Omar|Ese argumento me convence. ¿Y el coste?|هذه الحجة تقنعني. وماذا عن التكلفة؟|الحجة دي بتقنعني. والتكلفة؟
+DL|Lucía|A largo plazo sale más barato que la contaminación y los accidentes.|على المدى الطويل أرخص من التلوث والحوادث.|على المدى البعيد أرخص من التلوث والحوادث.
+DL|Omar|Sin duda. Entonces estamos de acuerdo en el enfoque general.|بلا شك. إذًا نحن متفقان على المقاربة العامة.|من غير شك. يبقى إحنا متفقين على المقاربة العامة.
+DQ|لوسيا بتقترح إيه؟|نقفل الوسط على العربيات|نزوّد العربيات|نلغي المترو|0|قالت الوسط لازم يتقفل على العربيات الخاصة.
+DQ|عمر اعترض على إيه؟|مش كل الناس عندها مواصلات|التكلفة عالية|مفيش تلوث|0|قال مش كل الناس تقدر تستخدم المواصلات العامة.
+DQ|الحل المقترح الأول؟|تحسين المترو والأتوبيسات|بناء جراج|منع المترو|0|قالت نحسّن المترو والأتوبيسات الأول.
+
+D|c1_contrato|general|C1|Negociar un contrato|التفاوض على عقد|التفاوض على عقد|تفاوض على السعر ومدة التسليم.|تفاوض على السعر وميعاد التسليم.
+DL|Proveedor|Le agradezco la reunión. Nuestra oferta es de diez mil euros, entrega en un mes.|أشكرك على الاجتماع. عرضنا عشرة آلاف يورو، والتسليم في شهر.|شاكر لك على الاجتماع. عرضنا عشرة آلاف يورو، والتسليم في شهر.
+DL|Cliente|En cuanto al precio, podemos aceptarlo, pero el plazo no es negociable: necesitamos tres semanas.|بخصوص السعر، يمكننا قبوله، لكن المدة غير قابلة للتفاوض: نحتاج ثلاثة أسابيع.|بخصوص السعر، نقدر نقبله، بس المدة مش قابلة للتفاوض: محتاجين تلات أسابيع.
+DL|Proveedor|Tres semanas es muy ajustado, aunque podríamos intentarlo con un recargo del cinco por ciento.|ثلاثة أسابيع ضيقة جدًا، لكن يمكننا المحاولة مقابل زيادة خمسة بالمئة.|تلات أسابيع ضيقة أوي، بس نقدر نحاول بزيادة خمسة في المية.
+DL|Cliente|No obstante, el presupuesto ya está aprobado sin recargos.|غير أن الميزانية معتمدة بالفعل بدون زيادات.|مع ذلك، الميزانية معتمدة خلاص من غير زيادات.
+DL|Proveedor|Propongo un compromiso: tres semanas sin recargo, pero el pago inicial del cincuenta por ciento.|أقترح التزامًا: ثلاثة أسابيع بدون زيادة، لكن الدفعة الأولى خمسون بالمئة.|باقترح التزام: تلات أسابيع من غير زيادة، بس الدفعة الأولى خمسين في المية.
+DL|Cliente|Me parece razonable. Lo firmamos y queda todo por escrito.|يبدو معقولًا. سنوقّعه ويبقى كل شيء مكتوبًا.|يبدو معقول. هنوقّعه وكل حاجة تبقى مكتوبة.
+DQ|العرض الأول كان بكام؟|عشرة آلاف يورو|خمسة آلاف|عشرين ألف|0|المورد قال العرض عشرة آلاف يورو.
+DQ|العميل محتاج التسليم في قد إيه؟|تلات أسابيع|شهر|أسبوع|0|قال محتاجين تلات أسابيع.
+DQ|الاتفاق النهائي على إيه؟|تلات أسابيع ودفعة أولى 50%|شهر وبدون دفعة|أسبوعين وزيادة 5%|0|المورد اقترح تلات أسابيع من غير زيادة مع دفعة أولى 50%.

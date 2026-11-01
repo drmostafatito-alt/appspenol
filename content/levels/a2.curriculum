@@ -1,0 +1,470 @@
+# Spanish 1000 — A2: السفر، الفندق، المطاعم، المواصلات، التسوق، البنك، الصحة، المكالمات
+L|A2|A2 — المواقف اليومية|A2 — Nivel elemental|تتعامل مع مواقف السفر والفندق والمطعم والتسوق والبنك والصحة بإسباني عملي.|مستوى ما قبل المتوسط: تتعامل مع مواقف الحياة الحقيقية، تطلب وتشتكي وتسأل عن الطريق وتحجز.
+
+U|a2_viaje|السفر والمطار|Viajes y aeropuerto|تحجز تذكرة وتسافر وتعدّي المطار.
+W|el viaje|السفر / الرحلة|السفرة|noun|السفر||el ˈbja.xe
+W|el billete|التذكرة|التذكرة|noun|السفر||el biˈʝe.te
+W|el billete de ida|تذكرة ذهاب|تذكرة روحان|phrase|السفر||el biˈʝe.te de ˈi.ða
+W|el billete de ida y vuelta|تذكرة ذهاب وعودة|تذكرة رايح جاي|phrase|السفر||el biˈʝe.te de ˈi.ða i ˈbwel.ta
+W|el pasaporte|جواز السفر|الباسبور|noun|السفر||el pa.saˈpoɾ.te
+W|el equipaje|الأمتعة|الشنط|noun|السفر||el e.kiˈpa.xe
+W|la maleta|الحقيبة|الشنطة|noun|السفر||la maˈle.ta
+W|el avión|الطائرة|الطيارة|noun|السفر||el aˈβjon
+W|el aeropuerto|المطار|المطار|noun|السفر||el a.e.ɾoˈpweɾ.to
+W|la puerta de embarque|بوابة الصعود|بوابة الطيارة|phrase|السفر||la ˈpweɾ.ta de emˈbaɾ.ke
+W|el vuelo|الرحلة الجوية|الرحلة|noun|السفر||el ˈbwe.lo
+W|la llegada|الوصول|الوصول|noun|السفر||la ʝeˈɣa.ða
+W|la salida|المغادرة|المغادرة|noun|السفر||la saˈli.ða
+W|el retraso|التأخير|التأخير|noun|السفر||el reˈtɾa.so
+W|la aduana|الجمارك|الجمارك|noun|السفر||la aˈðwa.na
+W|el control de pasaportes|مراقبة الجوازات|الجوازات|phrase|السفر||el konˈtɾol de pa.saˈpoɾ.tes
+W|la facturación|تسجيل الأمتعة|تسجيل الشنط|noun|السفر||la fak.tu.ɾaˈθjon
+W|la ventanilla|شباك التذاكر|الشباك|noun|السفر||la ben.taˈni.ʝa
+W|embarcar|يستقل الطائرة|يركب الطيارة|verb|السفر||em.baɾˈkaɾ
+W|despegar|تقلع|تقلع|verb|السفر||des.peˈɣaɾ
+W|aterrizar|تهبط|تهبط|verb|السفر||a.te.riˈθaɾ
+W|reservar|يحجز|يحجز|verb|السفر||re.seɾˈβaɾ
+W|cancelar|يلغي|يلغي|verb|السفر||kan.θeˈlaɾ
+W|perderse|يتوه|يتوه|verb|السفر||peɾˈðeɾ.se
+W|la escala|الترانزيت|الترانزيت|noun|السفر||la esˈka.la
+W|el turista|السائح|التوريست|noun|السفر||el tuˈɾis.ta
+W|el seguro de viaje|تأمين السفر|تأمين السفر|phrase|السفر||el seˈɣu.ɾo de ˈbja.xe
+S|Quiero un billete de ida y vuelta a Madrid.|أريد تذكرة ذهاب وعودة إلى مدريد.|عايز تذكرة رايح جاي مدريد.
+S|¿Dónde está la puerta de embarque?|أين بوابة الصعود؟|بوابة الطيارة فين؟
+S|El vuelo tiene dos horas de retraso.|الرحلة متأخرة ساعتين.|الرحلة متأخرة ساعتين.
+S|Mi maleta no ha llegado.|حقيبتي لم تصل.|شنطتي ماوصلتش.
+S|Tengo que pasar por la aduana.|يجب أن أمر بالجمارك.|لازم أعدي على الجمارك.
+S|¿Puedo reservar un asiento junto a la ventana?|هل يمكنني حجز مقعد بجانب النافذة؟|أقدر أحجز كرسي جنب الشباك؟
+
+U|a2_hotel|الفندق|El hotel|تحجز غرفة وتسأل عن الخدمات وتحل مشكلة.
+W|el hotel|الفندق|الفندق|noun|الفندق||el oˈtel
+W|la habitación|الغرفة|الأوضة|noun|الفندق||la a.βi.taˈθjon
+W|la habitación doble|غرفة مزدوجة|أوضة دبل|phrase|الفندق||la a.βi.taˈθjon ˈdo.βle
+W|la cama individual|سرير فردي|سرير فردي|phrase|الفندق||la ˈka.ma in.di.βiˈðwal
+W|la recepción|الاستقبال|الاستقبال|noun|الفندق||la re.θepˈθjon
+W|la reserva|الحجز|الحجز|noun|الفندق||la reˈseɾ.βa
+W|el desayuno incluido|فطور مشمول|فطار مشمول|phrase|الفندق||el de.saˈʝu.no inˈklwi.ðo
+W|la llave|المفتاح|المفتاح|noun|الفندق||la ˈʝa.βe
+W|la tarjeta|الكارت / البطاقة|الكارت|noun|الفندق||la taɾˈxe.ta
+W|el ascensor|المصعد|الأسانسير|noun|الفندق||el as.θenˈsoɾ
+W|la piscina|حمام السباحة|حمام السباحة|noun|الفندق||la pisˈθi.na
+W|el aire acondicionado|المكيف|التكييف|noun|الفندق||el ˈaj.ɾe a.kon.di.θjoˈna.ðo
+W|la toalla|المنشفة|الفوطة|noun|الفندق||la toˈa.ʝa
+W|el jabón|الصابون|الصابون|noun|الفندق||el xaˈβon
+W|la ducha|الدش|الدش|noun|الفندق||la ˈdu.tʃa
+W|el servicio de habitaciones|خدمة الغرف|خدمة الأوض|phrase|الفندق||el seɾˈβi.θjo de a.βi.taˈθjo.nes
+W|disponible|متاح|متاح|adj|الفندق||dis.poˈni.βle
+W|ocupado|مشغول|مشغول|adj|الفندق||o.kuˈpa.ðo
+W|el huésped|النزيل|النزيل|noun|الفندق||el ˈwes.peð
+W|la queja|الشكوى|الشكوى|noun|الفندق||la ˈke.xa
+W|quejarse|يشتكي|يشتكي|verb|الفندق||keˈxaɾ.se
+W|arreglar|يصلح|يصلح|verb|الفندق||a.reˈɣlaɾ
+W|cambiar|يغيّر|يغيّر|verb|الفندق||kamˈbjaɾ
+S|Tengo una reserva a nombre de Ahmed.|لدي حجز باسم أحمد.|عندي حجز باسم أحمد.
+S|¿A qué hora es el desayuno?|في أي ساعة الفطور؟|الفطار الساعة كام؟
+S|El aire acondicionado no funciona.|المكيف لا يعمل.|التكييف مش شغال.
+S|Quiero cambiar de habitación, por favor.|أريد تغيير الغرفة، من فضلك.|عايز أغيّر الأوضة لو سمحت.
+S|¿Puedo dejar el equipaje hasta las tres?|هل أستطيع ترك الأمتعة حتى الثالثة؟|أقدر أسيب الشنط لحد تلاتة؟
+S|Necesito una toalla limpia.|أحتاج منشفة نظيفة.|محتاج فوطة نضيفة.
+
+U|a2_restaurante|المطعم والطلب|En el restaurante|تطلب أكل وتفهم النادل وتدفع.
+W|el restaurante|المطعم|المطعم|noun|المطعم||el res.tauˈɾan.te
+W|la mesa para dos|طاولة لشخصين|ترابيزة لاتنين|phrase|المطعم||la ˈme.sa ˈpa.ɾa dos
+W|la carta|قائمة الطعام|المنيو|noun|المطعم||la ˈkaɾ.ta
+W|el camarero|النادل|الجرسون|noun|المطعم||el ka.maˈɾe.ɾo
+W|el primer plato|الطبق الأول|الأول|phrase|المطعم||el pɾiˈmeɾ ˈpla.to
+W|el segundo plato|الطبق الرئيسي|الطبق الأساسي|phrase|المطعم||el seˈɣun.do ˈpla.to
+W|el postre|الحلوى|الحلو|noun|المطعم||el ˈpos.tɾe
+W|la bebida|المشروب|المشروب|noun|المطعم||la beˈβi.ða
+W|la cuenta|الحساب|الحساب|noun|المطعم||la ˈkwen.ta
+W|la propina|البقشيش|الإكرامية|noun|المطعم||la pɾoˈpi.na
+W|pedir|يطلب|يطلب|verb|المطعم||peˈðiɾ
+W|recomendar|ينصح / يوصي|يرشّح|verb|المطعم||re.ko.menˈdaɾ
+W|traer|يجلب|يجيب|verb|المطعم||tɾaˈeɾ
+W|llevar|يأخذ (للخارج)|ياخد (تيك أواي)|verb|المطعم||ʝeˈβaɾ
+W|para llevar|للأخذ خارجًا|تيك أواي|phrase|المطعم||ˈpa.ɾa ʝeˈβaɾ
+W|sin hielo|بدون ثلج|من غير تلج|phrase|المطعم||sin ˈʝe.lo
+W|con leche|مع الحليب|بلبن|phrase|المطعم||kon ˈle.tʃe
+W|sin azúcar|بدون سكر|من غير سكر|phrase|المطعم||sin aˈθu.kaɾ
+W|vegetariano|نباتي|نباتي|adj|المطعم||be.xe.taˈɾja.no
+W|la alergia|الحساسية|الحساسية|noun|المطعم||la aˈleɾ.xja
+W|tengo una alergia|لدي حساسية|عندي حساسية|phrase|المطعم||ˈteŋ.ɡo ˈu.na aˈleɾ.xja
+W|¿está incluido el servicio?|هل الخدمة مشمولة؟|الخدمة متحسبة في الحساب؟|phrase|المطعم||esˈta in.klwi.ðo el seɾˈβi.θjo
+W|la cuenta separada|حساب منفصل|حساب منفصل|phrase|المطعم||la ˈkwen.ta se.paˈɾa.ða
+W|el menú del día|وجبة اليوم|وجبة اليوم|phrase|المطعم||el meˈnu del ˈdi.a
+S|Una mesa para dos, por favor.|طاولة لشخصين، من فضلك.|ترابيزة لاتنين لو سمحت.
+S|¿Qué me recomienda?|بماذا تنصحني؟|ترشحلي إيه؟
+S|Quiero el pollo sin cebolla, por favor.|أريد الدجاج بدون بصل، من فضلك.|عايز الفراخ من غير بصل لو سمحت.
+S|Soy alérgico a los frutos secos.|لدي حساسية من المكسرات.|عندي حساسية من المكسرات.
+S|¿Me trae la cuenta, por favor?|هل تحضر لي الحساب، من فضلك؟|تجيبلي الحساب لو سمحت؟
+S|Un café con leche y un vaso de agua, por favor.|قهوة بالحليب وكوب ماء، من فضلك.|قهوة بلبن وكباية مية لو سمحت.
+
+U|a2_transporte|المواصلات والاتجاهات|Transporte y direcciones|تسأل عن الطريق وتستخدم المترو والأتوبيس.
+W|el metro|المترو|المترو|noun|المواصلات||el ˈme.tɾo
+W|el autobús|الأتوبيس|الأتوبيس|noun|المواصلات||el au.toˈβus
+W|el tren|القطار|القطر|noun|المواصلات||el tɾen
+W|el taxi|التاكسي|التاكسي|noun|المواصلات||el ˈtak.si
+W|la estación|المحطة|المحطة|noun|المواصلات||la es.taˈθjon
+W|la parada|الموقف|الموقف|noun|المواصلات||la paˈɾa.ða
+W|el billete sencillo|تذكرة اتجاه واحد|تذكرة اتجاه واحد|phrase|المواصلات||el biˈʝe.te senˈθi.ʝo
+W|el abono|الاشتراك الشهري|الاشتراك|noun|المواصلات||el aˈβo.no
+W|el andén|الرصيف|الرصيف|noun|المواصلات||el anˈden
+W|la línea|الخط|الخط|noun|المواصلات||la ˈli.ne.a
+W|el transbordo|التحويل بين الخطوط|التحويل|noun|المواصلات||el tɾansˈboɾ.ðo
+W|la derecha|اليمين|اليمين|noun|المواصلات||la deˈɾe.tʃa
+W|la izquierda|الشمال|الشمال|noun|المواصلات||la iθˈkjeɾ.ða
+W|todo recto|على طول|على طول|phrase|المواصلات||ˈto.ðo ˈrek.to
+W|la esquina|الناصية|الناصية|noun|المواصلات||la esˈki.na
+W|el semáforo|إشارة المرور|الإشارة|noun|المواصلات||el seˈma.fo.ɾo
+W|la plaza|الميدان|الميدان|noun|المواصلات||la ˈpla.θa
+W|el cruce|التقاطع|التقاطع|noun|المواصلات||el ˈkɾu.θe
+W|la distancia|المسافة|المسافة|noun|المواصلات||la disˈtan.θja
+W|cerrar|يغلق|يقفل|verb|المواصلات||θeˈraɾ
+W|subir|يركب / يصعد|يركب|verb|المواصلات||suˈβiɾ
+W|bajar|ينزل|ينزل|verb|المواصلات||baˈxaɾ
+W|girar|يلف|يلف|verb|المواصلات||xiˈɾaɾ
+W|cruzar|يعبر|يعدي|verb|المواصلات||kɾuˈθaɾ
+W|seguir|يكمل / يتبع|يكمل|verb|المواصلات||seˈɣiɾ
+W|perdido|تائه|تايه|adj|المواصلات||peɾˈði.ðo
+W|el mapa|الخريطة|الخريطة|noun|المواصلات||el ˈma.pa
+S|¿Dónde está la estación de metro más cercana?|أين أقرب محطة مترو؟|أقرب محطة مترو فين؟
+S|¿Cuánto cuesta un billete sencillo?|كم سعر تذكرة اتجاه واحد؟|تذكرة الاتجاه الواحد بكام؟
+S|Tiene que cambiar en la línea dos.|يجب أن تغيّر في الخط الثاني.|لازم تحوّل في الخط التاني.
+S|Siga todo recto y luego gire a la izquierda.|اتبع على طول ثم لف يسارًا.|كمّل على طول وبعدين لف شمال.
+S|¿Este autobús va al centro?|هل يذهب هذا الأتوبيس للمركز؟|الأتوبيس ده رايح الداون تاون؟
+S|Bajo en la próxima parada.|أنزل في الموقف القادم.|بنزل في الموقف اللي جاي.
+
+U|a2_compras|التسوق والأسواق|De compras|تشتري وتفاصل وتسأل عن المقاسات والأسعار.
+W|el mercado|السوق|السوق|noun|التسوق||el meɾˈka.ðo
+W|el supermercado|السوبرماركت|السوبر ماركت|noun|التسوق||el su.peɾ.maɾˈka.ðo
+W|la caja|الكاشير|الكاشير|noun|التسوق||la ˈka.xa
+W|el precio|السعر|السعر|noun|التسوق||el ˈpɾe.θjo
+W|la oferta|العرض|العرض|noun|التسوق||la oˈfeɾ.ta
+W|la rebaja|التخفيض|التخفيض|noun|التسوق||la reˈβa.xa
+W|el descuento|الخصم|الخصم|noun|التسوق||el desˈkwen.to
+W|la factura|الفاتورة|الفاتورة|noun|التسوق||la fakˈtu.ɾa
+W|el recibo|الإيصال|الإيصال|noun|التسوق||el reˈθi.βo
+W|el cambio|الباقي / التغيير|الباقي|noun|التسوق||el ˈkam.bjo
+W|la bolsa|الكيس|الكيس|noun|التسوق||la ˈbol.sa
+W|el probador|غرفة القياس|غرفة القياس|noun|التسوق||el pɾo.βaˈðoɾ
+W|la talla|المقاس|المقاس|noun|التسوق||la ˈta.ʝa
+W|el color|اللون|اللون|noun|التسوق||el koˈloɾ
+W|devolver|يرجع|يرجّع|verb|التسوق||de.βolˈβeɾ
+W|pagar|يدفع|يدفع|verb|التسوق||paˈɣaɾ
+W|en efectivo|نقدًا|كاش|phrase|التسوق||en e.fekˈti.βo
+W|con tarjeta|بالكارت|بالكارت|phrase|التسوق||kon taɾˈxe.ta
+W|gratis|مجانًا|ببلاش|adj|التسوق||ˈɡɾa.tis
+W|abierto|مفتوح|مفتوح|adj|التسوق||aˈβjeɾ.to
+W|cerrado|مغلق|مقفول|adj|التسوق||θeˈra.ðo
+W|el horario|مواعيد العمل|المواعيد|noun|التسوق||el oˈɾa.ɾjo
+W|el dependiente|البائع|البائع|noun|التسوق||el de.penˈdjen.te
+W|la garantía|الضمان|الضمان|noun|التسوق||la ɡa.ɾanˈti.a
+W|reclamar|يسترد / يشتكي|يشتكي|verb|التسوق||re.klaˈmaɾ
+S|¿Cuánto cuesta esta camiseta?|كم سعر هذا التي شيرت؟|التيشيرت ده بكام؟
+S|¿Tienen una talla más pequeña?|هل عندكم مقاس أصغر؟|عندكم مقاس أصغر؟
+S|¿Puedo pagar con tarjeta?|هل يمكنني الدفع بالبطاقة؟|أقدر أدفع بالكارت؟
+S|¿Me da el recibo, por favor?|هل تعطيني الإيصال، من فضلك؟|تديني الإيصال لو سمحت؟
+S|Quiero devolver esto, no me queda bien.|أريد إرجاع هذا، إنه لا يناسبني.|عايز أرجّع ده، مش على مقاسي.
+S|El mercado abre a las ocho y cierra a las diez.|السوق يفتح الثامنة ويغلق العاشرة.|السوق بيفتح تمانية ويقفل عشرة.
+
+U|a2_banco|البنك والخدمات|El banco|تفتح حساب وتسحب وتستفسر عن الخدمات.
+W|el banco|البنك|البنك|noun|البنك||el ˈbaŋ.ko
+W|la tarjeta de crédito|بطاقة الائتمان|كارت الائتمان|phrase|البنك||la taɾˈxe.ta de ˈkɾe.ði.to
+W|la tarjeta de débito|بطاقة الخصم|كارت الخصم|phrase|البنك||la taɾˈxe.ta de ˈde.βi.to
+W|el cajero automático|ماكينة الصراف|الماكينة|phrase|البنك||el kaˈxe.ɾo au.toˈma.ti.ko
+W|la sucursal|الفرع|الفرع|noun|البنك||la su.kuɾˈsal
+W|el préstamo|القرض|القرض|noun|البنك||el ˈpɾes.ta.mo
+W|el interés|الفائدة|الفايدة|noun|البنك||el in.teˈɾes
+W|el saldo|الرصيد|الرصيد|noun|البنك||el ˈsal.do
+W|la transferencia|التحويل البنكي|التحويل|noun|البنك||la tɾans.feˈɾen.θja
+W|el ingreso|الإيداع|الإيداع|noun|البنك||el iŋˈɡɾe.so
+W|la retirada|السحب|السحب|noun|البنك||la re.tiˈɾa.ða
+W|la firma|التوقيع|التوقيع|noun|البنك||la ˈfiɾ.ma
+W|el documento|المستند|المستند|noun|البنك||el do.kuˈmen.to
+W|abrir una cuenta|يفتح حسابًا|يفتح حساب|phrase|البنك||aˈβɾiɾ ˈu.na ˈkwen.ta
+W|sacar dinero|يسحب نقودًا|يسحب فلوس|phrase|البنك||saˈkaɾ diˈne.ɾo
+W|ingresar|يودع|يودع|verb|البنك||iŋ.xeˈsaɾ
+W|firmar|يوقّع|يوقّع|verb|البنك||fiɾˈmaɾ
+W|el titular|صاحب الحساب|صاحب الحساب|noun|البنك||el ti.tuˈlaɾ
+W|la comisión|العمولة|العمولة|noun|البنك||la ko.miˈsjon
+W|el tipo de cambio|سعر الصرف|سعر الصرف|phrase|البنك||el ˈti.po de ˈkam.bjo
+W|la oficina de correos|مكتب البريد|البوسطة|phrase|البنك||la o.fiˈθi.na de koˈre.os
+W|el envío|الإرسال|الإرسال|noun|البنك||el emˈbi.o
+W|el paquete|الطرد|الطرد|noun|البنك||el paˈke.te
+S|Quiero abrir una cuenta, por favor.|أريد فتح حساب، من فضلك.|عايز أفتح حساب لو سمحت.
+S|¿Dónde está el cajero automático más cercano?|أين أقرب ماكينة صراف؟|أقرب ماكينة فين؟
+S|No puedo sacar dinero de esta tarjeta.|لا أستطيع السحب من هذا الكارت.|مش قادر أسحب من الكارت ده.
+S|¿Cuánto es la comisión por transferencia?|كم عمولة التحويل؟|عمولة التحويل كام؟
+S|Necesito mi saldo actual.|أحتاج رصيدي الحالي.|محتاج الرصيد الحالي.
+S|Quiero enviar este paquete a Egipto.|أريد إرسال هذا الطرد لمصر.|عايز أبعت الطرد ده لمصر.
+
+U|a2_salud|الصحة والصيدلية|Salud y farmacia|توصف أعراضك وتشتري دواء وتطلب مساعدة.
+W|la salud|الصحة|الصحة|noun|الصحة||la saˈluð
+W|el médico|الطبيب|الدكتور|noun|الصحة||el ˈme.ði.ko
+W|la farmacia|الصيدلية|الصيدلية|noun|الصحة||la faɾˈma.θja
+W|el hospital|المستشفى|المستشفى|noun|الصحة||el os.piˈtal
+W|la cita|الموعد|الميعاد|noun|الصحة||la ˈθi.ta
+W|el dolor|الألم|الوجع|noun|الصحة||el doˈloɾ
+W|la fiebre|الحمى|السخونية|noun|الصحة||la ˈfje.βɾe
+W|la tos|الكحة|الكحة|noun|الصحة||la tos
+W|el resfriado|نزلة برد|برد|noun|الصحة||el resˈfɾja.ðo
+W|la cabeza|الرأس|الدماغ|noun|الصحة||la kaˈβe.θa
+W|el estómago|المعدة|المعدة|noun|الصحة||el esˈto.ma.ɣo
+W|la garganta|الحلق|الزور|noun|الصحة||la ɡaɾˈɣan.ta
+W|la espalda|الظهر|الضهر|noun|الصحة||la esˈpal.da
+W|la receta|الروشتة|الروشتة|noun|الصحة||la reˈθe.ta
+W|la pastilla|القرص / الحباية|الحباية|noun|الصحة||la pasˈti.ʝa
+W|el jarabe|الشراب|الشراب|noun|الصحة||el xaˈɾa.βe
+W|la inyección|الحقنة|الحقنة|noun|الصحة||la in.jekˈθjon
+W|doler|يؤلم|يوجع|verb|الصحة||doˈleɾ
+W|me duele|يؤلمني|بيوجعني|phrase|الصحة||me ˈdwe.le
+W|tomar|يأخذ / يتناول|ياخد|verb|الصحة||toˈmaɾ
+W|descansar|يرتاح|يرتاح|verb|الصحة||des.kanˈsaɾ
+W|el seguro médico|التأمين الصحي|التأمين الصحي|phrase|الصحة||el seˈɣu.ɾo ˈme.ði.ko
+W|la urgencia|الطوارئ|الطوارئ|noun|الصحة||la uɾˈxen.θja
+W|grave|خطير|خطير|adj|الصحة||ˈɡɾa.βe
+S|Me duele la cabeza y tengo fiebre.|رأسي يؤلمني وعندي حمى.|دماغي بتوجعني وعندي سخونية.
+S|Necesito una cita con el médico.|أحتاج موعدًا مع الطبيب.|محتاج ميعاد مع الدكتور.
+S|¿Tiene algo para la tos?|هل عندك شيء للكحة؟|عندك حاجة للكحة؟
+S|Soy alérgico a la penicilina.|لدي حساسية من البنسلين.|عندي حساسية من البنسلين.
+S|Tomo una pastilla cada ocho horas.|آخذ قرصًا كل ثماني ساعات.|باخد حباية كل تمان ساعات.
+S|¿Dónde está la farmacia de guardia?|أين الصيدلية المناوبة؟|صيدلية الحراسة فين؟
+
+U|a2_telefono|المكالمات والمواعيد|Llamadas y citas|تتكلم في التليفون وتحدد مواعيد وتفهم رسائل.
+W|la llamada|المكالمة|المكالمة|noun|المكالمات||la ʝaˈma.ða
+W|el teléfono|التليفون|التليفون|noun|المكالمات||el teˈle.fo.no
+W|el móvil|الموبايل|الموبايل|noun|المكالمات||el ˈmo.βil
+W|el mensaje|الرسالة|الرسالة|noun|المكالمات||el menˈsa.xe
+W|el correo electrónico|البريد الإلكتروني|الإيميل|phrase|المكالمات||el koˈre.o e.lekˈtɾo.ni.ko
+W|la dirección|العنوان|العنوان|noun|المكالمات||la di.ɾekˈθjon
+W|el número|الرقم|الرقم|noun|المكالمات||el ˈnu.me.ɾo
+W|la cita médica|موعد طبي|ميعاد دكتور|phrase|المكالمات||la ˈθi.ta ˈme.ði.ka
+W|la cita previa|موعد مسبق|ميعاد مسبق|phrase|المكالمات||la ˈθi.ta ˈpɾe.βja
+W|marcar|يتصل / يطلب رقمًا|يتصل|verb|المكالمات||maɾˈkaɾ
+W|contestar|يرد|يرد|verb|المكالمات||kon.tesˈtaɾ
+W|colgar|يغلق المكالمة|يقفل|verb|المكالمات||kolˈɣaɾ
+W|esperar|ينتظر|يستنى|verb|المكالمات||es.peˈɾaɾ
+W|confirmar|يؤكد|يأكد|verb|المكالمات||kon.fiɾˈmaɾ
+W|avisar|يخبر / ينبه|يبلّغ|verb|المكالمات||a.βiˈsaɾ
+W|disculpar|يعتذر|يعتذر|verb|المكالمات||dis.kulˈpaɾ
+W|libre|فاضي|فاضي|adj|المكالمات||ˈli.βɾe
+W|la señal|الإشارة|الشبكة|noun|المكالمات||la seˈɲal
+W|la batería|البطارية|البطارية|noun|المكالمات||la ba.teˈɾi.a
+W|el contestador|الرد الآلي|الرد الآلي|noun|المكالمات||el kon.tes.taˈðoɾ
+W|¿diga?|آلو؟|آلو؟|interj|المكالمات||ˈdi.ɣa
+W|al habla|أتكلم (أنا)|أتكلم|phrase|المكالمات||al ˈa.βla
+S|¿Diga? Hola, soy Ahmed.|آلو؟ مرحبًا، أنا أحمد.|آلو؟ أهلاً، أنا أحمد.
+S|¿Puedo hablar con la señora López, por favor?|هل يمكنني التحدث مع السيدة لوبيز، من فضلك؟|أقدر أتكلم مع مدام لوبيز لو سمحت؟
+S|Quiero pedir una cita para el lunes.|أريد تحديد موعد للاثنين.|عايز أحجز ميعاد للاتنين.
+S|Lo siento, el médico está ocupado.|آسف، الطبيب مشغول.|معلش، الدكتور مشغول.
+S|Le mando los datos por correo electrónico.|سأرسل لك البيانات بالبريد الإلكتروني.|هبعتلك البيانات على الإيميل.
+S|No hay señal en el metro.|لا توجد إشارة في المترو.|مفيش شبكة في المترو.
+
+U|a2_problemas|الشكاوى والمشاكل|Quejas y problemas|تشتكي وتحل مشاكل بسيطة.
+W|el problema|المشكلة|المشكلة|noun|الشكاوى||el pɾoˈble.ma
+W|la solución|الحل|الحل|noun|الشكاوى||la so.luˈθjon
+W|el error|الخطأ|الغلط|noun|الشكاوى||el eˈroɾ
+W|la avería|العطل|العطل|noun|الشكاوى||la a.βeˈɾi.a
+W|la espera|الانتظار|الاستنى|noun|الشكاوى||la esˈpe.ɾa
+W|el ruido|الضوضاء|الزعيق|noun|الشكاوى||el ˈrwi.ðo
+W|la suciedad|الوسخ|الوسخ|noun|الشكاوى||la su.θjeˈðað
+W|el humo|الدخان|الدخان|noun|الشكاوى||el ˈu.mo
+W|la pérdida|الضياع|الضياع|noun|الشكاوى||la ˈpeɾ.ði.ða
+W|explicar|يشرح|يشرح|verb|الشكاوى||eks.pliˈkaɾ
+W|solucionar|يحل|يحل|verb|الشكاوى||so.lu.θjoˈnaɾ
+W|devolver el dinero|يرد المال|يرجّع الفلوس|phrase|الشكاوى||de.βolˈβeɾ el diˈne.ɾo
+W|está roto|تالف|مكسور|phrase|الشكاوى||esˈta ˈro.to
+W|no funciona|لا يعمل|مش شغال|phrase|الشكاوى||no funˈθjo.na
+W|falta|ناقص|ناقص|verb|الشكاوى||ˈfal.ta
+W|equivocado|مخطئ|غلط|adj|الشكاوى||e.ki.βoˈka.ðo
+W|urgente|عاجل|مستعجل|adj|الشكاوى||uɾˈxen.te
+W|lo siento|أنا آسف|أنا آسف|phrase|الشكاوى||lo ˈsjen.to
+W|tiene razón|أنت على حق|كلامك صح|phrase|الشكاوى||ˈtje.ne raˈθon
+W|de acuerdo|موافق|ماشي / تمام|phrase|الشكاوى||de aˈkweɾ.ðo
+S|Disculpe, hay un problema con mi pedido.|عفوًا، هناك مشكلة في طلبي.|لو سمحت، في مشكلة في الأوردر بتاعي.
+S|El aire acondicionado no funciona y hace mucho calor.|المكيف لا يعمل والجو حار جدًا.|التكييف مش شغال والجو حر أوي.
+S|Esto está roto y quiero devolverlo.|هذا مكسور وأريد إرجاعه.|ده مكسور وعايز أرجّعه.
+S|Falta un café en mi pedido.|قهوة ناقصة في طلبي.|قهوة ناقصة في الأوردر.
+S|Tiene razón, lo solucionamos ahora.|أنت على حق، سنحلها الآن.|كلامك صح، هنحلها دلوقتي.
+S|Quiero hablar con el responsable.|أريد التحدث مع المسؤول.|عايز أتكلم مع المسؤول.
+
+U|a2_ciudad|المدينة والأماكن|La ciudad|تتعرف على أماكن المدينة وتوصفها.
+W|la ciudad|المدينة|المدينة|noun|المدينة||la θjuˈðað
+W|el centro|المركز|الوسط|noun|المدينة||el ˈθen.tɾo
+W|la calle|الشارع|الشارع|noun|المدينة||la ˈka.ʝe
+W|el barrio|الحي|الحي|noun|المدينة||el ˈba.rjo
+W|la iglesia|الكنيسة|الكنيسة|noun|المدينة||la iˈɣle.sja
+W|la mezquita|المسجد|الجامع|noun|المدينة||la mezˈki.ta
+W|el museo|المتحف|المتحف|noun|المدينة||el muˈse.o
+W|el parque|الحديقة|الجنينة|noun|المدينة||el ˈpaɾ.ke
+W|la biblioteca|المكتبة|المكتبة|noun|المدينة||la bi.βljoˈte.ka
+W|la comisaría|قسم الشرطة|القسم|noun|المدينة||la ko.mi.saˈɾi.a
+W|el ayuntamiento|البلدية|المحافظة|noun|المدينة||el a.ʝun.taˈmjen.to
+W|la playa|الشاطئ|البحر|noun|المدينة||la ˈpla.ʝa
+W|el río|النهر|النيل / النهر|noun|المدينة||el ˈri.o
+W|el puente|الكوبري|الكوبري|noun|المدينة||el ˈpwen.te
+W|el edificio|المبنى|العمارة|noun|المدينة||el e.ðiˈfi.θjo
+W|el barrio antiguo|الحي القديم|البلد القديمة|phrase|المدينة||el ˈba.rjo anˈti.ɣwo
+W|cerca de|قريب من|قريب من|phrase|المدينة||ˈθeɾ.ka de
+W|lejos de|بعيد عن|بعيد عن|phrase|المدينة||ˈle.xos de
+W|al lado de|بجانب|جنب|phrase|المدينة||al ˈla.ðo de
+W|enfrente de|أمام|قصاد|phrase|المدينة||emˈfɾen.te de
+W|entre|بين|بين|phrase|المدينة||ˈen.tɾe
+S|Mi barrio está cerca del centro.|حيّي قريب من المركز.|حيّي قريب من الوسط.
+S|El museo está enfrente de la iglesia.|المتحف أمام الكنيسة.|المتحف قصاد الكنيسة.
+S|Hay un puente entre las dos plazas.|هناك كوبري بين الميدانين.|في كوبري بين الميدانين.
+S|La farmacia está al lado del hospital.|الصيدلية بجانب المستشفى.|الصيدلية جنب المستشفى.
+S|Vivo lejos del centro, en un barrio tranquilo.|أعيش بعيدًا عن المركز، في حي هادئ.|عايش بعيد عن الوسط، في حي هادي.
+S|¿Cómo puedo llegar al museo?|كيف أصل إلى المتحف؟|أوصل للمتحف إزاي؟
+
+U|a2_frases|عبارات المواقف الجاهزة|Frases para situaciones|عبارات جاهزة تستخدمها فورًا في المقهى والمطعم والفندق والشارع — وكلها موجودة في مواقف الحياة اليومية داخل التطبيق.
+W|Buenas noches, hasta mañana|تصبح على خير، إلى الغد|تصبح على خير، لبكرة|phrase|عبارات المواقف||ˈbwe.nas ˈno.tʃes ˈas.ta maˈɲa.na
+W|Busco una camiseta|أبحث عن تي شيرت|بدور على تيشيرت|phrase|عبارات المواقف||ˈbus.ko ˈu.na ka.miˈse.ta
+W|Disculpa|عفوًا|لو سمحت (غير رسمي)|interj|عبارات المواقف||disˈkul.pa
+W|Hablo árabe|أتحدث العربية|بتكلم عربي|phrase|عبارات المواقف||ˈa.βlo ˈa.ɾa.βe
+W|Me duele la cabeza|رأسي يؤلمني|دماغي بتوجعني|phrase|عبارات المواقف||me ˈdwe.le la kaˈβe.θa
+W|Me llamo...|اسمي...|اسمي...|phrase|عبارات المواقف||me ˈʝa.mo
+W|Me siento mareado|أشعر بدوار|حاسس بدوخة|phrase|عبارات المواقف||me ˈsjen.to ma.ɾeˈa.ðo
+W|Muchas gracias|شكرًا جزيلًا|شكراً جزيلاً|phrase|عبارات المواقف||ˈmu.tʃas ˈɣɾa.θjas
+W|Necesito la llave|أحتاج المفتاح|محتاج المفتاح|phrase|عبارات المواقف||ne.θeˈsi.to la ˈʝa.βe
+W|Para mí, una ensalada|بالنسبة لي، سلطة|ليّا أنا، سلطة|phrase|عبارات المواقف||ˈpa.ɾa mi ˈu.na en.saˈla.ða
+W|Perdona, ¿dónde está la estación?|عفوًا، أين المحطة؟|لو سمحت، المحطة فين؟|phrase|عبارات المواقف||peɾˈðo.na ˈdon.de esˈta la es.taˈθjon
+W|Quiero agua, por favor|أريد ماءً، من فضلك|عايز مية لو سمحت|phrase|عبارات المواقف||ˈkje.ɾo ˈa.ɣwa poɾ faˈβoɾ
+W|Solo estoy mirando|أنا أتفرج فقط|بتفرج بس|phrase|عبارات المواقف||ˈso.lo esˈtoj miˈɾan.do
+W|Tengo fiebre|عندي حمى|عندي سخونية|phrase|عبارات المواقف||ˈteŋ.ɡo ˈfje.βɾe
+W|Tengo una reserva|لدي حجز|عندي حجز|phrase|عبارات المواقف||ˈteŋ.ɡo ˈu.na reˈseɾ.βa
+W|Tengo una reserva para esta noche|لدي حجز لليلة الحالية|عندي حجز لليلة دي|phrase|عبارات المواقف||ˈteŋ.ɡo ˈu.na reˈseɾ.βa ˈpa.ɾa ˈes.ta ˈno.tʃe
+W|Un billete de ida y vuelta|تذكرة ذهاب وعودة|تذكرة رايح جاي|phrase|عبارات المواقف||un biˈʝe.te de ˈi.ða i ˈbwel.ta
+W|¿A qué hora se sirve el desayuno?|في أي ساعة يُقدَّم الفطور؟|الفطار بيتقدم الساعة كام؟|phrase|عبارات المواقف||a ke ˈo.ɾa se ˈsiɾ.βe el de.saˈʝu.no
+W|¿Cuánto cuesta el billete?|كم سعر التذكرة؟|التذكرة بكام؟|phrase|عبارات المواقف||ˈkwan.to ˈkwes.ta el biˈʝe.te
+W|¿Cuánto cuestan?|كم سعرهم؟|دول بكام؟|phrase|عبارات المواقف||ˈkwan.to ˈkwes.tan
+W|¿Dónde compro el billete?|من أين أشتري التذكرة؟|أشتري التذكرة منين؟|phrase|عبارات المواقف||ˈdon.de ˈkom.pɾo el biˈʝe.te
+W|¿Dónde está la farmacia más cercana?|أين أقرب صيدلية؟|أقرب صيدلية فين؟|phrase|عبارات المواقف||ˈdon.de esˈta la faɾˈma.θja mas θeɾˈka.na
+W|¿Dónde está la parada del autobús?|أين موقف الأتوبيس؟|موقف الأتوبيس فين؟|phrase|عبارات المواقف||ˈdon.de esˈta la paˈɾa.ða del au.toˈβus
+W|¿El desayuno está incluido?|هل الفطور مشمول؟|الفطار مشمول؟|phrase|عبارات المواقف||el de.saˈʝu.no esˈta in.klwi.ðo
+W|¿Me pone un café con leche?|هل تعطيني قهوة بالحليب؟|تجيبلي قهوة بلبن؟|phrase|عبارات المواقف||me ˈpo.ne un kaˈfe kon ˈle.tʃe
+W|¿Puedo ir andando?|هل أستطيع الذهاب مشيًا؟|أقدر أروح مشي؟|phrase|عبارات المواقف||ˈpwe.ðo iɾ anˈdan.do
+W|¿Puedo ver la carta?|هل أستطيع رؤية القائمة؟|أشوف المنيو؟|phrase|عبارات المواقف||ˈpwe.ðo beɾ la ˈkaɾ.ta
+W|¿Qué me recomiendas?|بماذا تنصحني؟|ترشحلي إيه؟|phrase|عبارات المواقف||ke me re.koˈmjen.das
+S|Entro y digo: «Buenos días», y luego pido un café.|أدخل وأقول «صباح الخير»، ثم أطلب قهوة.|بدخل وأقول «صباح الخير»، وبعدين أطلب قهوة.
+S|Si no quiero comprar nada, digo: «Solo estoy mirando».|إذا لم أرغب في شراء شيء أقول: «أنا أتفرج فقط».|لو مش عايز أشتري حاجة أقول: «بتفرج بس».
+S|En el hotel pregunto: «¿El desayuno está incluido?»|في الفندق أسأل: «هل الفطور مشمول؟»|في الفندق بسأل: «الفطار مشمول؟»
+
+U|a2_deportes|الرياضة والوقت الحر|Deporte y tiempo libre|تتكلم عن الرياضة والهوايات والوقت الحر.
+W|el deporte|الرياضة|الرياضة|noun|الرياضة||el deˈpoɾ.te
+W|el partido|المباراة|الماتش|noun|الرياضة||el paɾˈti.ðo
+W|el equipo|الفريق|الفريق|noun|الرياضة||el eˈki.po
+W|el jugador|اللاعب|اللاعب|noun|الرياضة||el xu.ɣaˈðoɾ
+W|el entrenador|المدرب|الكوتش|noun|الرياضة||el en.tɾe.naˈðoɾ
+W|el estadio|الملعب|الاستاد|noun|الرياضة||el esˈta.ðjo
+W|el gol|الهدف|الجون|noun|الرياضة||el ɡol
+W|la natación|السباحة|السباحة|noun|الرياضة||la na.taˈθjon
+W|el gimnasio|الجيم|الجيم|noun|الرياضة||el ximˈna.sjo
+W|la bicicleta|الدراجة|العجلة|noun|الرياضة||la bi.θiˈkle.ta
+W|correr|يجري|يجري|verb|الرياضة||koˈreɾ
+W|nadar|يسبح|يعوم|verb|الرياضة||naˈðaɾ
+W|jugar|يلعب|يلعب|verb|الرياضة||xuˈɣaɾ
+W|ganar|يفوز|يكسب|verb|الرياضة||ɡaˈnaɾ
+W|perder|يخسر|يخسر|verb|الرياضة||peɾˈðeɾ
+W|empatar|يتعادل|يتعادل|verb|الرياضة||em.paˈtaɾ
+W|entrenar|يتدرب|يتمرن|verb|الرياضة||en.tɾeˈnaɾ
+W|el aficionado|المشجع|المشجع|noun|الرياضة||el a.fi.θjoˈna.ðo
+W|la entrada|تذكرة الدخول|التذكرة|noun|الرياضة||la enˈtɾa.ða
+W|el descanso|الاستراحة|البريك|noun|الرياضة||el desˈkan.so
+W|la afición|الهواية|الهواية|noun|الرياضة||la a.fiˈθjon
+W|el tiempo libre|الوقت الحر|الوقت الفاضي|phrase|الرياضة||el ˈtjem.po ˈli.βɾe
+S|Juego al fútbol con mis amigos los viernes.|ألعب كرة القدم مع أصدقائي أيام الجمعة.|بلعب كورة مع أصحابي يوم الجمعة.
+S|Mi equipo ganó el partido tres a uno.|فريقي فاز بالمباراة ثلاثة مقابل واحد.|فريقي كسب الماتش تلاتة مقابل واحد.
+S|Prefiero nadar porque no me gusta correr.|أفضل السباحة لأنني لا أحب الجري.|بفضّل أعوم عشان مش بحب أجري.
+S|¿Cuánto cuesta la entrada del estadio?|كم سعر تذكرة الملعب؟|تذكرة الاستاد بكام؟
+S|Entreno en el gimnasio tres veces por semana.|أتدرب في الجيم ثلاث مرات أسبوعيًا.|بتمرن في الجيم تلات مرات في الأسبوع.
+
+U|a2_fiestas|الاحتفالات والمناسبات|Fiestas y celebraciones|تتكلم عن الأعياد والحفلات والمناسبات.
+W|la fiesta|الحفلة|الحفلة|noun|الاحتفالات||la ˈfjes.ta
+W|el cumpleaños|عيد الميلاد|عيد الميلاد|noun|الاحتفالات||el kum.pleˈa.ɲos
+W|la boda|الزفاف|الفرح|noun|الاحتفالات||la ˈbo.ða
+W|el regalo|الهدية|الهدية|noun|الاحتفالات||el reˈɣa.lo
+W|la invitación|الدعوة|الدعوة|noun|الاحتفالات||la im.bi.taˈθjon
+W|el invitado|المدعو|المعزوم|noun|الاحتفالات||el im.biˈta.ðo
+W|la tarta|التورتة|التورتة|noun|الاحتفالات||la ˈtaɾ.ta
+W|las velas|الشموع|الشمع|noun|الاحتفالات||las ˈbe.las
+W|el brindis|الشرب للنخب|النخب|noun|الاحتفالات||el ˈbɾin.dis
+W|la música|الموسيقى|المزيكا|noun|الاحتفالات||la ˈmu.si.ka
+W|el baile|الرقص|الرقص|noun|الاحتفالات||el ˈbai.le
+W|la decoración|الديكور|الديكور|noun|الاحتفالات||la de.ko.ɾaˈθjon
+W|Ramadán|رمضان|رمضان|noun|الاحتفالات||ra.maˈðan
+W|la Nochevieja|ليلة رأس السنة|ليلة رأس السنة|noun|الاحتفالات||la no.tʃeˈβje.xa
+W|celebrar|يحتفل|يحتفل|verb|الاحتفالات||θe.leˈβɾaɾ
+W|invitar|يدعو|يعزم|verb|الاحتفالات||im.biˈtaɾ
+W|felicitar|يهنئ|يهنئ|verb|الاحتفالات||fe.li.θiˈtaɾ
+W|brindar|يشرب للنخب|يعمل نخب|verb|الاحتفالات||bɾinˈdaɾ
+W|bailar|يرقص|يرقص|verb|الاحتفالات||baiˈlaɾ
+W|¡felicidades!|تهانينا!|مبروك!|interj|الاحتفالات||fe.li.θiˈða.ðes
+W|¡feliz cumpleaños!|عيد ميلاد سعيد!|عيد ميلاد سعيد!|interj|الاحتفالات||feˈliθ kum.pleˈa.ɲos
+W|¡que cumplas muchos más!|عقبال سنين كثيرة!|عقبال سنين كتير!|phrase|الاحتفالات||ke ˈkum.plas ˈmu.tʃos mas
+S|Mi hermana celebra su cumpleaños el sábado.|أختي تحتفل بعيد ميلادها السبت.|أختي بتحتفل بعيد ميلادها السبت.
+S|Te invito a la boda de mi primo.|أدعوك لزفاف ابن عمي.|بعتزمك على فرح ابن عمي.
+S|Traje un regalo para la fiesta.|أحضرت هدية للحفلة.|جبت هدية للحفلة.
+S|En Ramadán cenamos juntos toda la familia.|في رمضان نتناول العشاء معًا كل العائلة.|في رمضان بتعشى العيلة كلها مع بعض.
+S|¡Felicidades! Que tengas un año muy feliz.|تهانينا! أتمنى لك عامًا سعيدًا جدًا.|مبروك! سنة سعيدة عليك.
+S|Bailamos y brindamos hasta la medianoche.|رقصنا وشربنا للنخب حتى منتصف الليل.|رقصنا وعملنا نخب لحد نص الليل.
+
+U|a2_naturaleza|الطبيعة والحيوانات|Naturaleza y animales|تتكلم عن الحيوانات والطبيعة والطقس.
+W|el animal|الحيوان|الحيوان|noun|الطبيعة||el a.niˈmal
+W|el perro|الكلب|الكلب|noun|الطبيعة||el ˈpe.ro
+W|el gato|القط|القط|noun|الطبيعة||el ˈɡa.to
+W|el pájaro|الطائر|العصفور|noun|الطبيعة||el ˈpa.xa.ɾo
+W|el caballo|الحصان|الحصان|noun|الطبيعة||el kaˈβa.ʝo
+W|el pez|السمك|السمكة|noun|الطبيعة||el peθ
+W|el árbol|الشجرة|الشجرة|noun|الطبيعة||el ˈaɾ.βol
+W|la flor|الزهرة|الزهرة|noun|الطبيعة||la floɾ
+W|la montaña|الجبل|الجبل|noun|الطبيعة||la monˈta.ɲa
+W|el mar|البحر|البحر|noun|الطبيعة||el maɾ
+W|el desierto|الصحراء|الصحرا|noun|الطبيعة||el deˈsjeɾ.to
+W|el jardín|الحديقة|الجنينة|noun|الطبيعة||el xaɾˈðin
+W|la lluvia|المطر|المطرة|noun|الطبيعة||la ˈʝu.βja
+W|la nieve|الثلج|التلج|noun|الطبيعة||la ˈnje.βe
+W|el sol|الشمس|الشمس|noun|الطبيعة||el sol
+W|la luna|القمر|القمر|noun|الطبيعة||la ˈlu.na
+W|la estrella|النجمة|النجمة|noun|الطبيعة||la esˈtɾe.ʝa
+W|el campo|الريف|الريف|noun|الطبيعة||el ˈkam.po
+W|la isla|الجزيرة|الجزيرة|noun|الطبيعة||la ˈis.la
+W|cuidar|يعتني|يعتني|verb|الطبيعة||kwiˈðaɾ
+W|alimentar|يطعم|يطعم|verb|الطبيعة||a.li.menˈtaɾ
+W|pasear|يتنزه|يتمشى|verb|الطبيعة||pa.seˈaɾ
+S|Mi perro es pequeño y muy juguetón.|كلبي صغير ومرح جدًا.|كلبي صغير وبيعمل حركات أوي.
+S|Los fines de semana paseamos por el campo.|في نهاية الأسبوع نتنزه في الريف.|في الويك إند بنتمشى في الريف.
+S|En el desierto hace mucho calor por el día.|في الصحراء الجو حار جدًا نهارًا.|في الصحرا الجو حر أوي بالنهار.
+S|Hay que cuidar los animales y las plantas.|يجب العناية بالحيوانات والنباتات.|لازم نعتني بالحيوانات والنباتات.
+S|Esta noche la luna y las estrellas están claras.|هذه الليلة القمر والنجوم واضحة.|الليلة القمر والنجوم واضحين.
+
+U|a2_cocina|المطبخ والطبخ|La cocina|تطبخ وتفهم وصفات وتتكلم عن الطعام.
+W|la cocina|المطبخ|المطبخ|noun|الطبخ||la koˈθi.na
+W|el ingrediente|المكوّن|المكوّن|noun|الطبخ||el in.ɣɾeˈðjen.te
+W|la olla|الحلة|الحلة|noun|الطبخ||la ˈo.ʝa
+W|la sartén|المقلاة|الطاسة|noun|الطبخ||la saɾˈten
+W|el horno|الفرن|الفرن|noun|الطبخ||el ˈoɾ.no
+W|la cuchara|الملعقة|المعلقة|noun|الطبخ||la kuˈtʃa.ɾa
+W|el cuchillo|السكين|السكينة|noun|الطبخ||el kuˈtʃi.ʝo
+W|la sal|الملح|الملح|noun|الطبخ||la sal
+W|la pimienta|الفلفل|الفلفل|noun|الطبخ||la piˈmjen.ta
+W|el aceite|الزيت|الزيت|noun|الطبخ||el aˈθei.te
+W|el ajo|الثوم|التوم|noun|الطبخ||el ˈa.xo
+W|la cebolla|البصل|البصل|noun|الطبخ||la θeˈβo.ʝa
+W|el arroz|الأرز|الرز|noun|الطبخ||el aˈroθ
+W|el pollo|الدجاج|الفراخ|noun|الطبخ||el ˈpo.ʝo
+W|la carne|اللحم|اللحمة|noun|الطبخ||la ˈkaɾ.ne
+W|el pescado|السمك|السمك|noun|الطبخ||el pesˈka.ðo
+W|la verdura|الخضراوات|الخضار|noun|الطبخ||la beɾˈðu.ɾa
+W|la fruta|الفاكهة|الفاكهة|noun|الطبخ||la ˈfɾu.ta
+W|cortar|يقطع|يقطع|verb|الطبخ||koɾˈtaɾ
+W|freír|يقلي|يقلي|verb|الطبخ||fɾeˈiɾ
+W|hervir|يسلق|يسلق|verb|الطبخ||eɾˈβiɾ
+W|mezclar|يخلط|يخلط|verb|الطبخ||mesˈklaɾ
+W|servir|يقدّم|يقدّم|verb|الطبخ||seɾˈβiɾ
+W|la porción|الحصة|الحصة|noun|الطبخ||la poɾˈθjon
+S|Corto la cebolla y el ajo en trozos pequeños.|أقطع البصل والثوم قطعًا صغيرة.|بقطع البصل والتوم حتت صغيرة.
+S|Hierve el arroz veinte minutos y luego sírvelo.|اسلق الأرز عشرين دقيقة ثم قدمه.|اسلق الرز عشرين دقيقة وبعدين قدمه.
+S|Esta receta necesita sal, pimienta y aceite.|هذه الوصفة تحتاج ملحًا وفلفلًا وزيتًا.|الوصفة دي محتاجة ملح وفلفل وزيت.
+S|Freímos el pescado con un poco de aceite de oliva.|نقلي السمك بقليل من زيت الزيتون.|بنقلي السمك بشوية زيت زيتون.
+S|Prefiero las verduras al horno con la carne.|أفضل الخضار في الفرن مع اللحم.|بفضّل الخضار في الفرن مع اللحمة.
