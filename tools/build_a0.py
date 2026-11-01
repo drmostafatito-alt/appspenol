@@ -1,0 +1,252 @@
+#!/usr/bin/env python3
+"""Builds the A0 beginner track into content.json.
+
+- Idempotent: replaces any existing track with id "A0"; other tracks are untouched.
+- The A0 track is APPENDED so existing track indices (and saved progress keys
+  such as complete_0 / complete_1 and item ids) do not change.
+- Every item carries its own status. Only items passing the publish gate are "verified".
+  Letter-count facts are backed by RAE; other items stay "pending_verification".
+
+Item tuple: (type, es, ar_fusha, ar_egy, pronunciation, example_es, example_fusha, example_egy, note, topic)
+Usage: python tools/build_a0.py [content.json]
+"""
+import json
+import sys
+
+RAE_ALPHABET = "RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا"
+INTERNAL = "مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد"
+
+LETTERS = [
+    ("letter", "a", "الحرف a: صوت الفتحة 'آ' القصيرة", "الحرف a بيتنطق 'آ' قصيرة وواضحة", "آ قصيرة وواضحة", "casa", "بيت", "بيت", "الحرف a يُنطق دائمًا بصوت واحد", "الحروف والأصوات"),
+    ("letter", "b", "الحرف b: صوت الباء (ب)", "الحرف b بيتنطق باء", "ب", "bien", "جيد", "كويس", "b و v ينطقان بنفس الصوت", "الحروف والأصوات"),
+    ("letter", "c", "الحرف c قبل a / o / u: صوت الكاف (ك)", "c قبل a و o و u بتتنطق ك", "ك (قبل a و o و u)", "casa", "بيت", "بيت", "c قبل e أو i تُنطق كـ z (انظر ce / ci)", "الحروف والأصوات"),
+    ("sound", "ce / ci", "c قبل e أو i: صوت الثاء الإنجليزية (th في think)", "c قبل e و i بتتنطق ث زي th في think", "ث (مثل th في think)", "cena", "عشاء", "العشا", "هذا النطق الإسباني الأوروبي (قشتالي)", "الحروف والأصوات"),
+    ("letter", "d", "الحرف d: صوت الدال (د)", "الحرف d بيتنطق دال", "د (ناعمة بين حرفين متحركين)", "día", "يوم", "يوم", "بين حرفين متحركين تكون الـ d ناعمة", "الحروف والأصوات"),
+    ("letter", "e", "الحرف e: صوت الكسرة القصيرة (إِ)", "الحرف e بيتنطق إِ قصيرة ومفتوحة", "إِ قصيرة (مثل e في bed)", "mesa", "طاولة", "ترابيزة", "الحرف e قصير ومفتوح دائمًا", "الحروف والأصوات"),
+    ("letter", "f", "الحرف f: صوت الفاء (ف)", "الحرف f بيتنطق فاء", "ف", "foto", "صورة", "صورة", "f تُنطق كالفاء العربية", "الحروف والأصوات"),
+    ("letter", "g", "الحرف g قبل a / o / u: صوت الغين (غ)", "g قبل a و o و u بتتنطق غين", "غ (قبل a و o و u)", "gato", "قطة", "قطة", "g قبل e أو i تُنطق كالخاء (انظر ge / gi)", "الحروف والأصوات"),
+    ("sound", "ge / gi", "g قبل e أو i: صوت الخاء (خ)", "g قبل e و i بتتنطق خ", "خ (مثل خ في خبز)", "gente", "الناس", "ناس", "نفس صوت j تقريبًا", "الحروف والأصوات"),
+    ("letter", "h", "الحرف h: لا تُنطق أبدًا", "الحرف h ما بيتنطقش خالص", "صامتة (لا تُنطق)", "hola", "مرحبًا", "أهلاً", "h صامتة في الإسبانية", "الحروف والأصوات"),
+    ("letter", "i", "الحرف i: صوت 'إي' الطويلة (ي)", "الحرف i بيتنطق إي طويلة", "ي مفتوحة (مثل ee في see)", "sí", "نعم", "أيوه", "الحرف i يُنطق بنفس الطريقة دائمًا", "الحروف والأصوات"),
+    ("letter", "j", "الحرف j: صوت الخاء القوية (خ)", "الحرف j بيتنطق خاء قوية", "خ قوية (مثل خ في خليل)", "jugo", "عصير", "عصير", "j دائمًا صوت خاء", "الحروف والأصوات"),
+    ("letter", "k", "الحرف k: صوت الكاف (ك)", "الحرف k بيتنطق كاف", "ك", "kilo", "كيلوغرام", "كيلو", "نادر الاستخدام في الإسبانية", "الحروف والأصوات"),
+    ("letter", "l", "الحرف l: صوت اللام (ل)", "الحرف l بيتنطق لام", "ل", "luna", "قمر", "قمر", "l صوت واضح دائمًا", "الحروف والأصوات"),
+    ("letter", "m", "الحرف m: صوت الميم (م)", "الحرف m بيتنطق ميم", "م", "mamá", "أمي", "ماما", "m صوت واضح دائمًا", "الحروف والأصوات"),
+    ("letter", "n", "الحرف n: صوت النون (ن)", "الحرف n بيتنطق نون", "ن", "nombre", "اسم", "اسم", "n صوت واضح دائمًا", "الحروف والأصوات"),
+    ("letter", "ñ", "الحرف ñ: صوت 'ني' المختصرة", "ñ بتتنطق ني مختصرة زي ny في canyon", "ني (ny)", "año", "سنة", "سنة", "ñ حرف مستقل في الأبجدية الإسبانية", "الحروف والأصوات"),
+    ("letter", "o", "الحرف o: صوت 'أُو' القصيرة", "الحرف o بيتنطق أُو قصيرة", "أُو قصيرة ومغلقة", "poco", "قليل", "شوية", "o قصيرة وواضحة", "الحروف والأصوات"),
+    ("letter", "p", "الحرف p: صوت الباء بدون هواء قوي", "الحرف p بيتنطق ب خفيفة من غير نفس قوي", "ب خفيفة بدون دفعة هواء", "padre", "أب", "أبويا", "p أخف من الباء العربية", "الحروف والأصوات"),
+    ("letter", "q", "الحرف q: صوت الكاف دائمًا مع u", "q دايمًا مع u وبتتنطق ك", "ك (والـ u بعدها صامتة)", "qué", "ماذا", "إيه", "qu تُنطق ك، والـ u لا تُنطق قبل e و i", "الحروف والأصوات"),
+    ("letter", "r", "الحرف r: ضربة لسان خفيفة واحدة", "الحرف r بيتنطق ضربة لسان خفيفة", "ر خفيفة (ضربة واحدة)", "pero", "لكن", "بس", "r بين حرفين تُنطق بضربة واحدة", "الحروف والأصوات"),
+    ("sound", "rr", "الحرف rr: ر مرتعشة قوية", "rr بتتنطق ر مرتعشة قوية", "ر مرتعشة (تكرار اللسان)", "perro", "كلب", "كلب", "rr تُكتب مزدوجة وتُنطق بقوة", "الحروف والأصوات"),
+    ("letter", "s", "الحرف s: صوت السين (س)", "الحرف s بيتنطق سين", "س", "sol", "شمس", "شمس", "s صوت واضح دائمًا", "الحروف والأصوات"),
+    ("letter", "t", "الحرف t: صوت التاء بدون هواء قوي", "الحرف t بيتنطق تاء خفيفة", "ت خفيفة", "tú", "أنت", "إنت", "t أخف من التاء العربية", "الحروف والأصوات"),
+    ("letter", "u", "الحرف u: صوت 'و' الطويلة (مثل oo)", "الحرف u بيتنطق و طويلة", "و طويلة (مثل oo في boot)", "uno", "واحد", "واحد", "u يُنطق دائمًا بنفس الطريقة", "الحروف والأصوات"),
+    ("letter", "v", "الحرف v: نفس صوت الباء", "الحرف v بيتنطق زي الباء بالظبط", "ب (مثل b تمامًا)", "vaso", "كوب", "كوباية", "v و b نفس الصوت", "الحروف والأصوات"),
+    ("letter", "w", "الحرف w: حرف دخيل للكلمات الأجنبية", "الحرف w بيظهر في الكلمات الأجنبية", "و أو ف حسب الكلمة", "wifi", "واي فاي", "واي فاي", "w موجودة في كلمات مستعارة فقط", "الحروف والأصوات"),
+    ("letter", "x", "الحرف x: صوت 'كس'", "الحرف x بيتنطق كس", "كس", "taxi", "سيارة أجرة", "تاكسي", "x تُنطق كس في الغالب", "الحروف والأصوات"),
+    ("letter", "y", "الحرف y: صوت الياء (ي) مثل yes", "الحرف y بيتنطق ي زي yes", "ي (مثل y في yes)", "yo", "أنا", "أنا", "y في أول الكلمة صوت ي", "الحروف والأصوات"),
+    ("letter", "z", "الحرف z: صوت الثاء (th في think)", "الحرف z بيتنطق ث زي th في think", "ث (مثل th في think)", "zapato", "حذاء", "جزمة", "في إسبانيا الـ z ثاء، وفي أمريكا اللاتينية سين", "الحروف والأصوات"),
+    ("sound", "ch", "الحرف ch: صوت 'تش' (دِغراف)", "ch بتتنطق تش زي ch في church", "تش (مثل ch في church)", "chico", "ولد", "ولد", "ch دِغراف وليس حرفًا مستقلًا في الأبجدية", "الحروف والأصوات"),
+    ("sound", "ll", "الحرف ll: صوت الياء القوية (دِغراف)", "ll بتتنطق ي قوية زي y في yes", "ي قوية (مثل y في yes)", "llave", "مفتاح", "مفتاح", "ll دِغراف وليس حرفًا مستقلًا في الأبجدية", "الحروف والأصوات"),
+]
+
+VERBS_PRONOUNS_QUESTIONS_PHRASES = [
+    ("pronoun", "Yo", "أنا", "أنا", "يو", "Yo soy de Egipto.", "أنا من مصر.", "أنا من مصر.", "Yo = أنا", "الضمائر"),
+    ("pronoun", "Tú", "أنت (مع الصديق والقريب)", "إنت", "تو", "Tú eres amable.", "أنت لطيف.", "إنت لطيف.", "tú تُستخدم مع الأصدقاء والمقربين", "الضمائر"),
+    ("pronoun", "Usted", "حضرتك (للاحترام والغرباء)", "حضرتك", "ustéd", "Usted es muy amable.", "حضرتك لطيف جدًا.", "حضرتك لطيف أوي.", "usted تُستخدم مع الغرباء وكبار السن للاحترام", "الضمائر"),
+    ("pronoun", "Él", "هو", "هو", "إل", "Él es mi amigo.", "هو صديقي.", "هو صاحبي.", "él = هو", "الضمائر"),
+    ("pronoun", "Ella", "هي", "هي", "إيا", "Ella es mi hermana.", "هي أختي.", "هي أختي.", "ella = هي", "الضمائر"),
+    ("pronoun", "Nosotros", "نحن", "إحنا", "نوسوتروس", "Nosotros somos egipcios.", "نحن مصريون.", "إحنا مصريين.", "nosotros = نحن", "الضمائر"),
+    ("verb", "Soy", "أنا (هوية أو صفة ثابتة)", "أنا", "سُي", "Soy estudiante.", "أنا طالب.", "أنا طالب.", "soy من الفعل ser: للهوية والجنسية والمهنة", "الأفعال الأساسية"),
+    ("verb", "Eres", "أنتَ (هوية أو صفة ثابتة)", "إنت", "إيريس", "¿Eres egipcio?", "هل أنت مصري؟", "إنت مصري؟", "eres من الفعل ser", "الأفعال الأساسية"),
+    ("verb", "Es", "هو / هي / حضرتك (هوية أو صفة ثابتة)", "هو / هي", "إس", "Ella es médica.", "هي طبيبة.", "هي دكتورة.", "es من الفعل ser", "الأفعال الأساسية"),
+    ("verb", "Estoy", "أنا (حالة مؤقتة أو مكان)", "أنا", "إستوي", "Estoy cansado.", "أنا متعب.", "أنا تعبان.", "estoy من الفعل estar: للحالة المؤقتة والمكان", "الأفعال الأساسية"),
+    ("verb", "Estás", "أنتَ (حالة مؤقتة أو مكان)", "إنت", "إستاس", "¿Estás bien?", "هل أنت بخير؟", "إنت كويس؟", "estás من الفعل estar", "الأفعال الأساسية"),
+    ("verb", "Está", "هو / هي (حالة مؤقتة أو مكان)", "هو / هي", "إستا", "El baño está allí.", "الحمام هناك.", "الحمام هناك.", "está من الفعل estar", "الأفعال الأساسية"),
+    ("verb", "Tengo", "عندي / لديّ", "عندي", "تِنغو", "Tengo un hermano.", "لديّ أخ.", "عندي أخ.", "tengo من الفعل tener", "الأفعال الأساسية"),
+    ("verb", "Tienes", "عندك / لديك", "عندك", "تيينِس", "¿Tienes hermanos?", "هل لديك إخوة؟", "عندك إخوات؟", "tienes من الفعل tener", "الأفعال الأساسية"),
+    ("verb", "Tiene", "عنده / عندها / لديه", "عنده / عندها", "تيينِ", "Ella tiene un perro.", "لديها كلب.", "عندها كلب.", "tiene من الفعل tener", "الأفعال الأساسية"),
+    ("verb", "Quiero", "أريد", "عايز", "كيارو", "Quiero agua.", "أريد ماء.", "عايز مية.", "quiero من الفعل querer", "الأفعال الأساسية"),
+    ("verb", "Quieres", "تريد", "عايز", "كيايرِس", "¿Quieres café?", "هل تريد قهوة؟", "عايز قهوة؟", "quieres من الفعل querer", "الأفعال الأساسية"),
+    ("verb", "Voy", "أذهب", "رايح", "بوي", "Voy a casa.", "أذهب إلى البيت.", "رايح البيت.", "voy من الفعل ir", "الأفعال الأساسية"),
+    ("verb", "Vas", "تذهب", "رايح", "باس", "¿Adónde vas?", "إلى أين تذهب؟", "رايح فين؟", "vas من الفعل ir", "الأفعال الأساسية"),
+    ("question", "¿Qué?", "ماذا؟", "إيه؟", "كيه", "¿Qué es esto?", "ما هذا؟", "ده إيه؟", "qué = ماذا", "أسئلة"),
+    ("question", "¿Cómo?", "كيف؟", "إزاي؟", "كومو", "¿Cómo estás?", "كيف حالك؟", "عامل إيه؟", "cómo = كيف", "أسئلة"),
+    ("question", "¿Dónde?", "أين؟", "فين؟", "دونْدِ", "¿Dónde está la estación?", "أين المحطة؟", "المحطة فين؟", "dónde = أين", "أسئلة"),
+    ("question", "¿Cuándo?", "متى؟", "إمتى؟", "كوانْدو", "¿Cuándo llegas?", "متى تصل؟", "إمتى بتوصل؟", "cuándo = متى", "أسئلة"),
+    ("question", "¿Quién?", "من؟", "مين؟", "كيين", "¿Quién es ella?", "من هي؟", "دي مين؟", "quién = من", "أسئلة"),
+    ("question", "¿Cuánto?", "كم؟ (للسعر أو المقدار)", "بكام؟", "كوانتو", "¿Cuánto cuesta?", "كم يكلّف؟", "بكام؟", "cuánto = كم", "أسئلة"),
+    ("question", "¿Por qué?", "لماذا؟", "ليه؟", "بور كيه", "¿Por qué estás triste?", "لماذا أنت حزين؟", "إنت زعلان ليه؟", "por qué = لماذا", "أسئلة"),
+    ("question", "¿Cuál?", "أيّ؟", "أنهي؟", "كوال", "¿Cuál prefieres?", "أيهما تفضّل؟", "أنهي واحد بتحبه؟", "cuál = أيّ", "أسئلة"),
+    ("phrase", "Hola", "مرحبًا", "أهلاً", "أولا", "¡Hola! ¿Qué tal?", "مرحبًا! كيف حالك؟", "أهلاً! عامل إيه؟", "تحية عامة في كل وقت", "التحيات"),
+    ("phrase", "Buenos días", "صباح الخير", "صباح الفل", "بوينوس ديياس", "Buenos días, señora.", "صباح الخير يا سيدتي.", "صباح الفل يا مدام.", "تحية الصباح", "التحيات"),
+    ("phrase", "Buenas tardes", "مساء الخير (بعد الظهر)", "مساء الفل", "بُوينَس تاردِس", "Buenas tardes, señor.", "مساء الخير يا سيدي.", "مساء الفل يا أستاذ.", "تُقال بعد الظهر حتى المساء", "التحيات"),
+    ("phrase", "Buenas noches", "مساء الخير (ليلًا) أو تصبح على خير", "تصبح على خير", "بُوينَس نوتشيس", "Buenas noches, hasta mañana.", "تصبح على خير، إلى الغد.", "تصبح على خير، لحد بكرة.", "تُقال عند المساء المتأخر وعند الوداع ليلًا", "التحيات"),
+    ("phrase", "Adiós", "وداعًا", "باي", "أدِيوس", "Adiós, nos vemos.", "وداعًا، نراك لاحقًا.", "باي، نشوفك بعدين.", "تحية وداع عامة", "التحيات"),
+    ("phrase", "Hasta luego", "إلى اللقاء", "نشوفك بعدين", "أستا لوويجو", "Hasta luego, amigo.", "إلى اللقاء يا صديقي.", "نشوفك بعدين يا صاحبي.", "تُقال عندما تتوقع لقاءً قريبًا", "التحيات"),
+    ("phrase", "Hasta mañana", "إلى الغد", "لحد بكرة", "أستا مانيانا", "Hasta mañana, Pedro.", "إلى الغد يا بيدرو.", "لحد بكرة يا بيدرو.", "تُقال عند الوداع قبل يوم جديد", "التحيات"),
+    ("phrase", "¿Cómo te llamas?", "ما اسمك؟", "اسمك إيه؟", "كومو تي لياماس", "¿Cómo te llamas? Me llamo Omar.", "ما اسمك؟ اسمي عمر.", "اسمك إيه؟ اسمي عمر.", "te llamas = اسمك (للشخص المقرّب)", "التعارف"),
+    ("phrase", "Me llamo...", "اسمي...", "اسمي...", "مي لياموي", "Me llamo Ana.", "اسمي آنا.", "اسمي آنا.", "me llamo = اسمي", "التعارف"),
+    ("phrase", "Soy de Egipto", "أنا من مصر", "أنا من مصر", "سُي دي إيخيبتو", "¿De dónde eres? Soy de Egipto.", "من أين أنت؟ أنا من مصر.", "إنت منين؟ أنا من مصر.", "de = من", "التعارف"),
+    ("phrase", "Mucho gusto", "سررت بلقائك", "اتشرفت بيك", "موتشو غوستو", "Mucho gusto, soy Lucía.", "سررت بلقائك، أنا لوسيا.", "اتشرفت بيك، أنا لوسيا.", "عبارة تعارف للرجل والمرأة", "التعارف"),
+    ("phrase", "Encantado", "سعيد بلقائك (قال الرجل)", "اتشرفت (رجل)", "إنكانتادو", "Encantado, soy Carlos.", "سعيد بلقائك، أنا كارلوس.", "اتشرفت، أنا كارلوس.", "المذكر: encantado", "التعارف"),
+    ("phrase", "Encantada", "سعيدة بلقائك (قالت المرأة)", "اتشرفت (ست)", "إنكانتادا", "Encantada, soy Lucía.", "سعيدة بلقائك، أنا لوسيا.", "اتشرفت، أنا لوسيا.", "المؤنث: encantada", "التعارف"),
+    ("phrase", "¿Cómo estás?", "كيف حالك؟", "عامل إيه؟", "كومو إستاس", "¿Cómo estás? Estoy bien.", "كيف حالك؟ أنا بخير.", "عامل إيه؟ أنا كويس.", "estás من estar", "الحال"),
+    ("phrase", "Estoy bien", "أنا بخير", "أنا كويس", "إستوي بيين", "Estoy bien, gracias.", "أنا بخير، شكرًا.", "أنا كويس، شكرًا.", "الرد الأساسي على سؤال الحال", "الحال"),
+    ("phrase", "Estoy mal", "لستُ بخير", "أنا مش كويس", "إستوي مال", "Estoy mal hoy.", "لست بخير اليوم.", "أنا مش كويس النهارده.", "mal = سيئ أو غير بخير", "الحال"),
+    ("phrase", "Más o menos", "إلى حد ما", "ماشي الحال", "ماس أو مينوس", "¿Qué tal? Más o menos.", "كيف حالك؟ إلى حد ما.", "عامل إيه؟ ماشي الحال.", "رد شائع عندما لا تكون الحالة جيدة ولا سيئة", "الحال"),
+    ("phrase", "Bien, gracias, ¿y tú?", "بخير، شكرًا، وأنت؟", "كويس، الحمد لله، وإنت؟", "بيين، غراسياس، إي تو", "Bien, gracias, ¿y tú?", "بخير، شكرًا، وأنت؟", "كويس، الحمد لله، وإنت؟", "رد كامل ومهذب على سؤال الحال", "الحال"),
+    ("phrase", "Gracias", "شكرًا", "شكرًا", "غراسياس", "Muchas gracias.", "شكرًا جزيلًا.", "شكرًا جدًا.", "شكر عام", "عبارات مهذبة"),
+    ("phrase", "De nada", "عفوًا", "العفو", "دي ناضا", "Gracias. De nada.", "شكرًا. عفوًا.", "شكرًا. العفو.", "الرد على الشكر", "عبارات مهذبة"),
+    ("phrase", "Por favor", "من فضلك", "لو سمحت", "بور فابور", "Un café, por favor.", "قهوة، من فضلك.", "قهوة لو سمحت.", "تُقال عند الطلب", "عبارات مهذبة"),
+    ("phrase", "Perdón", "عذرًا / آسف", "آسف", "بيردون", "Perdón, ¿dónde está el baño?", "عذرًا، أين الحمام؟", "آسف، فين الحمام؟", "تُقال عند الاعتذار أو للفت الانتباه", "عبارات مهذبة"),
+    ("phrase", "Sí", "نعم", "أيوه", "سي", "Sí, gracias.", "نعم، شكرًا.", "أيوه، شكرًا.", "الإجابة بنعم", "عبارات مهذبة"),
+    ("phrase", "No", "لا", "لأ", "نو", "No, gracias.", "لا، شكرًا.", "لأ، شكرًا.", "الإجابة بلا", "عبارات مهذبة"),
+    ("phrase", "No entiendo", "لا أفهم", "مش فاهم", "نو إنتيينْدو", "No entiendo, ¿puede repetir?", "لا أفهم، هل يمكنك التكرار؟", "مش فاهم، ممكن تعيد؟", "entiendo من الفعل entender", "عبارات مهذبة"),
+    ("phrase", "Habla más despacio, por favor", "تكلّم ببطء أكثر، من فضلك", "اتكلم أبطأ شوية لو سمحت", "أبلا ماس دِيسباسيو", "Habla más despacio, por favor.", "تكلّم ببطء أكثر، من فضلك.", "اتكلم أبطأ شوية لو سمحت.", "تستخدمها عندما تريد إبطاء الكلام", "عبارات مهذبة"),
+    ("phrase", "¿Cómo se dice...?", "كيف تُقال...؟", "إزاي تقول...؟", "كومو سي ديسي", "¿Cómo se dice 'gracias'?", "كيف تُقال 'شكرًا'؟", "إزاي تقول 'شكرًا'؟", "se dice = تُقال", "عبارات مهذبة"),
+    ("phrase", "Tengo hambre", "أنا جائع", "أنا جعان", "تِنغو أمبري", "Tengo hambre. ¿Y tú?", "أنا جائع. وأنت؟", "أنا جعان. وإنت؟", "tener hambre = يكون عنده جوع", "جمل يومية"),
+    ("phrase", "Tengo sed", "أنا عطشان", "أنا عطشان", "تِنغو سِد", "Tengo sed, quiero agua.", "أنا عطشان، أريد ماء.", "أنا عطشان، عايز مية.", "tener sed = يكون عنده عطش", "جمل يومية"),
+    ("phrase", "Tengo prisa", "أنا مستعجل", "أنا مستعجل", "تِنغو بريسا", "Tengo prisa, lo siento.", "أنا مستعجل، آسف.", "أنا مستعجل، آسف.", "tener prisa = يكون مستعجلًا", "جمل يومية"),
+    ("phrase", "No pasa nada", "لا توجد مشكلة", "ولا يهمك", "نو باسا ناضا", "Perdón. No pasa nada.", "عذرًا. لا توجد مشكلة.", "آسف. ولا يهمك.", "تُقال للطمأنة بعد اعتذار", "جمل يومية"),
+    ("phrase", "Hace calor", "الجو حار", "الجو حر", "أاسي كالور", "Hoy hace calor.", "اليوم الجو حار.", "النهارده الجو حر.", "hacer للطقس", "جمل يومية"),
+    ("phrase", "Hace frío", "الجو بارد", "الجو برد", "أاسي فريو", "Hace frío en invierno.", "الجو بارد في الشتاء.", "الجو برد في الشتا.", "hacer للطقس", "جمل يومية"),
+]
+
+PER_UNIT_TOPICS = {"الحروف والأصوات": "الوحدة 1: الحروف والأصوات", "الضمائر": "الوحدة 2: الضمائر والأفعال الأولى",
+                   "الأفعال الأساسية": "الوحدة 2: الضمائر والأفعال الأولى", "أسئلة": "الوحدة 3: الأسئلة",
+                   "التحيات": "الوحدة 4: التحيات والتعارف", "التعارف": "الوحدة 4: التحيات والتعارف",
+                   "الحال": "الوحدة 5: السؤال عن الحال والجمل اليومية", "عبارات مهذبة": "الوحدة 5: السؤال عن الحال والجمل اليومية",
+                   "جمل يومية": "الوحدة 5: السؤال عن الحال والجمل اليومية"}
+UNIT_ORDER = ["الوحدة 1: الحروف والأصوات", "الوحدة 2: الضمائر والأفعال الأولى", "الوحدة 3: الأسئلة",
+              "الوحدة 4: التحيات والتعارف", "الوحدة 5: السؤال عن الحال والجمل اليومية"]
+LONG_TYPES = {"phrase", "verb", "question"}
+
+# IPA transcriptions (Castilian/peninsular norm). Written by the author; see audit ledger for which are source-checked.
+IPA = {
+    "a": "a", "b": "b / β", "c": "k", "ce / ci": "θe / θi", "d": "d / ð", "e": "e", "f": "f", "g": "ɡ / ɣ",
+    "ge / gi": "xe / xi", "h": "(صامتة)", "i": "i", "j": "x", "k": "k", "l": "l", "m": "m", "n": "n", "ñ": "ɲ",
+    "o": "o", "p": "p", "q": "k", "r": "ɾ", "rr": "r", "s": "s", "t": "t", "u": "u", "v": "b", "w": "w / b",
+    "x": "ks", "y": "ʝ / i", "z": "θ", "ch": "tʃ", "ll": "ʝ",
+    "Hola": "ˈo.la", "Buenos días": "ˈbwe.nos ˈði.as", "Buenas tardes": "ˈbwe.nas ˈtaɾ.ðes",
+    "Buenas noches": "ˈbwe.nas ˈno.tʃes", "Adiós": "a.ˈðjos", "Hasta luego": "ˈas.ta ˈlwe.ɣo",
+    "Hasta mañana": "ˈas.ta ma.ˈɲa.na", "¿Cómo te llamas?": "ˈko.mo te ˈʝa.mas", "Me llamo...": "me ˈʝa.mo",
+    "Soy de Egipto": "soj de e.ˈxip.to", "Mucho gusto": "ˈmu.tʃo ˈɣus.to", "Encantado": "en.kan.ˈta.ðo",
+    "Encantada": "en.kan.ˈta.ða", "¿Cómo estás?": "ˈko.mo es.ˈtas", "Estoy bien": "es.ˈtoj ˈbjen",
+    "Estoy mal": "es.ˈtoj ˈmal", "Más o menos": "ˈmas o ˈme.nos", "Bien, gracias, ¿y tú?": "ˈbjen ˈɣɾa.sjas i ˈtu",
+    "Gracias": "ˈɣɾa.sjas", "De nada": "de ˈna.ða", "Por favor": "poɾ fa.ˈβoɾ", "Perdón": "peɾ.ˈðon",
+    "Sí": "si", "No": "no", "No entiendo": "no en.ˈtjen.do", "Habla más despacio, por favor": "ˈa.βla ˈmas des.ˈpa.sjo poɾ fa.ˈβoɾ",
+    "¿Cómo se dice...?": "ˈko.mo se ˈði.se", "Tengo hambre": "ˈten.ɡo ˈam.bɾe", "Tengo sed": "ˈten.ɡo ˈseð",
+    "Tengo prisa": "ˈten.ɡo ˈpɾi.sa", "No pasa nada": "no ˈpa.sa ˈna.ða", "Hace calor": "ˈa.θe ka.ˈlor",
+    "Hace frío": "ˈa.θe ˈfɾi.o", "Yo": "ʝo", "Tú": "tu", "Usted": "us.ˈteð", "Él": "el", "Ella": "ˈe.ʝa",
+    "Nosotros": "no.ˈso.tɾos", "Soy": "soj", "Eres": "ˈe.ɾes", "Es": "es", "Estoy": "es.ˈtoj", "Estás": "es.ˈtas",
+    "Está": "es.ˈta", "Tengo": "ˈten.ɡo", "Tienes": "ˈtje.nes", "Tiene": "ˈtje.ne", "Quiero": "ˈkje.ɾo",
+    "Quieres": "ˈkje.ɾes", "Voy": "boj", "Vas": "bas", "¿Qué?": "ke", "¿Cómo?": "ˈko.mo", "¿Dónde?": "ˈdon.de",
+    "¿Cuándo?": "ˈkwan.do", "¿Quién?": "kjen", "¿Cuánto?": "ˈkwan.to", "¿Por qué?": "poɾ ˈke", "¿Cuál?": "kwal",
+}
+
+# Items whose SOUND claim is supported by a fetched source (see audit ledger). Translation still pending independent review.
+SOUND_SOURCED = {
+    "c": "Abbey School PDF (El Alfabeto español): c antes de a/o/u = oclusiva sorda; Uta Pressbooks cap.5: casa [ká.sa]",
+    "ce / ci": "Uta Pressbooks cap.5 (distinción): ce/ci = [θ]; Hablar y Decir (Z la ceceante): ce/ci = /θ/ en España",
+    "z": "Uta Pressbooks cap.5 (caza [ká.θa]); Hablar y Decir: z = /θ/ en España centro-norte",
+    "j": "Uta Pressbooks cap.5: jota [xó.ta] en el español peninsular",
+    "ge / gi": "Uta Pressbooks cap.5: gesto [xés.to] en el español peninsular",
+    "b": "مصدر ثانوي elon.io (تعليمي، غير أكاديمي): b و v بنفس الصوت /b/ أو /β/",
+    "v": "مصدر ثانوي elon.io (تعليمي، غير أكاديمي): v مطابقة لـ b في الإسبانية الحديثة",
+    "h": "مصدر ثانوي elon.io: h صامتة دائمًا (hola = ola)",
+    "ñ": "مصدر ثانوي elon.io: ñ = /ɲ/ مثل ny في canyon",
+    "r": "مصدر ثانوي elon.io: r مفردة = /ɾ/ ضربة واحدة، وتتغير حسب الموضع",
+    "rr": "مصدر ثانوي elon.io: rr = /r/ مرتعشة",
+    "ll": "مصدر ثانوي elon.io: ll = /ʝ/ في الإسبانية الأوروبية الشائعة (يائية)",
+    "ch": "مصدر ثانوي elon.io: ch = /tʃ/ مثل ch في church",
+    "y": "مصدر ثانوي elon.io: y في بداية المقطع = /ʝ/ مثل yes",
+    "w": "مصدر ثانوي evolang.info: w = /w/ في الكلمات الأجنبية",
+}
+ELON = "https://elon.io/grammar/spanish-spain/pronunciation/alphabet"
+UTA = "https://uta.pressbooks.pub/espanolpractico/chapter/capitulo-5-variacion-en-espanol/"
+ABBEY = "https://www.abbeyschool.it/torino/wp-content/uploads/2022/05/Elalfabetoespanol.pdf"
+HABLAR = "https://hablarydecir.com/z-la-ceceante/"
+CHECKED_ON = "2026-11-01"
+LEDGER = "releases/A0_AUDIT_LEDGER.csv"
+
+
+
+def has_latin(text):
+    return any("a" <= ch.lower() <= "z" for ch in text)
+
+
+def make_item(row):
+    typ, es, ar, egy, pron, ex, ex_ar, ex_egy, note, topic = row
+    src = RAE_ALPHABET if typ == "letter" else INTERNAL
+    ipa = IPA[es]
+    if has_latin(pron):
+        pron = f"[{ipa}]"  # never ship mixed Latin/Arabic transliteration; IPA is the reference
+    sourced = es in SOUND_SOURCED
+    if sourced:
+        src = SOUND_SOURCED[es]
+    return {
+        "es": es, "ar": ar, "ar_egy": egy, "pronunciation": pron, "ipa": ipa,
+        "example_es": ex, "example_fusha": ex_ar, "example_egy": ex_egy,
+        "grammar_note": note, "pos": typ, "topic": topic,
+        "difficulty": 1 if typ in ("letter", "sound") or topic in ("التحيات", "التعارف") else 2,
+        "source": src,
+        "verification": "sound_verified" if sourced else "pending_verification",
+        "type": typ,
+    }
+
+
+def write_ledger(track):
+    import csv
+    rows = []
+    for u in track["units"]:
+        for it in u["items"]:
+            sourced = it["verification"] == "sound_verified"
+            rows.append({
+                "es": it["es"], "type": it["type"], "ipa": it["ipa"],
+                "source": it["source"] if sourced else "لا يوجد مصدر خارجي مُتحقق منه بعد",
+                "source_url": " ; ".join(u for k, u in (("Abbey", ABBEY), ("Uta", UTA), ("Hablar", HABLAR), ("elon.io", ELON), ("evolang", "https://evolang.info/grammar-guide/spanish/spanish-alphabet-pronunciation-guide")) if sourced and k in it["source"]),
+                "fact_supported": "نطق الصوت الإسباني (القشتالي)" if sourced else "لم يُتحقق",
+                "translation_fusha_checked": "لا (مراجعة مستقلة لم تُجرَ)",
+                "translation_egy_checked": "لا (مراجعة مستقلة لم تُجرَ)",
+                "checked_on": CHECKED_ON,
+                "result": "sound_verified" if sourced else "pending",
+                "reject_reason": "",
+            })
+    with open(LEDGER, "w", encoding="utf-8", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        w.writeheader(); w.writerows(rows)
+    return len(rows)
+
+
+def build_track():
+    units = {u: [] for u in UNIT_ORDER}
+    for row in LETTERS + VERBS_PRONOUNS_QUESTIONS_PHRASES:
+        units[PER_UNIT_TOPICS[row[9]]].append(make_item(row))
+    return {"id": "A0", "title": "A0 — الأساسيات",
+            "units": [{"title": u, "items": units[u]} for u in UNIT_ORDER if units[u]]}
+
+
+def main(path):
+    with open(path, encoding="utf-8") as f:
+        data = json.load(f)
+    data["tracks"] = [t for t in data["tracks"] if t.get("id") != "A0"]
+    a0 = build_track()
+    data["tracks"].append(a0)
+    total = sum(len(u["items"]) for u in a0["units"])
+    write_ledger(a0)
+    for u in a0["units"]:
+        for it in u["items"]:
+            for k in ("es", "ar", "ar_egy", "pronunciation"):
+                assert str(it[k]).strip(), f"empty {k} in {it['es']}"
+            assert it["example_es"], f"no example for {it['es']}"
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=1)
+        f.write("\n")
+    print(f"Ledger: {LEDGER}")
+    print(f"A0 track: {total} items in {len(a0['units'])} units; track index {len(data['tracks'])-1}")
+
+
+if __name__ == "__main__":
+    main(sys.argv[1] if len(sys.argv) > 1 else "app/src/main/assets/content.json")

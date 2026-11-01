@@ -65,6 +65,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private EditText input;
     private Button action;
     private String selectedId=null, selectedWord=null, screen="home";
+    private int a0Track=-1;
     private int trackIndex=0, lessonIndex=0, cursor=0, correct=0, attempted=0, firstCorrect=0, firstAttempted=0, speechSkipped=0, listeningSkipped=0, matchMoves=0;
     private boolean dialogueMode=false;
     private int dialogueTurn=0;
@@ -104,6 +105,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         nunitoBold=Typeface.createFromAsset(getAssets(),"fonts/nunito-bold.ttf");
         trackIndex=prefs.getInt("last_track",0);
         try{loadContent();}catch(Exception e){throw new IllegalStateException("تعذر تحميل الدروس",e);}
+        if(!prefs.contains("last_track")&&a0Track>=0&&a0Track<tracks.size()&&prefs.getInt("complete_0",0)==0&&prefs.getInt("xp",0)==0)trackIndex=a0Track;
         if(trackIndex<0||trackIndex>=tracks.size())trackIndex=0;
         if(prefs.getBoolean("reminders_enabled",true))ReminderReceiver.scheduleNext(this);
         tts=new TextToSpeech(this,this); if(!prefs.getBoolean("onboarding_done",false)&&prefs.getInt("complete_0",0)==0&&prefs.getInt("complete_1",0)==0&&prefs.getInt("xp",0)==0)showWelcome();else home();
@@ -114,11 +116,13 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         JSONArray ts=new JSONObject(bytes.toString("UTF-8")).getJSONArray("tracks");
         for(int t=0;t<ts.length();t++){
             JSONObject tr=ts.getJSONObject(t); Track track=new Track(tr.getString("title")); JSONArray units=tr.getJSONArray("units");
+            if("A0".equals(tr.optString("id")))a0Track=t;
             for(int u=0;u<units.length();u++){
                 JSONObject unit=units.getJSONObject(u); JSONArray list=unit.getJSONArray("items"); Lesson lesson=null;
                 for(int i=0;i<list.length();i++){
-                    if(i%PER_LESSON==0){lesson=new Lesson(unit.getString("title")+" • "+(i/PER_LESSON+1));track.lessons.add(lesson);}
-                    JSONObject obj=list.getJSONObject(i); Item item=new Item(t+"_"+u+"_"+i,obj.getString("es"),obj.getString("ar"));
+                    JSONObject obj=list.getJSONObject(i);
+                    if(i%PER_LESSON==0){String st=obj.optString("verification","");String tag="verified".equals(st)?"":(st.isEmpty()?" • غير معتمد":" • قيد التحقق");lesson=new Lesson(unit.getString("title")+" • "+(i/PER_LESSON+1)+tag);track.lessons.add(lesson);}
+                    Item item=new Item(t+"_"+u+"_"+i,obj.getString("es"),obj.getString("ar"));
                     lesson.items.add(item); track.items.add(item);
                 }
             } tracks.add(track);
@@ -213,11 +217,11 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private int completed(int t){return Math.max(0,Math.min(prefs.getInt("complete_"+t,0),tracks.get(t).lessons.size()));}
     private int completedItems(int t){ArrayList<Integer> sizes=new ArrayList<>();for(Lesson l:tracks.get(t).lessons)sizes.add(l.items.size());return LearningLogic.completedItems(sizes,completed(t));}
     private String percentage(int done,int total){return (total==0?0:done*100/total)+"٪";}
-    private void mascot(LinearLayout box,String caption){LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);StudyBuddy buddy=new StudyBuddy(this);row.addView(buddy,new LinearLayout.LayoutParams(dp(76),dp(76)));TextView bubble=text(caption,15,INK,true);bubble.setPadding(dp(14),dp(10),dp(14),dp(10));bubble.setBackground(bg(Color.WHITE,LINE,18));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMargins(dp(8),0,0,0);row.addView(bubble,p);full(box,row);}
+    private void mascot(LinearLayout box,String caption){LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);CharacterArt.CharacterView buddy=new CharacterArt.CharacterView(this,CharacterArt.Cast.SOL,CharacterArt.Mood.WELCOME,dark(),false);row.addView(buddy,new LinearLayout.LayoutParams(dp(76),dp(76)));TextView bubble=text(caption,15,INK,true);bubble.setPadding(dp(14),dp(10),dp(14),dp(10));bubble.setBackground(bg(Color.WHITE,LINE,18));LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMargins(dp(8),0,0,0);row.addView(bubble,p);full(box,row);}
     private void home(){
         screen="home";setup("Spanish 1000",false,false);
         Track current=tracks.get(trackIndex);int next=completed(trackIndex);
-        LinearLayout welcome=new LinearLayout(this);welcome.setGravity(Gravity.CENTER_VERTICAL);LinearLayout greeting=column();full(greeting,text("¡Hola! أهلًا بيك",25,INK,true));space(greeting,4);full(greeting,text("كل يوم أقرب للإسباني",15,MUTED,false));welcome.addView(greeting,new LinearLayout.LayoutParams(0,-2,1));StudyBuddy buddy=new StudyBuddy(this);welcome.addView(buddy,new LinearLayout.LayoutParams(dp(72),dp(72)));full(body,welcome);space(body,16);
+        LinearLayout welcome=new LinearLayout(this);welcome.setGravity(Gravity.CENTER_VERTICAL);LinearLayout greeting=column();full(greeting,text("¡Hola! أهلًا بيك",25,INK,true));space(greeting,4);full(greeting,text("كل يوم أقرب للإسباني",15,MUTED,false));welcome.addView(greeting,new LinearLayout.LayoutParams(0,-2,1));CharacterArt.CharacterView buddy=new CharacterArt.CharacterView(this,CharacterArt.Cast.SOL,CharacterArt.Mood.HAPPY,dark(),false);welcome.addView(buddy,new LinearLayout.LayoutParams(dp(72),dp(72)));full(body,welcome);space(body,16);
         LinearLayout indicators=new LinearLayout(this);indicators.setGravity(Gravity.CENTER_VERTICAL);TextView streak=text("سلسلتك  "+prefs.getInt("streak",0)+" يوم",14,DARK_GREEN,true),xp=text("نقاطك  "+prefs.getInt("xp",0)+" XP",14,DARK_GREEN,true);streak.setGravity(Gravity.CENTER);xp.setGravity(Gravity.CENTER);streak.setPadding(dp(8),dp(12),dp(8),dp(12));xp.setPadding(dp(8),dp(12),dp(8),dp(12));streak.setBackground(bg(PALE,0,16));xp.setBackground(bg(LAVENDER,0,16));LinearLayout.LayoutParams ip=new LinearLayout.LayoutParams(0,-2,1);ip.setMargins(0,0,dp(8),0);indicators.addView(streak,ip);indicators.addView(xp,new LinearLayout.LayoutParams(0,-2,1));full(body,indicators);space(body,20);
         TextView section=text("رحلتك النهارده",19,INK,true);full(body,section);space(body,8);
         LinearLayout continuation=card();continuation.setBackground(bg(PALE,0,24));full(continuation,text(current.title,14,DARK_GREEN,true));space(continuation,6);full(continuation,text(next<current.lessons.size()?current.lessons.get(next).title:"أكملت المسار — راجع دروسك",21,INK,true));space(continuation,8);full(continuation,text(completedItems(trackIndex)+" من "+current.items.size()+" عنصر في المسار",14,MUTED,false));space(continuation,8);full(continuation,progress(completedItems(trackIndex),current.items.size()));space(continuation,16);
@@ -284,7 +288,29 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private int dueCount(){long now=System.currentTimeMillis();int count=0;for(Track t:tracks)for(Item item:t.items){long due=prefs.getLong("due_"+item.id,0);if(due>0&&due<=now)count++;}return count;}
     private void dailyGoalCard(LinearLayout box){
         int goal=prefs.getInt("daily_goal",1);String today=new SimpleDateFormat("yyyy-MM-dd",Locale.US).format(new Date());int done=prefs.getString("daily_date","").equals(today)?prefs.getInt("daily_lessons",0):0;
-        LinearLayout daily=card();daily.setBackground(bg(LAVENDER,0,20));full(daily,text("🎯  هدفك اليومي",17,INK,true));space(daily,5);full(daily,text("أنجزت "+done+" من "+goal+" درس اليوم",14,MUTED,false));space(daily,6);full(daily,progress(done,goal));full(box,daily);
+        LinearLayout daily=card();daily.setBackground(bg(LAVENDER,0,20));full(daily,text("🎯  هدفك اليومي",17,INK,true));space(daily,5);full(daily,goalRow(done,goal));full(box,daily);
+    }
+    private LinearLayout goalRow(int done,int goal){
+        LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);
+        int pct=goal<=0?0:Math.min(100,done*100/goal);
+        DesignSystem.RingProgressView ring=new DesignSystem.RingProgressView(this,pct,done+"/"+goal,"درس اليوم",foreground(GREEN),surface(LINE),foreground(INK),foreground(MUTED),cairoBold,nunitoRegular);
+        row.addView(ring,new LinearLayout.LayoutParams(dp(92),dp(92)));
+        LinearLayout copy=column();
+        full(copy,text(done>=goal?"وصلت لهدفك اليوم 🎉":"باقي "+(goal-done)+" درس لهدف اليوم",16,INK,true));space(copy,4);
+        full(copy,text("الهدف: "+goal+" درس يوميًا · السلسلة: "+prefs.getInt("streak",0)+" يوم",13,MUTED,false));
+        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMargins(dp(12),0,0,0);row.addView(copy,p);
+        return row;
+    }
+    private LinearLayout accuracyRing(int correctCount,int attemptCount){
+        LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);
+        int pct=attemptCount<=0?0:Math.min(100,correctCount*100/attemptCount);
+        DesignSystem.RingProgressView ring=new DesignSystem.RingProgressView(this,pct,attemptCount==0?"—":pct+"٪","دقة أول محاولة",foreground(GREEN),surface(LINE),foreground(INK),foreground(MUTED),cairoBold,nunitoRegular);
+        row.addView(ring,new LinearLayout.LayoutParams(dp(88),dp(88)));
+        LinearLayout copy=column();
+        full(copy,text("إجابات صحيحة من أول محاولة",15,INK,true));space(copy,4);
+        full(copy,text(correctCount+" من "+attemptCount,14,MUTED,false));
+        LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(0,-2,1);p.setMargins(dp(12),0,0,0);row.addView(copy,p);
+        return row;
     }
     private void showLearningSettings(){
         screen="settings";setup("إعدادات التعلم",true,false);LinearLayout c=card();full(c,text("🎯 هدف الدروس اليومي",19,INK,true));space(c,8);int goal=prefs.getInt("daily_goal",1);TextView value=text(goal+" درس يوميًا",17,GREEN,true);value.setGravity(Gravity.CENTER);full(c,value);space(c,8);LinearLayout row=new LinearLayout(this);Button less=button("−",Color.WHITE,BLUE),more=button("+",Color.WHITE,BLUE);row.addView(less,new LinearLayout.LayoutParams(0,dp(54),1));row.addView(more,new LinearLayout.LayoutParams(0,dp(54),1));full(c,row);less.setOnClickListener(v->{int n=Math.max(1,prefs.getInt("daily_goal",1)-1);prefs.edit().putInt("daily_goal",n).apply();value.setText(n+" درس يوميًا");});more.setOnClickListener(v->{int n=Math.min(10,prefs.getInt("daily_goal",1)+1);prefs.edit().putInt("daily_goal",n).apply();value.setText(n+" درس يوميًا");});space(c,20);full(c,text("🔊 سرعة النطق الإسباني",19,INK,true));space(c,5);float rate=prefs.getFloat("tts_rate",.9f);TextView speed=text(String.format(Locale.US,"%.1f×",rate),17,GREEN,true);speed.setGravity(Gravity.CENTER);full(c,speed);android.widget.SeekBar seek=new android.widget.SeekBar(this);seek.setMax(15);seek.setProgress(Math.round((rate-.5f)*10));full(c,seek);seek.setOnSeekBarChangeListener(new android.widget.SeekBar.OnSeekBarChangeListener(){public void onProgressChanged(android.widget.SeekBar s,int p,boolean user){float r=.5f+p*.1f;speed.setText(String.format(Locale.US,"%.1f×",r));if(user){prefs.edit().putFloat("tts_rate",r).apply();if(ttsReady)tts.setSpeechRate(r);}}public void onStartTrackingTouch(android.widget.SeekBar s){}public void onStopTrackingTouch(android.widget.SeekBar s){}});space(c,16);
