@@ -34,6 +34,11 @@ final class AnswerChecker {
     }
 
     static Verdict check(Curriculum.Exercise exercise, Answer answer) {
+        return check(exercise, answer, null);
+    }
+
+    /** `item` (optional) enables legitimate noun/adjective inflections to be accepted. */
+    static Verdict check(Curriculum.Exercise exercise, Answer answer, Curriculum.Item item) {
         String expected = expectedLabel(exercise);
         switch (exercise.type) {
             case "intro":
@@ -48,7 +53,7 @@ final class AnswerChecker {
                 return orderVerdict(exercise, answer, expected);
             case "translate_es_ar":
             case "translate_ar_es":
-                return translateVerdict(exercise, answer, expected);
+                return translateVerdict(exercise, answer, expected, item);
             case "match":
                 return new Verdict(true, expected, "");
             case "speak":
@@ -82,8 +87,14 @@ final class AnswerChecker {
         return new Verdict(correct, expected, diagnosis);
     }
 
-    private static Verdict translateVerdict(Curriculum.Exercise exercise, Answer answer, String expected) {
+    private static Verdict translateVerdict(Curriculum.Exercise exercise, Answer answer, String expected,
+                                            Curriculum.Item item) {
         boolean correct = TextNormalizers.matchesAny(exercise.answers, answer.text);
+        if (!correct && item != null && exercise.type.equals("translate_ar_es")) {
+            for (String accepted : exercise.answers) {
+                if (TextNormalizers.inflectionMatches(accepted, answer.text, item.pos)) { correct = true; break; }
+            }
+        }
         String diagnosis = "";
         if (!correct) {
             int best = Integer.MAX_VALUE;

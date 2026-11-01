@@ -50,6 +50,16 @@ final class LessonPlanner {
             plan.add(choose(model, item, lesson, random, "اختبار ختامي — اختار معنى «" + item.es + "»"));
         }
         if (plan.size() > MAX_EXERCISES) plan = new ArrayList<>(plan.subList(0, MAX_EXERCISES));
+        return withUniqueIds(plan, lesson);
+    }
+
+    /**
+     * Exercise ids used to be derived from the item hash, which produced duplicates when a
+     * lesson revisited an item (final test) or when two hashes collided. Ids are now the
+     * lesson id plus the position, so every exercise in a session is addressable.
+     */
+    private static List<Curriculum.Exercise> withUniqueIds(List<Curriculum.Exercise> plan, Curriculum.Lesson lesson) {
+        for (int i = 0; i < plan.size(); i++) plan.get(i).id = lesson.id + "_ex_" + (i + 1);
         return plan;
     }
 
@@ -190,6 +200,25 @@ final class LessonPlanner {
             }
             if (options.size() == 4) break;
         }
+        // Letter/number lessons have no other multi-letter words in their items, so the pool is
+        // widened to the example sentences of neighbouring items before giving up.
+        if (options.size() < 3) {
+            for (Curriculum.Item distractor : distractors(model, item, random, 24)) {
+                if (!distractor.hasExample()) continue;
+                for (String word : TextNormalizers.words(distractor.exEs)) {
+                    if (word.length() > 2 && seen.add(TextNormalizers.spanishKey(word))) options.add(word);
+                    if (options.size() == 4) break;
+                }
+                if (options.size() == 4) break;
+            }
+        }
+        if (options.size() < 3) {
+            for (String word : TextNormalizers.words(item.exEs)) {
+                if (word.length() > 2 && seen.add(TextNormalizers.spanishKey(word))) options.add(word);
+                if (options.size() == 4) break;
+            }
+        }
+        if (options.size() < 2) return choose(model, item, lesson, random, "«" + item.es + "» معناها إيه؟");
         Collections.shuffle(options, random);
         exercise.options = options;
         exercise.answer = options.indexOf(target);

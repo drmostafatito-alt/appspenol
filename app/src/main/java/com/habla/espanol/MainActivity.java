@@ -66,7 +66,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
 
     private final ArrayList<Track> tracks = new ArrayList<>();
     private final ArrayList<Session> queue = new ArrayList<>();
-    private final Set<String> mistakes = new HashSet<>(), skippedItems = new HashSet<>();
+    private final Set<String> mistakes = new HashSet<>(), skippedItems = new HashSet<>(), srsGraded = new HashSet<>();
     private final LinkedHashMap<String, Boolean> firstOutcome = new LinkedHashMap<>();
     private final ArrayList<String> selectedWords = new ArrayList<>();
     private final ArrayList<Button> selectedChips = new ArrayList<>();
@@ -95,6 +95,8 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     private Integer selectedChoice = null;
     private String selectedWord = null;
     private long lessonStarted = 0;
+    /** Durable snapshot of the running lesson so a restart can resume it. */
+    private LessonSession savedSession;
     private Lesson activeLesson;
     private Curriculum.Dialogue activeDialogue;
     private String pendingExport = null;
@@ -330,7 +332,6 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         if (tts.speak(phrase, TextToSpeech.QUEUE_FLUSH, null, "habla") != TextToSpeech.SUCCESS) {
             toast("تعذر تشغيل الصوت.");
         }
-        applyRate(false);
     }
 
     private String cleanForSpeech(String value) {
@@ -883,6 +884,8 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         full(body, indicators);
         space(body, 18);
 
+        resumeSessionCard(body);
+
         LinearLayout continuation = card();
         continuation.setBackground(bg(PALE, 0, 24));
         full(continuation, text(track.title + "  •  " + track.titleEs, 14, DARK_GREEN, true));
@@ -949,6 +952,85 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         space(body, 14);
         full(body, text("الصوت بيستخدم محرك TTS في الجهاز بصوت es-ES. التعرف على الكلام بيستخدم خدمة الجهاز، "
                 + "وتقييم النطق تقريبي وليس تحليلًا صوتيًا.", 12, MUTED, false));
+    }
+
+    /** "Continue where you stopped" — backed by the durable {@link LessonSession}. */
+    private void resumeSessionCard(LinearLayout box) {
+        LessonSession pending = LessonSession.load(store);
+        if (pending == null || pending.cursor <= 0 || pending.finished()) return;
+        LinearLayout card = card();
+        card.setBackground(bg(SKY, 0, 22));
+        full(card, text("فيه درس وقفت في نصه 🕘", 17, BLUE, true));
+        space(card, 5);
+        String title = pending.lessonId;
+        Lesson lesson = findLessonById(pending.lessonId);
+        if (lesson != null && !lesson.title.isEmpty()) title = lesson.title;
+        full(card, text(title, 16, INK, true));
+        space(card, 4);
+        full(card, text("وقفت عند تمرين " + Math.min(pending.cursor + 1, pending.total) + " من " + pending.total
+                + " — إجابات صح من أول مرة: " + pending.firstCorrect + " من " + pending.firstAttempted, 13, MUTED, false));
+        space(card, 10);
+        LinearLayout row = new LinearLayout(this);
+        Button resume = button("كمّل من مكانك", GREEN, Color.WHITE);
+        Button restart = button("ابدأها من الأول", Color.WHITE, BLUE);
+        resume.setOnClickListener(v -> resumeSavedSession());
+        restart.setOnClickListener(v -> {
+            LessonSession.clear(store);
+            toast("اتلغت الجلسة المحفوظة. الدرس هيتحسب من الأول بدون نقاط إضافية.");
+            home();
+        });
+        row.addView(resume, new LinearLayout.LayoutParams(0, dp(48), 1.2f));
+        row.addView(restart, new LinearLayout.LayoutParams(0, dp(48), 1f));
+        full(card, row);
+        full(box, card);
+        space(box, 14);
+    }
+
+    private Lesson findLessonById(String id) {
+        if (id == null || id.isEmpty()) return null;
+        for (Track track : tracks) for (Lesson lesson : track.lessons) if (lesson.id.equals(id)) return lesson;
+        return null;
+    }
+
+    private void resumeSavedSession() {
+        LessonSession state = LessonSession.load(store);
+        if (state == null) { toast("مفيش جلسة محفوظة."); home(); return; }
+        Lesson lesson = findLessonById(state.lessonId);
+        if (lesson == null || lesson.ref == null) {
+            if (state.reviewMode && !state.items().isEmpty()) {
+                List<Curriculum.Item> items = new ArrayList<>();
+                for (String id : state.items()) {
+                    Curriculum.Item item = resolveItem(id);
+                    if (item != null) items.add(item);
+                }
+                if (!items.isEmpty()) {
+                    startItemSession(items, true);
+                    cursor = Math.min(state.cursor, queue.size());
+                    firstCorrect = state.firstCorrect;
+                    firstAttempted = state.firstAttempted;
+                    attempted = state.attempted;
+                    correct = state.correct;
+                    showExercise();
+                    toast("رجعت لجلسة المراجعة من تمرين " + (cursor + 1) + ".");
+                    return;
+                }
+            }
+            LessonSession.clear(store);
+            toast("الدرس المحفوظ مش موجود في المحتوى الحالي؛ اتحذفت الجلسة بأمان.");
+            home();
+            return;
+        }
+        List<Curriculum.Exercise> plan = LessonPlanner.plan(curriculum, lesson.ref);
+        if (plan.isEmpty()) {
+            LessonSession.clear(store);
+            toast("الدرس المحفوظ مفيش فيه تمارين؛ اتحذفت الجلسة بأمان.");
+            home();
+            return;
+        }
+        activeLesson = lesson;
+        activeDialogue = lesson.dialogueId.isEmpty() ? null : curriculum.dialogue(lesson.dialogueId);
+        beginSession(plan, state.reviewMode, lesson.dialogueId, state);
+        toast("رجعت للدرس من تمرين " + (Math.min(state.cursor, queue.size() - 1) + 1) + " من " + queue.size() + ".");
     }
 
     private void dailyGoalCard(LinearLayout box) {
@@ -1166,15 +1248,25 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
     }
 
     private void beginSession(List<Curriculum.Exercise> plan, boolean asReview, String dialogueId) {
+        beginSession(plan, asReview, dialogueId, null);
+    }
+
+    private void beginSession(List<Curriculum.Exercise> plan, boolean asReview, String dialogueId, LessonSession restore) {
         queue.clear();
         mistakes.clear();
         skippedItems.clear();
+        srsGraded.clear();
         firstOutcome.clear();
         sessionItems.clear();
         for (Curriculum.Exercise exercise : plan) {
             queue.add(new Session(exercise, resolveItem(exercise.itemId), false, dialogueId));
             Curriculum.Item item = resolveItem(exercise.itemId);
             if (item != null && !containsItem(sessionItems, item.id)) sessionItems.add(findItemBySource(item.id));
+        }
+        if (sessionItems.isEmpty() && activeLesson != null) {
+            for (Item studied : activeLesson.items) {
+                if (studied != null && !containsItem(sessionItems, studied.id)) sessionItems.add(studied);
+            }
         }
         sessionItems.removeAll(Collections.singleton(null));
         cursor = 0;
@@ -1187,6 +1279,23 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         reviewMode = asReview;
         lessonStarted = System.currentTimeMillis();
         if (queue.isEmpty()) { toast("الدرس مفيش فيه تمارين."); path(); return; }
+        savedSession = LessonSession.begin(activeLesson == null ? "" : activeLesson.id, dialogueId, queue.size(),
+                asReview, lessonStarted);
+        java.util.List<String> plannedIds = new ArrayList<>();
+        for (Curriculum.Exercise planned : plan) {
+            if (!planned.itemId.isEmpty() && !plannedIds.contains(planned.itemId)) plannedIds.add(planned.itemId);
+        }
+        savedSession.setItems(plannedIds);
+        if (restore != null) {
+            cursor = Math.min(restore.cursor, queue.size());
+            firstCorrect = restore.firstCorrect;
+            firstAttempted = restore.firstAttempted;
+            attempted = restore.attempted;
+            correct = restore.correct;
+            lessonStarted = restore.startedAt > 0 ? restore.startedAt : lessonStarted;
+            savedSession = restore;
+        }
+        LessonSession.save(store, savedSession);
         showExercise();
     }
 
@@ -1305,13 +1414,22 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         action.setEnabled(ex.type.equals("intro") || ex.type.equals("speak") || ex.type.equals("match"));
         full(footer, action);
         action.setOnClickListener(v -> {
-            if (answered) { cursor++; showExercise(); return; }
-            if (ex.type.equals("intro")) { cursor++; showExercise(); return; }
+            if (answered) { advanceSession(); showExercise(); return; }
+            if (ex.type.equals("intro")) { advanceSession(); showExercise(); return; }
             if (ex.type.equals("speak")) { requestSpeech(speakTarget(ex)); return; }
             if (ex.type.equals("match")) { hint("طابق كل الأزواج الأول."); return; }
             checkAnswer(session);
         });
         if (input != null) watchInput(input);
+    }
+
+    /** Moves to the next exercise and persists the position immediately. */
+    private void advanceSession() {
+        cursor++;
+        if (savedSession != null) {
+            savedSession.cursor = cursor;
+            LessonSession.save(store, savedSession);
+        }
     }
 
     private String speakTarget(Curriculum.Exercise ex) {
@@ -1531,7 +1649,7 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         } else {
             return;
         }
-        AnswerChecker.Verdict verdict = AnswerChecker.check(ex, answer);
+        AnswerChecker.Verdict verdict = AnswerChecker.check(ex, answer, session.item);
         gradeCurrent(verdict.correct, verdict.diagnosis + (verdict.correct ? "" : "\n" + verdict.expected));
     }
 
@@ -1552,11 +1670,19 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         } else if (!firstOutcome.containsKey(session.ex.itemId)) {
             firstOutcome.put(session.ex.itemId, correctAnswer);
         }
+        if (savedSession != null) {
+            savedSession.record(correctAnswer, session.retry, session.ex.itemId, session.ex.type);
+            LessonSession.save(store, savedSession);
+        }
         if (!correctAnswer) {
             mistakes.add(session.ex.itemId + ":" + session.ex.type);
             if (session.ex.itemId != null && !session.ex.itemId.isEmpty()) {
                 prefs.edit().putInt("misses_" + session.ex.itemId,
                         prefs.getInt("misses_" + session.ex.itemId, 0) + 1).apply();
+                // Enqueue the item for spaced review right away (once per session).
+                if (srsGraded.add(session.ex.itemId)) {
+                    ReviewScheduler.grade(store, session.ex.itemId, ReviewScheduler.AGAIN, System.currentTimeMillis());
+                }
             }
             queue.add(new Session(session.ex, session.item, true, session.dialogueId));
         }
@@ -1640,6 +1766,8 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         stopRecognizer();
         stopSpeaking();
         screen = "summary";
+        LessonSession.clear(store);
+        savedSession = null;
         long now = System.currentTimeMillis();
         SharedPreferences.Editor edit = prefs.edit();
         int earned = 0;
@@ -1661,11 +1789,20 @@ public class MainActivity extends Activity implements TextToSpeech.OnInitListene
         }
         // spaced repetition outcome per item
         for (Map.Entry<String, Boolean> entry : firstOutcome.entrySet()) {
+            if (srsGraded.contains(entry.getKey())) continue;
             int quality = entry.getValue() ? ReviewScheduler.GOOD : ReviewScheduler.AGAIN;
             ReviewScheduler.grade(store, entry.getKey(), quality, now);
         }
+        // Items that the lesson teaches but no exercise carried (handwritten dialogue lessons)
+        // still enter the spaced-repetition queue once the lesson is finished.
+        for (Item studied : sessionItems) {
+            if (!firstOutcome.containsKey(studied.id) && !srsGraded.contains(studied.id)) {
+                ReviewScheduler.grade(store, studied.id, ReviewScheduler.GOOD, now);
+            }
+        }
         for (String skipped : skippedItems) {
-            if (!firstOutcome.containsKey(skipped)) ReviewScheduler.grade(store, skipped, ReviewScheduler.HARD, now);
+            if (!firstOutcome.containsKey(skipped) && !srsGraded.contains(skipped))
+                ReviewScheduler.grade(store, skipped, ReviewScheduler.HARD, now);
         }
         int xp = prefs.getInt("xp", 0) + earned;
         edit.putInt("xp", xp);

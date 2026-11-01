@@ -77,6 +77,45 @@ final class TextNormalizers {
         return false;
     }
 
+    /**
+     * Accepts the legitimate grammatical variants a learner may type for a noun or an
+     * adjective: plural (-s / -es) and gender (-o / -a). Verb conjugations are NOT
+     * accepted — "hablo" is a different tense, not an inflection of "hablar".
+     */
+    static boolean inflectionMatches(String expected, String answer, String pos) {
+        if (expected == null || answer == null) return false;
+        if (!isNounLike(pos)) return false;
+        String target = spanishKey(expected);
+        String got = spanishKey(answer);
+        if (target.isEmpty() || got.isEmpty()) return false;
+        if (target.indexOf(' ') >= 0 || got.indexOf(' ') >= 0) return false;
+        if (target.equals(got)) return true;
+        if (got.equals(target + "s") || got.equals(target + "es")) return true;
+        if (target.equals(got + "s") || target.equals(got + "es")) return true;
+        if (target.length() > 2 && got.length() == target.length()) {
+            char lastTarget = target.charAt(target.length() - 1);
+            char lastGot = got.charAt(got.length() - 1);
+            if (lastTarget == 'o' && lastGot == 'a' && target.substring(0, target.length() - 1)
+                    .equals(got.substring(0, got.length() - 1))) return true;
+            if (lastTarget == 'a' && lastGot == 'o' && target.substring(0, target.length() - 1)
+                    .equals(got.substring(0, got.length() - 1))) return true;
+        }
+        return false;
+    }
+
+    private static boolean isNounLike(String pos) {
+        if (pos == null) return false;
+        switch (pos) {
+            case "noun":
+            case "adj":
+            case "num":
+            case "word":
+                return true;
+            default:
+                return false;
+        }
+    }
+
     static boolean isArabic(String text) {
         for (int i = 0; i < text.length(); i++) if (text.charAt(i) >= 0x0600 && text.charAt(i) <= 0x06FF) return true;
         return false;

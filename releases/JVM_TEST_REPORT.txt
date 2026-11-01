@@ -1,8 +1,10 @@
 Spanish 1000 — JVM test run
   content: 3101 عنصر • 573 درس • 96 تمرين • 12 حوار
-  planner: 573 lessons / 11914 exercises
-  grading: 10343 generated exercises round-tripped
+  planner: 573 lessons / 11681 exercises
+  grading: 10110 generated exercises round-tripped
   scenarios: 8 موقف / 51 عبارة قابلة للتدرّب
-  flow: 573 درس • 11914 تمرين • 11914 إجابة صحيحة • 10343 إجابة خاطئة • XP 17644
+  flow: 573 درس • 11681 تمرين • 11681 إجابة صحيحة • 10110 إجابة خاطئة • XP 17411
+  session: 573 درس • 11681 تمرين • فشل 0
 
-PASS — 168209 checks
+  report: /home/user/appspenol/releases/LESSON_SESSION_REPORT.csv
+PASS — 339754 checks

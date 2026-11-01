@@ -125,7 +125,13 @@ final class ReviewScheduler {
             long dueAt = store.getLong("due_" + id, 0);
             if (dueAt > 0 && dueAt <= now) due.add(id);
         }
-        due.sort((a, b) -> Long.compare(store.getLong("due_" + a, 0), store.getLong("due_" + b, 0)));
+        // Collections.sort (not List.sort) keeps this working on minSdk 23, where the
+        // List.sort default method does not exist yet.
+        java.util.Collections.sort(due, new java.util.Comparator<String>() {
+            public int compare(String a, String b) {
+                return Long.compare(store.getLong("due_" + a, 0), store.getLong("due_" + b, 0));
+            }
+        });
         if (limit > 0 && due.size() > limit) return new java.util.ArrayList<>(due.subList(0, limit));
         return due;
     }

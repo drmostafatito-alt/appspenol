@@ -295,6 +295,50 @@ def collect_extra_examples(dialogues, grammar):
             EXTRA_EXAMPLES.append({"es": example["es"], "ar": example["ar"], "ar_egy": example["egy"]})
 
 
+CURATED = {}
+
+def load_curated_examples():
+    """Hand-written example sentences for items that no curriculum sentence covers.
+
+    File: content/examples.curriculum, one line per item:
+        E|<spanish as in the curriculum>|<example es>|<fusha>|<egyptian>
+    These are authored sentences, not machine templates, so they are tagged
+    example_source = "curated" and still never marked as verified.
+    """
+    path = os.path.join(CONTENT_DIR, "examples.curriculum")
+    if not os.path.exists(path):
+        return CURATED
+    with open(path, encoding="utf-8") as handle:
+        for number, raw in enumerate(handle, 1):
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            parts = line.split("|")
+            if len(parts) != 5 or parts[0] != "E":
+                fail(f"examples.curriculum:{number}: expected E|item|es|fusha|egy")
+            _, key, es, fusha, egy = parts
+            if not es.strip() or not fusha.strip() or not egy.strip():
+                fail(f"examples.curriculum:{number}: empty field")
+            if not ARABIC_RE.search(fusha) or not ARABIC_RE.search(egy):
+                fail(f"examples.curriculum:{number}: Arabic translation missing")
+            CURATED[key.strip()] = {"es": es.strip(), "fusha": fusha.strip(), "egy": egy.strip()}
+    return CURATED
+
+
+def fill_curated_examples(unit):
+    """Applies the hand-written sentences, keeping every other source untouched."""
+    for item in unit.items:
+        if item["type"] == "sentence" or item.get("example_es"):
+            continue
+        curated = CURATED.get(item["es"].strip())
+        if not curated:
+            continue
+        item["example_es"] = curated["es"]
+        item["example_fusha"] = curated["fusha"]
+        item["example_egy"] = curated["egy"]
+        item["example_source"] = "curated"
+
+
 def attach_examples(items):
     """Attach the first model sentence that uses the word, allowing simple inflections."""
     sentences = [i for i in items if i["type"] == "sentence"] + EXTRA_EXAMPLES
@@ -308,7 +352,12 @@ def attach_examples(items):
         simple = len(core.split()) == 1
         for sentence in sentences:
             sentence_tokens = tokens(sentence["es"])
-            if all(token in sentence_tokens for token in word_tokens):
+            if len(word_tokens) > 1:
+                # A multi-word expression must appear as a sequence; "¿y tú?" must not be
+                # satisfied by any sentence that merely contains "y" and "tu".
+                hit = any(sentence_tokens[i:i + len(word_tokens)] == word_tokens
+                          for i in range(len(sentence_tokens) - len(word_tokens) + 1))
+            elif all(token in sentence_tokens for token in word_tokens):
                 hit = True
             elif simple and core.isalpha():
                 hit = any(inflection_hit(core, token, item["pos"]) for token in sentence_tokens)
@@ -498,6 +547,7 @@ def main():
     parser.add_argument("--check", action="store_true", help="validate only, do not write")
     args = parser.parse_args()
 
+    load_curated_examples()
     levels = build_levels()
     dialogues = build_dialogues()
     grammar = build_grammar()
@@ -513,6 +563,7 @@ def main():
         for unit in level.units:
             attach_examples(unit.items)
             fill_phrase_examples(unit)
+            fill_curated_examples(unit)
             fill_pattern_examples(unit)
             validate_items(level, unit, unit.items, seen)
             out_items = []
@@ -638,6 +689,8 @@ def main():
         if not rule["examples"]:
             fail(f"grammar {rule['id']}: needs at least one example")
 
+    link_dialogue_vocabulary(output_levels, dialogues)
+
     total_items = sum(len(u["items"]) for level in output_levels for u in level["units"])
     total_words = sum(1 for level in output_levels for u in level["units"] for i in u["items"] if i["type"] == "word")
     total_sentences = sum(1 for level in output_levels for u in level["units"] for i in u["items"] if i["type"] == "sentence")
@@ -692,6 +745,69 @@ def main():
     print(f"wrote {OUTPUT} ({size / 1024:.0f} KB)")
 
     write_report(model, stats, size)
+
+
+DIALOGUE_STOPWORDS = {
+    "el", "la", "los", "las", "un", "una", "unos", "unas", "de", "del", "que", "y", "o", "en", "con",
+    "por", "para", "es", "son", "está", "están", "me", "te", "se", "le", "lo", "mi", "tu", "su",
+    "muy", "más", "no", "sí", "al", "a", "como", "pero", "si", "ya", "hay", "he", "ha", "este",
+    "esta", "esto", "buenos", "buenas", "días", "tardes", "noches", "gracias", "hola", "adiós",
+}
+
+
+def _plain(word):
+    import unicodedata
+    value = unicodedata.normalize("NFD", word.lower())
+    return "".join(c for c in value if not unicodedata.combining(c))
+
+
+def link_dialogue_vocabulary(output_levels, dialogues):
+    """Attach the curriculum words that actually occur inside each dialogue to its lesson.
+
+    Dialogue lessons ship hand-written comprehension exercises with no item ids, so finishing
+    one used to add nothing to the spaced-repetition queue. We now point each dialogue lesson
+    at up to six real curriculum items whose Spanish form appears in the dialogue text.
+    The items themselves stay defined in their own unit (no duplicated ids, no new items).
+    """
+    catalogue = {}
+    for level in output_levels:
+        for unit in level["units"]:
+            for item in unit["items"]:
+                if item["type"] != "word":
+                    continue
+                key = _plain(item["es"].strip())
+                if " " in key or "/" in key or len(key) < 3:
+                    continue
+                catalogue.setdefault(key, item["id"])
+    by_id = {d["id"]: d for d in dialogues}
+    linked = 0
+    for level in output_levels:
+        for unit in level["units"]:
+            if unit.get("kind") != "dialogue":
+                continue
+            for lesson in unit["lessons"]:
+                dialogue = by_id.get(lesson.get("dialogue", ""))
+                if not dialogue:
+                    continue
+                found = []
+                for line in dialogue["lines"]:
+                    cleaned = (line["es"].replace("¿", " ").replace("¡", " ").replace("?", " ")
+                               .replace("!", " ").replace(",", " ").replace(".", " "))
+                    for raw in cleaned.split():
+                        key = _plain(raw).strip("´`'\"()")
+                        if key in DIALOGUE_STOPWORDS or len(key) < 3:
+                            continue
+                        item_id = catalogue.get(key)
+                        if item_id and item_id not in found:
+                            found.append(item_id)
+                        if len(found) == 6:
+                            break
+                    if len(found) == 6:
+                        break
+                lesson["items"] = found
+                if found:
+                    linked += 1
+    print(f"dialogue vocabulary links: {linked} lessons")
 
 
 def write_report(model, stats, size):

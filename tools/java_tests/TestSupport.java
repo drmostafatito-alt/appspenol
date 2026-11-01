@@ -51,5 +51,11 @@ final class TestSupport {
             return value instanceof String ? (String) value : fallback;
         }
         public void putString(String key, String value) { values.put(key, value); }
+        @SuppressWarnings("unchecked")
+        public java.util.Set<String> getStringSet(String key, java.util.Set<String> fallback) {
+            Object value = values.get(key);
+            return value instanceof java.util.Set ? (java.util.Set<String>) value : fallback;
+        }
+        public void putStringSet(String key, java.util.Set<String> value) { values.put(key, new java.util.LinkedHashSet<>(value)); }
     }
 }

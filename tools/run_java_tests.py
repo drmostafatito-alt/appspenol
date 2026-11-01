@@ -21,7 +21,7 @@ ANDROID_API = os.path.join(ROOT, ".tools", "platforms", "android-36", "android-a
 LOGIC_SOURCES = [
     "Json.java", "Curriculum.java", "TextNormalizers.java", "AnswerChecker.java",
     "ReviewScheduler.java", "Tutor.java", "XpPolicy.java", "LessonPlanner.java", "LearningLogic.java",
-    "RealLife.java",
+    "RealLife.java", "LessonSession.java",
 ]
 
 
@@ -47,7 +47,7 @@ def main():
          "-17", "-nowarn", "-proc:none", "-encoding", "UTF-8",
          "-cp", ANDROID_API, "-d", OUT, "@" + argfile])
     content = os.path.join(ROOT, "app", "src", "main", "assets", "content.json")
-    run([JAVA, "-cp", OUT, "com.habla.espanol.TestRunner", content])
+    run([JAVA, "-cp", OUT, "com.habla.espanol.TestRunner", content, os.path.join(ROOT, "releases")])
 
 
 if __name__ == "__main__":

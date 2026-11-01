@@ -38,8 +38,8 @@ D8 = os.path.join(TOOLS, "minapk", "package", "tools", "d8.jar")
 APKSIGNER = os.path.join(TOOLS, "minapk", "package", "tools", "apksigner.jar")
 SIGNING = os.path.join(TOOLS, "signing")
 
-VERSION_CODE = "11"
-VERSION_NAME = "8.1"
+VERSION_CODE = "12"
+VERSION_NAME = "8.2"
 MIN_SDK = "23"
 TARGET_SDK = "36"
 
@@ -189,12 +189,17 @@ def zipalign(src_apk, dst_apk):
                 method_flag = 0
             offset = handle.tell()
             header.header_offset = offset
+            name_bytes = name.encode("utf-8")
             padding = b""
-            if method_flag == 0:
-                data_start = offset + 30 + len(name.encode("utf-8")) + len(padding)
-                rem = data_start % align
-                if rem:
-                    padding = b"\0" * (align - rem)
+            if align > 1:
+                # zipalign semantics: the file data must start on an `align` boundary.
+                # The local extra field is the padding; it must be 0 or at least 4 bytes,
+                # otherwise the extra field itself would be malformed.
+                base = offset + 30 + len(name_bytes)
+                pad = (-base) % align
+                if 0 < pad < 4:
+                    pad += align
+                padding = b"\0" * pad
             local = bytearray()
             local += (0x04034B50).to_bytes(4, "little")
             local += (20).to_bytes(2, "little")
@@ -205,7 +210,6 @@ def zipalign(src_apk, dst_apk):
             local += header.CRC.to_bytes(4, "little")
             local += header.compress_size.to_bytes(4, "little")
             local += header.file_size.to_bytes(4, "little")
-            name_bytes = name.encode("utf-8")
             local += len(name_bytes).to_bytes(2, "little")
             local += len(padding).to_bytes(2, "little")
             handle.write(bytes(local) + name_bytes + padding + chunk)
