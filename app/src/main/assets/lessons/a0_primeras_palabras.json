@@ -1,0 +1,311 @@
+{
+ "id": "A0_L1",
+ "title_es": "Primeras palabras y saludos",
+ "title_egy": "أول الكلمات والتحيات",
+ "title_fusha": "أول الكلمات والتحيات",
+ "intro_egy": "في الدرس ده هتتعلم أول كلمات إسبانية، وتحيات، وإزاي تعرّف نفسك. الإسبانية الأوروبية هي اللي بنعلمها هنا.",
+ "intro_fusha": "في هذا الدرس تتعلم أولى الكلمات الإسبانية والتحيات وطريقة التعارف، وفق النطق القشتالي (الأوروبي).",
+ "verification": "pending_verification",
+ "audio": {
+  "engine": "Android TextToSpeech",
+  "voice": "es-ES إن توفر",
+  "human_recording": false
+ },
+ "exercises": [
+  {
+   "id": "L1_01",
+   "type": "choose",
+   "refs": [
+    "Hola"
+   ],
+   "prompt_egy": "Hola معناها إيه؟",
+   "prompt_fusha": "ما معنى Hola؟",
+   "options": [
+    "مرحبًا / أهلاً",
+    "شكرًا",
+    "وداعًا",
+    "من فضلك"
+   ],
+   "answer": 0,
+   "explain_egy": "Hola معناها أهلاً، وتقال في أي وقت. الحرف h مش بيتنطق خالص، فتنطقها 'أولا'.",
+   "explain_fusha": "Hola تعني مرحبًا، وتُستعمل في أي وقت. الحرف h صامت لا يُنطق."
+  },
+  {
+   "id": "L1_02",
+   "type": "listen",
+   "refs": [
+    "Gracias"
+   ],
+   "prompt_egy": "اسمع الكلمة وشوف هي إيه",
+   "prompt_fusha": "استمع إلى الكلمة واختر الصحيحة",
+   "speak": "Gracias",
+   "options": [
+    "Gracias",
+    "Gracia",
+    "Grandes",
+    "Gatos"
+   ],
+   "answer": 0,
+   "explain_egy": "الكلمة دي Gracias، معناها شكرًا. خد بالك إن الـ c قبل i أو e بيتنطق ث في إسبانيا.",
+   "explain_fusha": "الكلمة هي Gracias، وتعني شكرًا."
+  },
+  {
+   "id": "L1_03",
+   "type": "choose",
+   "refs": [
+    "Buenos días"
+   ],
+   "prompt_egy": "Buenos días بتتقال إمتى؟",
+   "prompt_fusha": "متى تُقال Buenos días؟",
+   "options": [
+    "الصبح",
+    "بالليل",
+    "وقت الوداع",
+    "وقت الأكل"
+   ],
+   "answer": 0,
+   "explain_egy": "Buenos días معناها صباح الخير، وبتتقال الصبح. بالليل بنقول Buenas noches.",
+   "explain_fusha": "Buenos días تعني صباح الخير، وتُقال في الصباح."
+  },
+  {
+   "id": "L1_04",
+   "type": "choose",
+   "refs": [
+    "Buenas tardes"
+   ],
+   "prompt_egy": "الساعة 5 العصر وعايز تسلم، تقول إيه؟",
+   "prompt_fusha": "الساعة الخامسة مساءً، ماذا تقول للتحية؟",
+   "options": [
+    "Buenas tardes",
+    "Buenas noches",
+    "Buenos días",
+    "Adiós"
+   ],
+   "answer": 0,
+   "explain_egy": "بعد الضهر وقبل الليل بنقول Buenas tardes. Buenas noches للليل المتأخر وللوداع بالليل.",
+   "explain_fusha": "بعد الظهر حتى المساء نقول Buenas tardes."
+  },
+  {
+   "id": "L1_05",
+   "type": "choose",
+   "refs": [
+    "Mucho gusto"
+   ],
+   "prompt_egy": "حد قدمهولك، Mucho gusto معناها إيه؟",
+   "prompt_fusha": "ما معنى Mucho gusto عند التعارف؟",
+   "options": [
+    "اتشرفت بيك",
+    "شكرًا",
+    "مش فاهم",
+    "عفوًا"
+   ],
+   "answer": 0,
+   "explain_egy": "لما حد يعرفك على نفسه، ترد بـ Mucho gusto يعني اتشرفت بيك.",
+   "explain_fusha": "عند التعارف تقول Mucho gusto، أي سررت بلقائك."
+  },
+  {
+   "id": "L1_06",
+   "type": "order",
+   "refs": [
+    "Soy de Egipto"
+   ],
+   "prompt_egy": "رتّب الكلمات عشان تقول: أنا من مصر",
+   "prompt_fusha": "رتّب الكلمات لتكوّن جملة: أنا من مصر",
+   "tokens": [
+    "de",
+    "Soy",
+    "Egipto"
+   ],
+   "answer_order": [
+    1,
+    0,
+    2
+   ],
+   "sentence": "Soy de Egipto",
+   "explain_egy": "Soy معناها أنا، وde معناها من، وEgipto معناها مصر. الترتيب دايمًا: Soy الأول.",
+   "explain_fusha": "الترتيب الصحيح: Soy de Egipto، أي أنا من مصر."
+  },
+  {
+   "id": "L1_07",
+   "type": "order",
+   "refs": [
+    "¿Cómo estás?"
+   ],
+   "prompt_egy": "رتّب عشان تسأل: عامل إيه؟",
+   "prompt_fusha": "رتّب الكلمات لتسأل: كيف حالك؟",
+   "tokens": [
+    "estás?",
+    "¿Cómo"
+   ],
+   "answer_order": [
+    1,
+    0
+   ],
+   "sentence": "¿Cómo estás?",
+   "explain_egy": "السؤال يبدأ بـ ¿Cómo? وبعده estás يعني إنت عامل إيه. الترتيب: ¿Cómo estás?",
+   "explain_fusha": "الترتيب الصحيح: ¿Cómo estás? أي كيف حالك؟"
+  },
+  {
+   "id": "L1_08",
+   "type": "fill",
+   "refs": [
+    "Soy",
+    "Yo"
+   ],
+   "prompt_egy": "Yo ___ de Egipto. اختار الكلمة الناقصة",
+   "prompt_fusha": "أكمل الفراغ: Yo ___ de Egipto",
+   "sentence": "Yo ___ de Egipto.",
+   "options": [
+    "soy",
+    "eres",
+    "es"
+   ],
+   "answer": 0,
+   "explain_egy": "مع Yo (أنا) بنقول soy. eres لـ 'إنت' و es لـ 'هو/هي'.",
+   "explain_fusha": "مع الضمير Yo نستعمل الفعل soy."
+  },
+  {
+   "id": "L1_09",
+   "type": "fill",
+   "refs": [
+    "Eres",
+    "Tú"
+   ],
+   "prompt_egy": "¿___ de Egipto? بتسأل إنت من مصر؟",
+   "prompt_fusha": "أكمل: ¿___ de Egipto? أي هل أنت من مصر؟",
+   "sentence": "¿___ de Egipto?",
+   "options": [
+    "Eres",
+    "Soy",
+    "Somos"
+   ],
+   "answer": 0,
+   "explain_egy": "مع tú (إنت) بنقول eres. Soy معناها أنا، و Somos معناها إحنا.",
+   "explain_fusha": "مع tú نستعمل eres، أي أنت."
+  },
+  {
+   "id": "L1_10",
+   "type": "choose",
+   "refs": [
+    "No entiendo"
+   ],
+   "prompt_egy": "لو ما فهمتش حاجة، تقول No entiendo. معناها؟",
+   "prompt_fusha": "ما معنى No entiendo؟",
+   "options": [
+    "مش فاهم",
+    "عايز أكل",
+    "ولا يهمك",
+    "عفوًا"
+   ],
+   "answer": 0,
+   "explain_egy": "No entiendo معناها مش فاهم. ودي من أهم الجمل اللي تحتاجها في أول أيامك.",
+   "explain_fusha": "No entiendo تعني لا أفهم."
+  },
+  {
+   "id": "L1_11",
+   "type": "choose",
+   "refs": [
+    "Quiero"
+   ],
+   "prompt_egy": "Quiero agua معناها؟",
+   "prompt_fusha": "ما معنى Quiero agua؟",
+   "options": [
+    "عايز مية",
+    "عندي جوع",
+    "أنا متعب",
+    "أنا مستعجل"
+   ],
+   "answer": 0,
+   "explain_egy": "Quiero معناها عايز أو عايزة، وagua معناها مية. هنا الفعل بيتصرف مع كل شخص.",
+   "explain_fusha": "Quiero تعني أريد، وagua تعني ماء."
+  },
+  {
+   "id": "L1_12",
+   "type": "choose",
+   "refs": [
+    "No pasa nada"
+   ],
+   "prompt_egy": "حد قالك Perdón، ورديت عليه بـ No pasa nada. تقصد إيه؟",
+   "prompt_fusha": "ماذا تقصد بـ No pasa nada بعد اعتذار؟",
+   "options": [
+    "ولا يهمك",
+    "عفوًا فقط",
+    "إلى اللقاء",
+    "شكرًا"
+   ],
+   "answer": 0,
+   "explain_egy": "No pasa nada معناها ولا يهمك، بتقولها لما حد يعتذر لك.",
+   "explain_fusha": "No pasa nada تعني لا توجد مشكلة، وتُقال للطمأنة."
+  },
+  {
+   "id": "L1_13",
+   "type": "choose",
+   "refs": [
+    "h",
+    "Hola"
+   ],
+   "prompt_egy": "الحرف h في Hola بيتنطق إزاي؟",
+   "prompt_fusha": "كيف يُنطق الحرف h في Hola؟",
+   "options": [
+    "ما بيتنطقش (صامت)",
+    "هاء قوية",
+    "خاء",
+    "كاف"
+   ],
+   "answer": 0,
+   "explain_egy": "الـ h في الإسباني صامتة دايمًا، فـ Hola بتتنطق كأنها 'أولا'.",
+   "explain_fusha": "الحرف h صامت في الإسبانية دائمًا."
+  },
+  {
+   "id": "L1_14",
+   "type": "choose",
+   "refs": [
+    "Adiós",
+    "Hasta luego"
+   ],
+   "prompt_egy": "لما تمشي وعايز تقول نشوفك بعدين، تقول إيه؟",
+   "prompt_fusha": "ماذا تقول عند الافتراق مع توقع لقاء قريب؟",
+   "options": [
+    "Hasta luego",
+    "Buenas noches",
+    "Mucho gusto",
+    "De nada"
+   ],
+   "answer": 0,
+   "explain_egy": "Hasta luego معناها نشوفك بعدين. Adiós معناها باي، والاتنين للوداع.",
+   "explain_fusha": "Hasta luego تعني إلى اللقاء."
+  },
+  {
+   "id": "L1_15",
+   "type": "match",
+   "refs": [
+    "Hola",
+    "Adiós",
+    "Gracias",
+    "Perdón"
+   ],
+   "prompt_egy": "وصّل كل كلمة بمعناها",
+   "prompt_fusha": "صِل كل كلمة إسبانية بمعناها العربي",
+   "pairs": [
+    [
+     "Hola",
+     "مرحبًا"
+    ],
+    [
+     "Adiós",
+     "وداعًا"
+    ],
+    [
+     "Gracias",
+     "شكرًا"
+    ],
+    [
+     "Perdón",
+     "عذرًا"
+    ]
+   ],
+   "explain_egy": "كلهم كلمات أساسية: Hola للسلام، Adiós للوداع، Gracias للشكر، Perdón للاعتذار.",
+   "explain_fusha": "هذه الكلمات الأربع من أهم الكلمات في الحياة اليومية."
+  }
+ ]
+}

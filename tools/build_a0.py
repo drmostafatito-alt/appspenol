@@ -153,7 +153,18 @@ SOUND_SOURCED = {
     "z": "Uta Pressbooks cap.5 (caza [ká.θa]); Hablar y Decir: z = /θ/ en España centro-norte",
     "j": "Uta Pressbooks cap.5: jota [xó.ta] en el español peninsular",
     "ge / gi": "Uta Pressbooks cap.5: gesto [xés.to] en el español peninsular",
+    "b": "مصدر ثانوي elon.io (تعليمي، غير أكاديمي): b و v بنفس الصوت /b/ أو /β/",
+    "v": "مصدر ثانوي elon.io (تعليمي، غير أكاديمي): v مطابقة لـ b في الإسبانية الحديثة",
+    "h": "مصدر ثانوي elon.io: h صامتة دائمًا (hola = ola)",
+    "ñ": "مصدر ثانوي elon.io: ñ = /ɲ/ مثل ny في canyon",
+    "r": "مصدر ثانوي elon.io: r مفردة = /ɾ/ ضربة واحدة، وتتغير حسب الموضع",
+    "rr": "مصدر ثانوي elon.io: rr = /r/ مرتعشة",
+    "ll": "مصدر ثانوي elon.io: ll = /ʝ/ في الإسبانية الأوروبية الشائعة (يائية)",
+    "ch": "مصدر ثانوي elon.io: ch = /tʃ/ مثل ch في church",
+    "y": "مصدر ثانوي elon.io: y في بداية المقطع = /ʝ/ مثل yes",
+    "w": "مصدر ثانوي evolang.info: w = /w/ في الكلمات الأجنبية",
 }
+ELON = "https://elon.io/grammar/spanish-spain/pronunciation/alphabet"
 UTA = "https://uta.pressbooks.pub/espanolpractico/chapter/capitulo-5-variacion-en-espanol/"
 ABBEY = "https://www.abbeyschool.it/torino/wp-content/uploads/2022/05/Elalfabetoespanol.pdf"
 HABLAR = "https://hablarydecir.com/z-la-ceceante/"
@@ -195,7 +206,7 @@ def write_ledger(track):
             rows.append({
                 "es": it["es"], "type": it["type"], "ipa": it["ipa"],
                 "source": it["source"] if sourced else "لا يوجد مصدر خارجي مُتحقق منه بعد",
-                "source_url": " ; ".join(u for k, u in (("Abbey", ABBEY), ("Uta", UTA), ("Hablar", HABLAR)) if sourced and k in it["source"]),
+                "source_url": " ; ".join(u for k, u in (("Abbey", ABBEY), ("Uta", UTA), ("Hablar", HABLAR), ("elon.io", ELON), ("evolang", "https://evolang.info/grammar-guide/spanish/spanish-alphabet-pronunciation-guide")) if sourced and k in it["source"]),
                 "fact_supported": "نطق الصوت الإسباني (القشتالي)" if sourced else "لم يُتحقق",
                 "translation_fusha_checked": "لا (مراجعة مستقلة لم تُجرَ)",
                 "translation_egy_checked": "لا (مراجعة مستقلة لم تُجرَ)",

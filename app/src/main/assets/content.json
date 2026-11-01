@@ -30322,8 +30322,8 @@
        "pos": "letter",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي elon.io (تعليمي، غير أكاديمي): b و v بنفس الصوت /b/ أو /β/",
+       "verification": "sound_verified",
        "type": "letter"
       },
       {
@@ -30458,8 +30458,8 @@
        "pos": "letter",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي elon.io: h صامتة دائمًا (hola = ola)",
+       "verification": "sound_verified",
        "type": "letter"
       },
       {
@@ -30577,8 +30577,8 @@
        "pos": "letter",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي elon.io: ñ = /ɲ/ مثل ny في canyon",
+       "verification": "sound_verified",
        "type": "letter"
       },
       {
@@ -30645,8 +30645,8 @@
        "pos": "letter",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي elon.io: r مفردة = /ɾ/ ضربة واحدة، وتتغير حسب الموضع",
+       "verification": "sound_verified",
        "type": "letter"
       },
       {
@@ -30662,8 +30662,8 @@
        "pos": "sound",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي elon.io: rr = /r/ مرتعشة",
+       "verification": "sound_verified",
        "type": "sound"
       },
       {
@@ -30730,8 +30730,8 @@
        "pos": "letter",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي elon.io (تعليمي، غير أكاديمي): v مطابقة لـ b في الإسبانية الحديثة",
+       "verification": "sound_verified",
        "type": "letter"
       },
       {
@@ -30747,8 +30747,8 @@
        "pos": "letter",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي evolang.info: w = /w/ في الكلمات الأجنبية",
+       "verification": "sound_verified",
        "type": "letter"
       },
       {
@@ -30781,8 +30781,8 @@
        "pos": "letter",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي elon.io: y في بداية المقطع = /ʝ/ مثل yes",
+       "verification": "sound_verified",
        "type": "letter"
       },
       {
@@ -30815,8 +30815,8 @@
        "pos": "sound",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي elon.io: ch = /tʃ/ مثل ch في church",
+       "verification": "sound_verified",
        "type": "sound"
       },
       {
@@ -30832,8 +30832,8 @@
        "pos": "sound",
        "topic": "الحروف والأصوات",
        "difficulty": 1,
-       "source": "مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد",
-       "verification": "pending_verification",
+       "source": "مصدر ثانوي elon.io: ll = /ʝ/ في الإسبانية الأوروبية الشائعة (يائية)",
+       "verification": "sound_verified",
        "type": "sound"
       }
      ]

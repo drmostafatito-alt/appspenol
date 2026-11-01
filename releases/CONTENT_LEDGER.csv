@@ -2000,7 +2000,7 @@ id,es,ar_fusha,verification,source,missing,publishable
 1_24_38,Que te vaya muy bien.,أتمنى لك التوفيق.,unverified,,ar_egy;pronunciation;example_es;source,no
 1_24_39,"Hasta la próxima, cuídate mucho.",إلى المرة الجاية، خلي بالك من نفسك.,unverified,,ar_egy;pronunciation;example_es;source,no
 2_0_0,a,الحرف a: صوت الفتحة 'آ' القصيرة,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
-2_0_1,b,الحرف b: صوت الباء (ب),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
+2_0_1,b,الحرف b: صوت الباء (ب),sound_verified,مصدر ثانوي elon.io (تعليمي، غير أكاديمي): b و v بنفس الصوت /b/ أو /β/,,no
 2_0_2,c,الحرف c قبل a / o / u: صوت الكاف (ك),sound_verified,Abbey School PDF (El Alfabeto español): c antes de a/o/u = oclusiva sorda; Uta Pressbooks cap.5: casa [ká.sa],,no
 2_0_3,ce / ci,c قبل e أو i: صوت الثاء الإنجليزية (th في think),sound_verified,Uta Pressbooks cap.5 (distinción): ce/ci = [θ]; Hablar y Decir (Z la ceceante): ce/ci = /θ/ en España,,no
 2_0_4,d,الحرف d: صوت الدال (د),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
@@ -2008,29 +2008,29 @@ id,es,ar_fusha,verification,source,missing,publishable
 2_0_6,f,الحرف f: صوت الفاء (ف),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_7,g,الحرف g قبل a / o / u: صوت الغين (غ),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_8,ge / gi,g قبل e أو i: صوت الخاء (خ),sound_verified,Uta Pressbooks cap.5: gesto [xés.to] en el español peninsular,,no
-2_0_9,h,الحرف h: لا تُنطق أبدًا,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
+2_0_9,h,الحرف h: لا تُنطق أبدًا,sound_verified,مصدر ثانوي elon.io: h صامتة دائمًا (hola = ola),,no
 2_0_10,i,الحرف i: صوت 'إي' الطويلة (ي),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_11,j,الحرف j: صوت الخاء القوية (خ),sound_verified,Uta Pressbooks cap.5: jota [xó.ta] en el español peninsular,,no
 2_0_12,k,الحرف k: صوت الكاف (ك),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_13,l,الحرف l: صوت اللام (ل),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_14,m,الحرف m: صوت الميم (م),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_15,n,الحرف n: صوت النون (ن),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
-2_0_16,ñ,الحرف ñ: صوت 'ني' المختصرة,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
+2_0_16,ñ,الحرف ñ: صوت 'ني' المختصرة,sound_verified,مصدر ثانوي elon.io: ñ = /ɲ/ مثل ny في canyon,,no
 2_0_17,o,الحرف o: صوت 'أُو' القصيرة,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_18,p,الحرف p: صوت الباء بدون هواء قوي,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_19,q,الحرف q: صوت الكاف دائمًا مع u,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
-2_0_20,r,الحرف r: ضربة لسان خفيفة واحدة,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
-2_0_21,rr,الحرف rr: ر مرتعشة قوية,pending_verification,مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد,,no
+2_0_20,r,الحرف r: ضربة لسان خفيفة واحدة,sound_verified,مصدر ثانوي elon.io: r مفردة = /ɾ/ ضربة واحدة، وتتغير حسب الموضع,,no
+2_0_21,rr,الحرف rr: ر مرتعشة قوية,sound_verified,مصدر ثانوي elon.io: rr = /r/ مرتعشة,,no
 2_0_22,s,الحرف s: صوت السين (س),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_23,t,الحرف t: صوت التاء بدون هواء قوي,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
 2_0_24,u,الحرف u: صوت 'و' الطويلة (مثل oo),pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
-2_0_25,v,الحرف v: نفس صوت الباء,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
-2_0_26,w,الحرف w: حرف دخيل للكلمات الأجنبية,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
+2_0_25,v,الحرف v: نفس صوت الباء,sound_verified,مصدر ثانوي elon.io (تعليمي، غير أكاديمي): v مطابقة لـ b في الإسبانية الحديثة,,no
+2_0_26,w,الحرف w: حرف دخيل للكلمات الأجنبية,sound_verified,مصدر ثانوي evolang.info: w = /w/ في الكلمات الأجنبية,,no
 2_0_27,x,الحرف x: صوت 'كس',pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
-2_0_28,y,الحرف y: صوت الياء (ي) مثل yes,pending_verification,"RAE, Ortografía de la lengua española (2010) وصفحة 'Exclusión de ch y ll': 27 حرفًا",,no
+2_0_28,y,الحرف y: صوت الياء (ي) مثل yes,sound_verified,مصدر ثانوي elon.io: y في بداية المقطع = /ʝ/ مثل yes,,no
 2_0_29,z,الحرف z: صوت الثاء (th في think),sound_verified,Uta Pressbooks cap.5 (caza [ká.θa]); Hablar y Decir: z = /θ/ en España centro-norte,,no
-2_0_30,ch,الحرف ch: صوت 'تش' (دِغراف),pending_verification,مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد,,no
-2_0_31,ll,الحرف ll: صوت الياء القوية (دِغراف),pending_verification,مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد,,no
+2_0_30,ch,الحرف ch: صوت 'تش' (دِغراف),sound_verified,مصدر ثانوي elon.io: ch = /tʃ/ مثل ch في church,,no
+2_0_31,ll,الحرف ll: صوت الياء القوية (دِغراف),sound_verified,مصدر ثانوي elon.io: ll = /ʝ/ في الإسبانية الأوروبية الشائعة (يائية),,no
 2_1_0,Yo,أنا,pending_verification,مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد,,no
 2_1_1,Tú,أنت (مع الصديق والقريب),pending_verification,مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد,,no
 2_1_2,Usted,حضرتك (للاحترام والغرباء),pending_verification,مراجعة داخلية فقط — لم يُتحقق من مصدر خارجي بعد,,no
