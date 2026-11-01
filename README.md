@@ -28,6 +28,7 @@ From this directory:
 gradle :app:assembleDebug
 gradle :app:lintDebug
 python tools/check_learning_logic.py
+python tools/validate_content.py
 ```
 
 The portable logic test compiles the actual production `LearningLogic.java` with the local JDK into a temporary directory and runs assertions for phrase/template answers, matching-pair scheduling with duplicate translations, lesson progression, and flashcard intervals. It needs no Android SDK or dependencies. On Windows, run it with `py tools/check_learning_logic.py` or `python tools/check_learning_logic.py`.
@@ -45,5 +46,7 @@ A successful build or logic test does **not** verify the Android UI, device spee
 - Report precisely what was tested and what could not be tested. A compiled APK is not proof of runtime or UI correctness.
 
 ## Content changes
+
+Run `python tools/validate_content.py` after any change to `content.json`. It fails on empty fields, missing translations, and items with no Spanish letters, and reports duplicates and cross-track overlaps as warnings for review.
 
 `content.json` is consumed directly by the app. Preserve its JSON schema (`tracks` → `units` → `items`, with Spanish `es` and Arabic `ar` strings). If curriculum content changes, validate the JSON and confirm both tracks remain complete; do not make up translations or claim language review without a qualified review.
